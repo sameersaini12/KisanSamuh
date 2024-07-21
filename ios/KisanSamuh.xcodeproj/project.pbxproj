@@ -14,6 +14,38 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		7699B88040F8A987B510C191 /* libPods-KisanSamuh-KisanSamuhTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-KisanSamuh-KisanSamuhTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		A8191C320C3843168B51E9DB /* Poppins-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6F1E6262FBEA462FA9A04986 /* Poppins-Black.ttf */; };
+		D21B8DFFA13042E6B8533B73 /* Poppins-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 42B73689B8104EECA819C14C /* Poppins-Bold.ttf */; };
+		BBB31E1ECD15419B9A6FBAA0 /* Poppins-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 70F709D82D0D4678A8DA4076 /* Poppins-ExtraBold.ttf */; };
+		D1C6381230454812B3582DC8 /* Poppins-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 90544D914C174E34A05CA58A /* Poppins-ExtraLight.ttf */; };
+		E66E5D16865B459FB02AA03A /* Poppins-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 503BA68445654D349F6A0BBA /* Poppins-Light.ttf */; };
+		7029E0A24D1548CF917F4BDD /* Poppins-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FF7C3C8241A84C7B9CD0BD4A /* Poppins-Medium.ttf */; };
+		E22427DC3B0C4AFA80504108 /* Poppins-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E5ABC91C77864746BD91A6CC /* Poppins-Regular.ttf */; };
+		D34BED7740D641DCBB324EB8 /* Poppins-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C300E5E6B35C4C9B91CFB218 /* Poppins-SemiBold.ttf */; };
+		346ED23D718F4812871A778B /* Poppins-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0399A35165414412815DD06B /* Poppins-Thin.ttf */; };
+		DE5724E46398456B8A33AB11 /* nutrients_image.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C9DBC735D4684C73820B5D97 /* nutrients_image.jpg */; };
+		8CA4CFD72DE247BBA56E93E0 /* other_image.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 89EAA17711FE4927ABBC971C /* other_image.jpg */; };
+		93BD5671709F42A8A03C8C60 /* default_profile_pic.png in Resources */ = {isa = PBXBuildFile; fileRef = CA77BCDCE4A44CFDBC300C55 /* default_profile_pic.png */; };
+		ACD44F462624497CA0B33641 /* fungicide.png in Resources */ = {isa = PBXBuildFile; fileRef = 7C2FA4AD1B3F43A4A483EF50 /* fungicide.png */; };
+		140A20C411B64A50B6618C2B /* growth.png in Resources */ = {isa = PBXBuildFile; fileRef = 41EBE59C34BD44C48EA2F17D /* growth.png */; };
+		1F5188E1737B4444AD8705B7 /* growth_.png in Resources */ = {isa = PBXBuildFile; fileRef = 0B818F1F789F4821985021F1 /* growth_.png */; };
+		C4E8D91D5A9745B9BE7D0515 /* herbicide.png in Resources */ = {isa = PBXBuildFile; fileRef = F7A593F2C30646CDA95E63B1 /* herbicide.png */; };
+		66D52978EC92469F9174A84C /* nutrient.png in Resources */ = {isa = PBXBuildFile; fileRef = 79F3B678BD5C41B0943AE20E /* nutrient.png */; };
+		86870C4F9D384463A0738EBF /* seeds.png in Resources */ = {isa = PBXBuildFile; fileRef = 7264390EF7BF489DB1BE1740 /* seeds.png */; };
+		595AFBDF058348F490CE59D5 /* insecticide.png in Resources */ = {isa = PBXBuildFile; fileRef = F6F190B2952A41948B0BE256 /* insecticide.png */; };
+		8465CDB4289C4621BEFA2CFF /* pesticide.png in Resources */ = {isa = PBXBuildFile; fileRef = 92F486D2768E48CAA363C1FC /* pesticide.png */; };
+		DD7C8927F6704ED5A42AA83C /* roundupimage in Resources */ = {isa = PBXBuildFile; fileRef = 75182A9446764CA9A6DD09F0 /* roundupimage */; };
+		2B029DBF3B11479583AA0323 /* fmc_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 22F7FE5AE0CF47AEBD351D31 /* fmc_logo.png */; };
+		B8DDA3CA93E04099B6539A2D /* jk_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = B20D4B5F316B4BB28B375854 /* jk_logo.png */; };
+		41071FD29B474BEC81AED8DF /* syngenta_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 89822725E6614D308FA4BA3B /* syngenta_logo.png */; };
+		887A558E917546DE8E99B14C /* tractor_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 2D7E0E532B6E4CAA9935B0F8 /* tractor_logo.png */; };
+		FABA6755454E41469C582CD5 /* bayer_logo.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 997D0FDB72874112A6F001D4 /* bayer_logo.jpg */; };
+		2C91C799BEB1459F82994A46 /* ju_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = B6A8EFB5FEEC49FDB68988AA /* ju_logo.png */; };
+		67FF6FF1690F474E823D3AC6 /* dhanuka_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = A62CCE9BE41D498C9A9A2B6B /* dhanuka_logo.png */; };
+		CEA49D876F63499496F840CE /* banner_1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 13BE2D79448C41BAABD5542E /* banner_1.jpg */; };
+		615E86E35221443580384CB7 /* banner_2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AF08294D33D7497D8EAC0B2A /* banner_2.jpg */; };
+		BAC82257CE0A4ACAADF8C36A /* farmer_call.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 515A9A23E767462BB4582D27 /* farmer_call.jpg */; };
+		C86CF7D16F8D43719EDAF8B8 /* icomoon.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C791303827D94BBFAD0A5EFC /* icomoon.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,7 +68,7 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = KisanSamuh/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = KisanSamuh/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = KisanSamuh/main.m; sourceTree = "<group>"; };
-	    13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = PrivacyInfo.xcprivacy; path = KisanSamuh/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = PrivacyInfo.xcprivacy; path = KisanSamuh/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		19F6CBCC0A4E27FBF8BF4A61 /* libPods-KisanSamuh-KisanSamuhTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-KisanSamuh-KisanSamuhTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B4392A12AC88292D35C810B /* Pods-KisanSamuh.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KisanSamuh.debug.xcconfig"; path = "Target Support Files/Pods-KisanSamuh/Pods-KisanSamuh.debug.xcconfig"; sourceTree = "<group>"; };
 		5709B34CF0A7D63546082F79 /* Pods-KisanSamuh.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KisanSamuh.release.xcconfig"; path = "Target Support Files/Pods-KisanSamuh/Pods-KisanSamuh.release.xcconfig"; sourceTree = "<group>"; };
@@ -45,6 +77,38 @@
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = KisanSamuh/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-KisanSamuh-KisanSamuhTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KisanSamuh-KisanSamuhTests.release.xcconfig"; path = "Target Support Files/Pods-KisanSamuh-KisanSamuhTests/Pods-KisanSamuh-KisanSamuhTests.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		6F1E6262FBEA462FA9A04986 /* Poppins-Black.ttf */ = {isa = PBXFileReference; name = "Poppins-Black.ttf"; path = "../src/assets/fonts/Poppins-Black.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		42B73689B8104EECA819C14C /* Poppins-Bold.ttf */ = {isa = PBXFileReference; name = "Poppins-Bold.ttf"; path = "../src/assets/fonts/Poppins-Bold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		70F709D82D0D4678A8DA4076 /* Poppins-ExtraBold.ttf */ = {isa = PBXFileReference; name = "Poppins-ExtraBold.ttf"; path = "../src/assets/fonts/Poppins-ExtraBold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		90544D914C174E34A05CA58A /* Poppins-ExtraLight.ttf */ = {isa = PBXFileReference; name = "Poppins-ExtraLight.ttf"; path = "../src/assets/fonts/Poppins-ExtraLight.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		503BA68445654D349F6A0BBA /* Poppins-Light.ttf */ = {isa = PBXFileReference; name = "Poppins-Light.ttf"; path = "../src/assets/fonts/Poppins-Light.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		FF7C3C8241A84C7B9CD0BD4A /* Poppins-Medium.ttf */ = {isa = PBXFileReference; name = "Poppins-Medium.ttf"; path = "../src/assets/fonts/Poppins-Medium.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		E5ABC91C77864746BD91A6CC /* Poppins-Regular.ttf */ = {isa = PBXFileReference; name = "Poppins-Regular.ttf"; path = "../src/assets/fonts/Poppins-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		C300E5E6B35C4C9B91CFB218 /* Poppins-SemiBold.ttf */ = {isa = PBXFileReference; name = "Poppins-SemiBold.ttf"; path = "../src/assets/fonts/Poppins-SemiBold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		0399A35165414412815DD06B /* Poppins-Thin.ttf */ = {isa = PBXFileReference; name = "Poppins-Thin.ttf"; path = "../src/assets/fonts/Poppins-Thin.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		C9DBC735D4684C73820B5D97 /* nutrients_image.jpg */ = {isa = PBXFileReference; name = "nutrients_image.jpg"; path = "../src/assets/Categories/nutrients_image.jpg"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		89EAA17711FE4927ABBC971C /* other_image.jpg */ = {isa = PBXFileReference; name = "other_image.jpg"; path = "../src/assets/Categories/other_image.jpg"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		CA77BCDCE4A44CFDBC300C55 /* default_profile_pic.png */ = {isa = PBXFileReference; name = "default_profile_pic.png"; path = "../src/assets/default_profile_pic.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		7C2FA4AD1B3F43A4A483EF50 /* fungicide.png */ = {isa = PBXFileReference; name = "fungicide.png"; path = "../src/assets/Categories/fungicide.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		41EBE59C34BD44C48EA2F17D /* growth.png */ = {isa = PBXFileReference; name = "growth.png"; path = "../src/assets/Categories/growth.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		0B818F1F789F4821985021F1 /* growth_.png */ = {isa = PBXFileReference; name = "growth_.png"; path = "../src/assets/Categories/growth_.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		F7A593F2C30646CDA95E63B1 /* herbicide.png */ = {isa = PBXFileReference; name = "herbicide.png"; path = "../src/assets/Categories/herbicide.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		79F3B678BD5C41B0943AE20E /* nutrient.png */ = {isa = PBXFileReference; name = "nutrient.png"; path = "../src/assets/Categories/nutrient.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		7264390EF7BF489DB1BE1740 /* seeds.png */ = {isa = PBXFileReference; name = "seeds.png"; path = "../src/assets/Categories/seeds.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		F6F190B2952A41948B0BE256 /* insecticide.png */ = {isa = PBXFileReference; name = "insecticide.png"; path = "../src/assets/Categories/insecticide.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		92F486D2768E48CAA363C1FC /* pesticide.png */ = {isa = PBXFileReference; name = "pesticide.png"; path = "../src/assets/Categories/pesticide.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		75182A9446764CA9A6DD09F0 /* roundupimage */ = {isa = PBXFileReference; name = "roundupimage"; path = "../src/assets/Categories/roundupimage"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		22F7FE5AE0CF47AEBD351D31 /* fmc_logo.png */ = {isa = PBXFileReference; name = "fmc_logo.png"; path = "../src/assets/Brands/fmc_logo.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		B20D4B5F316B4BB28B375854 /* jk_logo.png */ = {isa = PBXFileReference; name = "jk_logo.png"; path = "../src/assets/Brands/jk_logo.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		89822725E6614D308FA4BA3B /* syngenta_logo.png */ = {isa = PBXFileReference; name = "syngenta_logo.png"; path = "../src/assets/Brands/syngenta_logo.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		2D7E0E532B6E4CAA9935B0F8 /* tractor_logo.png */ = {isa = PBXFileReference; name = "tractor_logo.png"; path = "../src/assets/Brands/tractor_logo.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		997D0FDB72874112A6F001D4 /* bayer_logo.jpg */ = {isa = PBXFileReference; name = "bayer_logo.jpg"; path = "../src/assets/Brands/bayer_logo.jpg"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		B6A8EFB5FEEC49FDB68988AA /* ju_logo.png */ = {isa = PBXFileReference; name = "ju_logo.png"; path = "../src/assets/Brands/ju_logo.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		A62CCE9BE41D498C9A9A2B6B /* dhanuka_logo.png */ = {isa = PBXFileReference; name = "dhanuka_logo.png"; path = "../src/assets/Brands/dhanuka_logo.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		13BE2D79448C41BAABD5542E /* banner_1.jpg */ = {isa = PBXFileReference; name = "banner_1.jpg"; path = "../src/assets/Banners/banner_1.jpg"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		AF08294D33D7497D8EAC0B2A /* banner_2.jpg */ = {isa = PBXFileReference; name = "banner_2.jpg"; path = "../src/assets/Banners/banner_2.jpg"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		515A9A23E767462BB4582D27 /* farmer_call.jpg */ = {isa = PBXFileReference; name = "farmer_call.jpg"; path = "../src/assets/Banners/farmer_call.jpg"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		C791303827D94BBFAD0A5EFC /* icomoon.ttf */ = {isa = PBXFileReference; name = "icomoon.ttf"; path = "../src/assets/fonts/icomoon.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -124,6 +188,7 @@
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				BBD78D7AC51CEA395F1C20DB /* Pods */,
+				20960F26826C46B782D32D28 /* Resources */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -149,6 +214,46 @@
 			);
 			path = Pods;
 			sourceTree = "<group>";
+		};
+		20960F26826C46B782D32D28 /* Resources */ = {
+			isa = "PBXGroup";
+			children = (
+				6F1E6262FBEA462FA9A04986 /* Poppins-Black.ttf */,
+				42B73689B8104EECA819C14C /* Poppins-Bold.ttf */,
+				70F709D82D0D4678A8DA4076 /* Poppins-ExtraBold.ttf */,
+				90544D914C174E34A05CA58A /* Poppins-ExtraLight.ttf */,
+				503BA68445654D349F6A0BBA /* Poppins-Light.ttf */,
+				FF7C3C8241A84C7B9CD0BD4A /* Poppins-Medium.ttf */,
+				E5ABC91C77864746BD91A6CC /* Poppins-Regular.ttf */,
+				C300E5E6B35C4C9B91CFB218 /* Poppins-SemiBold.ttf */,
+				0399A35165414412815DD06B /* Poppins-Thin.ttf */,
+				C9DBC735D4684C73820B5D97 /* nutrients_image.jpg */,
+				89EAA17711FE4927ABBC971C /* other_image.jpg */,
+				CA77BCDCE4A44CFDBC300C55 /* default_profile_pic.png */,
+				7C2FA4AD1B3F43A4A483EF50 /* fungicide.png */,
+				41EBE59C34BD44C48EA2F17D /* growth.png */,
+				0B818F1F789F4821985021F1 /* growth_.png */,
+				F7A593F2C30646CDA95E63B1 /* herbicide.png */,
+				79F3B678BD5C41B0943AE20E /* nutrient.png */,
+				7264390EF7BF489DB1BE1740 /* seeds.png */,
+				F6F190B2952A41948B0BE256 /* insecticide.png */,
+				92F486D2768E48CAA363C1FC /* pesticide.png */,
+				75182A9446764CA9A6DD09F0 /* roundupimage */,
+				22F7FE5AE0CF47AEBD351D31 /* fmc_logo.png */,
+				B20D4B5F316B4BB28B375854 /* jk_logo.png */,
+				89822725E6614D308FA4BA3B /* syngenta_logo.png */,
+				2D7E0E532B6E4CAA9935B0F8 /* tractor_logo.png */,
+				997D0FDB72874112A6F001D4 /* bayer_logo.jpg */,
+				B6A8EFB5FEEC49FDB68988AA /* ju_logo.png */,
+				A62CCE9BE41D498C9A9A2B6B /* dhanuka_logo.png */,
+				13BE2D79448C41BAABD5542E /* banner_1.jpg */,
+				AF08294D33D7497D8EAC0B2A /* banner_2.jpg */,
+				515A9A23E767462BB4582D27 /* farmer_call.jpg */,
+				C791303827D94BBFAD0A5EFC /* icomoon.ttf */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+			path = "";
 		};
 /* End PBXGroup section */
 
@@ -245,6 +350,38 @@
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				A8191C320C3843168B51E9DB /* Poppins-Black.ttf in Resources */,
+				D21B8DFFA13042E6B8533B73 /* Poppins-Bold.ttf in Resources */,
+				BBB31E1ECD15419B9A6FBAA0 /* Poppins-ExtraBold.ttf in Resources */,
+				D1C6381230454812B3582DC8 /* Poppins-ExtraLight.ttf in Resources */,
+				E66E5D16865B459FB02AA03A /* Poppins-Light.ttf in Resources */,
+				7029E0A24D1548CF917F4BDD /* Poppins-Medium.ttf in Resources */,
+				E22427DC3B0C4AFA80504108 /* Poppins-Regular.ttf in Resources */,
+				D34BED7740D641DCBB324EB8 /* Poppins-SemiBold.ttf in Resources */,
+				346ED23D718F4812871A778B /* Poppins-Thin.ttf in Resources */,
+				DE5724E46398456B8A33AB11 /* nutrients_image.jpg in Resources */,
+				8CA4CFD72DE247BBA56E93E0 /* other_image.jpg in Resources */,
+				93BD5671709F42A8A03C8C60 /* default_profile_pic.png in Resources */,
+				ACD44F462624497CA0B33641 /* fungicide.png in Resources */,
+				140A20C411B64A50B6618C2B /* growth.png in Resources */,
+				1F5188E1737B4444AD8705B7 /* growth_.png in Resources */,
+				C4E8D91D5A9745B9BE7D0515 /* herbicide.png in Resources */,
+				66D52978EC92469F9174A84C /* nutrient.png in Resources */,
+				86870C4F9D384463A0738EBF /* seeds.png in Resources */,
+				595AFBDF058348F490CE59D5 /* insecticide.png in Resources */,
+				8465CDB4289C4621BEFA2CFF /* pesticide.png in Resources */,
+				DD7C8927F6704ED5A42AA83C /* roundupimage in Resources */,
+				2B029DBF3B11479583AA0323 /* fmc_logo.png in Resources */,
+				B8DDA3CA93E04099B6539A2D /* jk_logo.png in Resources */,
+				41071FD29B474BEC81AED8DF /* syngenta_logo.png in Resources */,
+				887A558E917546DE8E99B14C /* tractor_logo.png in Resources */,
+				FABA6755454E41469C582CD5 /* bayer_logo.jpg in Resources */,
+				2C91C799BEB1459F82994A46 /* ju_logo.png in Resources */,
+				67FF6FF1690F474E823D3AC6 /* dhanuka_logo.png in Resources */,
+				CEA49D876F63499496F840CE /* banner_1.jpg in Resources */,
+				615E86E35221443580384CB7 /* banner_2.jpg in Resources */,
+				BAC82257CE0A4ACAADF8C36A /* farmer_call.jpg in Resources */,
+				C86CF7D16F8D43719EDAF8B8 /* icomoon.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

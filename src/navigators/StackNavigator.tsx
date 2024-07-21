@@ -1,0 +1,139 @@
+import { StyleSheet, Text, View } from 'react-native'
+import React from 'react'
+import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import { COLORS } from '../theme/theme'
+import ProductDetailsScreen from '../screens/ProductDetailsScreen'
+import CartScreen from '../screens/CartScreen'
+import TabNavigator from './TabNavigator'
+import GetStartScreen from '../screens/GetStartScreen'
+import ChooseLanguageScreen from '../screens/ChooseLanguageScreen'
+import PhoneLoginScreen from '../screens/PhoneLoginScreen'
+import PhoneOTPScreen from '../screens/PhoneOTPScreen'
+import PaymentCheckoutScreen from '../screens/PaymentCheckoutScreen'
+import OrderHistoryScreen from '../screens/OrderHistoryScreen'
+import ProfileScreen from '../screens/ProfileScreen'
+import CreateProductScreen from '../screens/CreateProductScreen'
+import CreateProductCategory from '../screens/CreateProductCategory'
+import OrderedProductInfoScreen from '../screens/OrderedProductInfoScreen'
+import UpdateOrderStatusScreen from '../screens/UpdateOrderStatusScreen'
+import RefundPolicyScreen from '../screens/RefundPolicyScreen'
+import PrivacyPolicyScreen from '../screens/PrivacyPolicyScreen'
+import TermsScreen from '../screens/TermsScreen'
+import ShareFeedbackScreen from '../screens/ShareFeedbackScreen'
+import KrishiGyanScreen from '../screens/KrishiGyanScreen'
+
+const Stack = createNativeStackNavigator()
+
+const StackNavigator = () => {
+  return (
+    <Stack.Navigator 
+          screenOptions={{ 
+            headerShown : false,
+            contentStyle : {
+              backgroundColor : COLORS.primaryWhiteHex
+            } 
+          }}
+          
+        >
+          {/* <Stack.Screen
+            name="GetStartScreen"
+            component={GetStartScreen}
+            options={{animation : "slide_from_bottom"}}
+          />
+          <Stack.Screen
+            name="LanguageScreen"
+            component={ChooseLanguageScreen}
+            options={{animation : "slide_from_bottom"}}
+          />
+          <Stack.Screen
+            name="PhoneLoginScreen"
+            component={PhoneLoginScreen}
+            options={{animation : "slide_from_bottom"}}
+          />
+          <Stack.Screen
+            name="PhoneOTPScreen"
+            component={PhoneOTPScreen}
+            options={{animation : "slide_from_bottom"}}
+          /> */}
+          <Stack.Screen
+            name='Tab'
+            component={TabNavigator}
+            options={{ animation : "slide_from_bottom"}}
+          />
+          <Stack.Screen
+            name='ProductDetails'
+            component={ProductDetailsScreen}
+            options={{animation : "slide_from_bottom"}}
+          />
+          <Stack.Screen
+            name="CartScreen"
+            component={CartScreen}
+            options={{animation : "slide_from_bottom"}}
+          />
+          <Stack.Screen
+            name='PaymentCheckoutScreen'
+            component={PaymentCheckoutScreen}
+            options={{ animation : "slide_from_bottom"}}
+          />
+          <Stack.Screen
+            name='OrderHistoryScreen'
+            component={OrderHistoryScreen}
+            options={{ animation : "slide_from_bottom"}}
+          />
+          <Stack.Screen
+            name='ProfileScreen'
+            component={ProfileScreen}
+            options={{ animation : "slide_from_bottom"}}
+          />
+          <Stack.Screen
+            name='CreateProductScreen'
+            component={CreateProductScreen}
+            options={{ animation : "slide_from_bottom"}}
+          />
+          <Stack.Screen
+            name='CreateProductCategory'
+            component={CreateProductCategory}
+            options={{ animation : "slide_from_bottom"}}
+          />
+          <Stack.Screen
+            name='OrderedProductInfoScreen'
+            component={OrderedProductInfoScreen}
+            options={{ animation : "slide_from_bottom"}}
+          />
+          <Stack.Screen
+            name='UpdateOrderStatus'
+            component={UpdateOrderStatusScreen}
+            options={{ animation : "slide_from_bottom"}}
+          />
+          <Stack.Screen
+            name='RefundPolicyScreen'
+            component={RefundPolicyScreen}
+            options={{ animation : "slide_from_bottom"}}
+          />
+          <Stack.Screen
+            name='PrivacyPolicyScreen'
+            component={PrivacyPolicyScreen}
+            options={{ animation : "slide_from_bottom"}}
+          />
+          <Stack.Screen
+            name='TermsScreen'
+            component={TermsScreen}
+            options={{ animation : "slide_from_bottom"}}
+          />
+          <Stack.Screen
+            name='ShareFeedbackScreen'
+            component={ShareFeedbackScreen}
+            options={{ animation : "slide_from_bottom"}}
+          />
+          <Stack.Screen
+            name='KrishiGyanScreen'
+            component={KrishiGyanScreen}
+            options={{ animation : "slide_from_bottom"}}
+          />
+        </Stack.Navigator>
+  )
+}
+
+export default StackNavigator
+
+const styles = StyleSheet.create({})

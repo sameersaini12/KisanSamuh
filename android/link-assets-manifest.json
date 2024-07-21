@@ -1,0 +1,133 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "src/assets/Banners/banner_1.jpg",
+      "sha1": "eaaaae9e9c3d627248aea30978b80060f8ca9cc9"
+    },
+    {
+      "path": "src/assets/Banners/banner_2.jpg",
+      "sha1": "a75aef9be7126a586e075c3d41164eca794aeaa9"
+    },
+    {
+      "path": "src/assets/Banners/farmer_call.jpg",
+      "sha1": "e40a70a617ea7a37c3398c859b831829e64a1a85"
+    },
+    {
+      "path": "src/assets/Brands/bayer_logo.jpg",
+      "sha1": "b542e93d576eceb206ab7946154848c0b29b8a16"
+    },
+    {
+      "path": "src/assets/Brands/dhanuka_logo.png",
+      "sha1": "d403d9b425061226ffd6cd5126feff3cb59b19eb"
+    },
+    {
+      "path": "src/assets/Brands/fmc_logo.png",
+      "sha1": "4cd996febff444afefe830a2db387160e73e9170"
+    },
+    {
+      "path": "src/assets/Brands/jk_logo.png",
+      "sha1": "1f242fc63589596450096ba48fc01d78d58baac2"
+    },
+    {
+      "path": "src/assets/Brands/ju_logo.png",
+      "sha1": "50f53aaa28c7167ea3dcd54f645c2e335ea48c15"
+    },
+    {
+      "path": "src/assets/Brands/syngenta_logo.png",
+      "sha1": "e6ccdbf5bfe9eba20c56eb458d2dbb60d0e666ca"
+    },
+    {
+      "path": "src/assets/Brands/tractor_logo.png",
+      "sha1": "36de9010bdc6ed0a0bf6a069138cd9f533220f9e"
+    },
+    {
+      "path": "src/assets/Categories/fungicide.png",
+      "sha1": "53767313b53dd7637cb35ef3394caa94b0918588"
+    },
+    {
+      "path": "src/assets/Categories/growth.png",
+      "sha1": "1719c18be6ade7dd440fdc65e977b12ce9397b2d"
+    },
+    {
+      "path": "src/assets/Categories/growth_.png",
+      "sha1": "69f301247505bbf7949079fb85bcc7e4558fa697"
+    },
+    {
+      "path": "src/assets/Categories/herbicide.png",
+      "sha1": "2923671f746532549442c18d4b9515440ec55347"
+    },
+    {
+      "path": "src/assets/Categories/insecticide.png",
+      "sha1": "6713eba770525b5e72745987b8bec1c7f929d70d"
+    },
+    {
+      "path": "src/assets/Categories/nutrient.png",
+      "sha1": "79bf01bf2c74112c09e6cbdcee56a9a643bcba29"
+    },
+    {
+      "path": "src/assets/Categories/nutrients_image.jpg",
+      "sha1": "53895d2de34e3a56f4a75c728c5db43f7e9010b2"
+    },
+    {
+      "path": "src/assets/Categories/other_image.jpg",
+      "sha1": "7ceb433614521689b2fb99d70171b122711b9bf6"
+    },
+    {
+      "path": "src/assets/Categories/pesticide.png",
+      "sha1": "27809a423fb4868e7528ec5604b10aac15aaef05"
+    },
+    {
+      "path": "src/assets/Categories/roundupimage",
+      "sha1": "7b5fda2d638a5b0da88e6f808f3f0627f85f0d1a"
+    },
+    {
+      "path": "src/assets/Categories/seeds.png",
+      "sha1": "19f81ba182c84b3543000009c0a589e202e02754"
+    },
+    {
+      "path": "src/assets/default_profile_pic.png",
+      "sha1": "8f29726b071664d00ff43a8d8c27d6de9e4e33ba"
+    },
+    {
+      "path": "src/assets/fonts/icomoon.ttf",
+      "sha1": "33488cfecfe631f718f44e056fb1b3babcdfb62e"
+    },
+    {
+      "path": "src/assets/fonts/Poppins-Black.ttf",
+      "sha1": "645e04c53c6b5b35bce654a811ebce16af8aa721"
+    },
+    {
+      "path": "src/assets/fonts/Poppins-Bold.ttf",
+      "sha1": "875cf0cecd647bcf22e79d633d868c1b1ec98dfa"
+    },
+    {
+      "path": "src/assets/fonts/Poppins-ExtraBold.ttf",
+      "sha1": "4b5c0750f073abd576413a0898d3b95adaf199c8"
+    },
+    {
+      "path": "src/assets/fonts/Poppins-ExtraLight.ttf",
+      "sha1": "85af6582a7e6155917c605f9d3fed68c02b23b06"
+    },
+    {
+      "path": "src/assets/fonts/Poppins-Light.ttf",
+      "sha1": "e247a92158e112f8bf7b638c8d95381d66b00dbb"
+    },
+    {
+      "path": "src/assets/fonts/Poppins-Medium.ttf",
+      "sha1": "283f21b44efbdbf276ba802be2d949a36bbc4233"
+    },
+    {
+      "path": "src/assets/fonts/Poppins-Regular.ttf",
+      "sha1": "fdd3002e7d814ee47c1c1b8487c72c6bbb3a2d00"
+    },
+    {
+      "path": "src/assets/fonts/Poppins-SemiBold.ttf",
+      "sha1": "8a4ace9392d06bcb7f8ea2f5169b07e4c383a90d"
+    },
+    {
+      "path": "src/assets/fonts/Poppins-Thin.ttf",
+      "sha1": "09ba4dcd5509c8085bf88c665dcc51cbdfced27b"
+    }
+  ]
+}
