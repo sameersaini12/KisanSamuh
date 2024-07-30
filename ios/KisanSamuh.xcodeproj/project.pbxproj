@@ -46,6 +46,9 @@
 		615E86E35221443580384CB7 /* banner_2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AF08294D33D7497D8EAC0B2A /* banner_2.jpg */; };
 		BAC82257CE0A4ACAADF8C36A /* farmer_call.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 515A9A23E767462BB4582D27 /* farmer_call.jpg */; };
 		C86CF7D16F8D43719EDAF8B8 /* icomoon.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C791303827D94BBFAD0A5EFC /* icomoon.ttf */; };
+		10ED2AB1102D4F4DA3769D9E /* paddy.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 441BF91892E641979ABDCD19 /* paddy.jpg */; };
+		C468350D0C924442989B260E /* wheat.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 5DC41513F70D4E1BB4B47858 /* wheat.jpg */; };
+		774D1D01165849F9A4AA34FE /* sugarcane.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C41567E111A84A0582F5C3C1 /* sugarcane.jpg */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -109,6 +112,9 @@
 		AF08294D33D7497D8EAC0B2A /* banner_2.jpg */ = {isa = PBXFileReference; name = "banner_2.jpg"; path = "../src/assets/Banners/banner_2.jpg"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		515A9A23E767462BB4582D27 /* farmer_call.jpg */ = {isa = PBXFileReference; name = "farmer_call.jpg"; path = "../src/assets/Banners/farmer_call.jpg"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		C791303827D94BBFAD0A5EFC /* icomoon.ttf */ = {isa = PBXFileReference; name = "icomoon.ttf"; path = "../src/assets/fonts/icomoon.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		441BF91892E641979ABDCD19 /* paddy.jpg */ = {isa = PBXFileReference; name = "paddy.jpg"; path = "../src/assets/crops/paddy.jpg"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		5DC41513F70D4E1BB4B47858 /* wheat.jpg */ = {isa = PBXFileReference; name = "wheat.jpg"; path = "../src/assets/crops/wheat.jpg"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		C41567E111A84A0582F5C3C1 /* sugarcane.jpg */ = {isa = PBXFileReference; name = "sugarcane.jpg"; path = "../src/assets/crops/sugarcane.jpg"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -250,6 +256,9 @@
 				AF08294D33D7497D8EAC0B2A /* banner_2.jpg */,
 				515A9A23E767462BB4582D27 /* farmer_call.jpg */,
 				C791303827D94BBFAD0A5EFC /* icomoon.ttf */,
+				441BF91892E641979ABDCD19 /* paddy.jpg */,
+				5DC41513F70D4E1BB4B47858 /* wheat.jpg */,
+				C41567E111A84A0582F5C3C1 /* sugarcane.jpg */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -382,6 +391,9 @@
 				615E86E35221443580384CB7 /* banner_2.jpg in Resources */,
 				BAC82257CE0A4ACAADF8C36A /* farmer_call.jpg in Resources */,
 				C86CF7D16F8D43719EDAF8B8 /* icomoon.ttf in Resources */,
+				10ED2AB1102D4F4DA3769D9E /* paddy.jpg in Resources */,
+				C468350D0C924442989B260E /* wheat.jpg in Resources */,
+				774D1D01165849F9A4AA34FE /* sugarcane.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

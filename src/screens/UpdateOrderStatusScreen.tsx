@@ -6,6 +6,7 @@ import { TouchableOpacity } from '@gorhom/bottom-sheet'
 import CustomIcon from '../components/CustomIcon'
 import { useSelector } from 'react-redux'
 import LottieView from 'lottie-react-native'
+import moment from 'moment'
 
 const UpdateOrderStatusScreen = ({navigation } : any) => {
 
@@ -159,7 +160,8 @@ const UpdateOrderStatusScreen = ({navigation } : any) => {
                                                                 </TouchableOpacity>
                                                             </View>
                                                             
-                                                            <Text style={styles.DeliveryStatusDate}>On {orderData.orderDate}</Text>
+                                                            <Text style={styles.DeliveryStatusDate}>Ordered On - {moment(orderData.orderDate).format("DD MMMM, YYYY")}</Text>
+                                                            <Text style={styles.DeliveryStatusDate}>Delivered By - {moment(orderData.deliveryDate).format("DD MMMM, YYYY")}</Text>
                                                             <Text style={styles.DeliveryStatusDate}>Ordered By {"- "}
                                                               <Text style={{textDecorationLine : "underline" , color : COLORS.primaryBlackHex}}>
                                                                 {orderData.userId}
@@ -196,6 +198,16 @@ const UpdateOrderStatusScreen = ({navigation } : any) => {
                                                                 )}
                                                               </View>
                                                             </View>
+                                                            {orderData.buyingGroup!=="none" && (
+                                                                <View style={[ {flexDirection : "row", alignItems : "center" , marginTop : SPACING.space_10}]}>
+                                                                <Text>Buying Group {"- "} </Text>
+                                                                <View>
+                                                                  <View style={styles.PaymentStatusContainer}>
+                                                                    <Text style={styles.PaymentStatusText}>{orderData.buyingGroup}</Text>
+                                                                  </View>
+                                                                </View>
+                                                              </View>
+                                                            )}
                                                         </View>
                                                     </View> 
                                                     <View style={[styles.HorizontalRule , ]}>
@@ -212,6 +224,7 @@ const UpdateOrderStatusScreen = ({navigation } : any) => {
                                                                         price : orderItemData.price,
                                                                         orderDate : orderData.orderDate,
                                                                         orderStatus : orderData.status,
+                                                                        buyingGroup : orderData.buyingGroup
                                                                     })
                                                                 }}
                                                             >

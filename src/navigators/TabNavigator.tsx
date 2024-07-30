@@ -6,9 +6,9 @@ import { BlurView } from '@react-native-community/blur'
 import { COLORS, FONTSIZE, SPACING } from '../theme/theme.ts'
 import CustomIcon from '../components/CustomIcon'
 import ShopScreen from '../screens/ShopScreen.tsx'
-import NotificationScreen from '../screens/NotificationScreen.tsx'
 import DrawerNavigator from './DrawerNavigator.tsx'
 import CallDoctorScreen from '../screens/CallDoctorScreen.tsx'
+import MessageScreen from '../screens/MessageScreen.tsx'
 
 const Tab = createBottomTabNavigator()
 
@@ -120,7 +120,7 @@ const TabNavigator = ({navigation , route} : any) => {
          />
          <Tab.Screen
             name= 'Message'
-            component={NotificationScreen}
+            component={MessageScreen}
             options={{
                 tabBarIcon : ({focused , color , size}) => {
                     return (
@@ -134,7 +134,7 @@ const TabNavigator = ({navigation , route} : any) => {
                 tabBarLabel : ({focused , color}) => {
                     return (
                         <Text style={{color : focused ? COLORS.primaryLightGreenHex : COLORS.primaryLightGreyHex, fontSize : FONTSIZE.size_12, marginBottom : SPACING.space_10,}}>
-                            Message
+                            Groups
                         </Text>
                     )
                 }

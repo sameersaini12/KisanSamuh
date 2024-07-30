@@ -4,6 +4,7 @@ import { GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler
 import { BORDERRADIUS, COLORS, FONTFAMILY, FONTSIZE, SPACING } from '../theme/theme'
 import { TouchableOpacity } from '@gorhom/bottom-sheet'
 import CustomIcon from '../components/CustomIcon'
+import moment from 'moment'
 
 const screen_width = Dimensions.get("screen").width
 
@@ -54,7 +55,7 @@ const OrderedProductInfoScreen = ({navigation, route} : any) => {
                     </View>
                     <View style={styles.DeliveryStatusDateContainer}>
                         <Text style={styles.DeliveryStatusText}>{route.params.orderStatus}</Text>
-                        <Text style={styles.DeliveryStatusDate}>On {route.params.orderDate}</Text>
+                        <Text style={styles.DeliveryStatusDate}>On {moment(route.params.orderDate).format("DD MMMM, YYYY")}</Text>
                     </View>
                 </View>
                 <View style={styles.DeliveryAddressContainer}>
@@ -72,6 +73,13 @@ const OrderedProductInfoScreen = ({navigation, route} : any) => {
                         )
                     })}
                 </View>
+                {route.params.buyingGroup!=="none" && (
+                    <View style={styles.DeliveryAddressContainer}>
+                        <Text style={styles.DeliveryAddressHeading}>Buying Group</Text>
+                        <Text style={styles.DeliveryAddressText}>{route.params.buyingGroup}</Text>
+                    </View>
+                )}
+                
                 <View style={styles.DeliveryAddressContainer}>
                     <Text style={styles.DeliveryAddressHeading}>Delivery Address</Text>
                     <Text style={styles.DeliveryAddressText}>{route.params.address}</Text>

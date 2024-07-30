@@ -1,5 +1,5 @@
 import { Pressable, StatusBar, StyleSheet, Text, View } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { GestureHandlerRootView, ScrollView, TouchableOpacity } from 'react-native-gesture-handler'
 import { BORDERRADIUS, COLORS, FONTFAMILY, FONTSIZE, SPACING } from '../theme/theme'
 import CustomIcon from '../components/CustomIcon'
@@ -9,6 +9,7 @@ import Base64 from "react-native-base64"
 import sha256 from "sha256"
 import { updateAfterOrder } from '../features/cartSlice'
 import LottieView from 'lottie-react-native'
+import moment from 'moment'
 
 
 const paymentMethodList = [
@@ -19,7 +20,9 @@ const paymentMethodList = [
 const PaymentCheckoutScreen = ({navigation , route} : any) => {
 
   const dispatch = useDispatch()
-
+  const [buyingGroupName , setBuyingGroupName] = useState(route.params.buyingGroupName)
+  // console.log(buyingGroupName)
+    
   const [ selectedPaymentMethod , setSelectedPaymentMethod ] = useState(1)
 
   const [showDoneAnimation , setShowDoneAnimation ] = useState(false)
@@ -29,6 +32,8 @@ const PaymentCheckoutScreen = ({navigation , route} : any) => {
   const [merchandId , setMerchandId] = useState("PGTESTPAYUAT86")
   const [appId, setAppId] = useState('')
   const [enableLogging , setEnableLogging] = useState(true)
+  const [deliveryDate , setDeliveryDate] = useState('')
+  const [uploadDeliveryDate , setUploadDeliveryDate ] = useState('')
 
   const addToOrderHistoryUPI = async () => {
     await fetch("http://10.0.2.2:4000/order/add-to-order-history" ,{
@@ -43,8 +48,11 @@ const PaymentCheckoutScreen = ({navigation , route} : any) => {
         orders : JSON.stringify(cartItemList),
         address : route.params.address,
         amount : totalCartPrice,
+        orderDate : new Date(),
         paymentStatus : true,
-        paymentMode : "Online"
+        paymentMode : "Online",
+        buyingGroup : buyingGroupName===undefined? "none" : buyingGroupName,
+        deliveryDate : uploadDeliveryDate
       })
     }).then((res) => res.json())
     .then((res) => {
@@ -96,7 +104,7 @@ const PaymentCheckoutScreen = ({navigation , route} : any) => {
               setShowDoneAnimation(false)
               dispatch(updateAfterOrder())
             navigation.navigate("OrderHistoryScreen")
-          }, 3000); 
+          }, 2000); 
         }else if(res.status === "FAILURE") { 
           console.log("Payment Failed")
         }else {
@@ -122,6 +130,36 @@ const PaymentCheckoutScreen = ({navigation , route} : any) => {
     navigation.pop()
   }
 
+  const findDeliveryDate = async () => {
+    if(buyingGroupName===undefined) {
+      var date : any = new Date()
+      date.setDate(date.getDate()+1)
+      setUploadDeliveryDate(date)
+      var finalDate = moment(date).format("DD MMMM, YYYY")
+      // console.log(new Date(finalDate))
+      setDeliveryDate(finalDate)
+    }else {
+      var nextMonday : any= new Date()
+      var nextThursday : any = new Date(nextMonday)
+      nextMonday.setDate(nextMonday.getDate() + (((1+7-nextMonday.getDay()) %7) || 7))
+      nextThursday.setDate(nextThursday.getDate() + (((4+7-nextThursday.getDay()) %7) || 7))
+
+      var nextDeliveryDate : any;
+      if(nextMonday > nextThursday) {
+        nextDeliveryDate = nextThursday
+      }else {
+        nextDeliveryDate = nextMonday
+      }
+      setUploadDeliveryDate(nextDeliveryDate)
+      var finalDate = moment(nextDeliveryDate).format("DD MMMM, YYYY")
+
+      setDeliveryDate(finalDate)
+      // return d
+    }
+  }
+
+  const d = new Date()
+
   const cashOnDeliveryButtonHandler = async () => {
     await fetch("http://10.0.2.2:4000/order/add-to-order-history" ,{
       method : "POST",
@@ -135,6 +173,9 @@ const PaymentCheckoutScreen = ({navigation , route} : any) => {
         orders : JSON.stringify(cartItemList),
         address : route.params.address,
         amount : totalCartPrice,
+        orderDate : new Date(),
+        buyingGroup : buyingGroupName===undefined? "none" : buyingGroupName,
+        deliveryDate : uploadDeliveryDate
       })
     }).then((res) => res.json())
     .then((res) => {
@@ -143,12 +184,16 @@ const PaymentCheckoutScreen = ({navigation , route} : any) => {
           setShowDoneAnimation(false)
           dispatch(updateAfterOrder())
           navigation.navigate("OrderHistoryScreen")
-      }, 3000);
+      }, 2000);
       
     }).catch((error) => {
       console.log(error)
     })
   }
+
+  useEffect(() => {
+    findDeliveryDate()
+  }, [])
 
   return (
     <GestureHandlerRootView>
@@ -208,13 +253,19 @@ const PaymentCheckoutScreen = ({navigation , route} : any) => {
         <Text style={styles.PaymentMethodListHeading}>Delivery Address</Text>
 
         <View style={styles.DeliveryAddressContainer}>
-          <View style={{flexDirection : "row"}}>
+          <View style={{flexDirection : "row" , alignItems : "center"}}>
             <CustomIcon
               name='location21'
               size={17}
               color={COLORS.primaryBlackHex}
             />
               <Text style={[styles.DeliveryAddressText , {marginLeft : SPACING.space_10*0.3}]}>{route.params.address}</Text>
+          </View>
+        </View>
+
+        <View style={[styles.DeliveryAddressContainer , {marginTop : -SPACING.space_10}]}>
+          <View style={{flexDirection : "row"}}>
+              <Text style={[styles.DeliveryAddressText , {marginLeft : SPACING.space_10*0.3}]}> <Text style={{fontFamily : FONTFAMILY.poppins_semibold}}>Delivered by - </Text>{deliveryDate}</Text>
           </View>
         </View>
 

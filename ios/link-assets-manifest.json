@@ -86,6 +86,18 @@
       "sha1": "19f81ba182c84b3543000009c0a589e202e02754"
     },
     {
+      "path": "src/assets/crops/paddy.jpg",
+      "sha1": "e17295fdd34482a81da2e6c09859fa491da616e4"
+    },
+    {
+      "path": "src/assets/crops/sugarcane.jpg",
+      "sha1": "707457a4408b1bb73e82df96a02fe0ef4ff18dcb"
+    },
+    {
+      "path": "src/assets/crops/wheat.jpg",
+      "sha1": "375d03a8a9ba79e799c3a63ab52aa4d7a13938ef"
+    },
+    {
       "path": "src/assets/default_profile_pic.png",
       "sha1": "8f29726b071664d00ff43a8d8c27d6de9e4e33ba"
     },

@@ -17,7 +17,7 @@ const ShareFeedbackScreen = ({navigation}  : any) => {
   const [showDoneAnimation , setShowDoneAnimation] = useState(false)
 
   const userToken = useSelector((state : any) => state.user.token)
-  const userId = useSelector((state:any) => state.user.userId)
+  const userId = useSelector((state:any) => state.user.id)
 
 
   const backButtonHandler = () => {

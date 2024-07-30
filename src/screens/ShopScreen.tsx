@@ -1,4 +1,4 @@
-import { Dimensions, ScrollView, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Dimensions, Pressable, ScrollView, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import CustomIcon from '../components/CustomIcon'
 import { BORDERRADIUS, COLORS, FONTFAMILY, FONTSIZE, SPACING } from '../theme/theme'
@@ -85,7 +85,7 @@ const ShopScreen = ({navigation  , searchTextFromPreviousScreen = ''} : any) => 
               style={styles.SearchTextInputContainer}
             />
             {searchText.length > 0 ? (
-              <TouchableOpacity
+              <Pressable
                 onPress={() => {
                   resetSearchInputText()
                   setCategories('')
@@ -97,12 +97,12 @@ const ShopScreen = ({navigation  , searchTextFromPreviousScreen = ''} : any) => 
                   size={FONTSIZE.size_16}
                   color={COLORS.primaryLightGreyHex}
                 />
-              </TouchableOpacity>
+              </Pressable>
             ) : (
               <></>
             )}
           </View>
-          <TouchableOpacity
+          <Pressable
             onPress={() => {
               navigation.push("CartScreen")
             }}
@@ -127,7 +127,7 @@ const ShopScreen = ({navigation  , searchTextFromPreviousScreen = ''} : any) => 
                       <Text style={{color : COLORS.primaryWhiteHex}}>{totalItemInCartStore}</Text>
                   </View>
               )}
-          </TouchableOpacity>
+          </Pressable>
         </View>
 
         { productList === undefined ? 
@@ -138,12 +138,12 @@ const ShopScreen = ({navigation  , searchTextFromPreviousScreen = ''} : any) => 
                     autoPlay
                     loop
                   />
-                  <TouchableOpacity
+                  <Pressable
                       onPress={() => setRetryButton(!retryButton)}
                       style={styles.LoadingRetryButton}
                   >
                     <Text style={styles.LoadingRetryButtonText}>Retry</Text>
-                  </TouchableOpacity>
+                  </Pressable>
               </View>
               
           :
@@ -154,7 +154,7 @@ const ShopScreen = ({navigation  , searchTextFromPreviousScreen = ''} : any) => 
              :
             productList.map((product,index) => {
               return (
-                <TouchableOpacity
+                <Pressable
                   key={index}
                   onPress={() => {
                     navigation.push('ProductDetails', {
@@ -169,7 +169,7 @@ const ShopScreen = ({navigation  , searchTextFromPreviousScreen = ''} : any) => 
                     companyName= {product['brand']}
                     price= {product['price'][0]['price']}
                   />
-                </TouchableOpacity>
+                </Pressable>
               )
             })}
           </View>

@@ -100,7 +100,6 @@ const CartScreen = ({navigation , route} : any) => {
                 </View>
             </BottomSheetModal>
             
-
             <ScrollView
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={styles.ScrollViewFlex}
@@ -210,8 +209,6 @@ const CartScreen = ({navigation , route} : any) => {
                                 <Text style={styles.NetPrice}>{70 + parseFloat(totalCartPrice)}</Text>
                             </View>
 
-                            
-
                             <Pressable 
                                 onPress={userLoginStatus===false ? 
                                     () => navigation.push("PhoneLoginScreen") :
@@ -226,17 +223,25 @@ const CartScreen = ({navigation , route} : any) => {
                                 style={styles.CheckOutButtonContainer}>
                                 <Text style={styles.CheckOutButtonText}>Proceed to Checkout</Text>
                             </Pressable>
+
+                            <Pressable 
+                                onPress={userLoginStatus===false ? 
+                                    () => navigation.push("PhoneLoginScreen") :
+                                    () => {
+                                        navigation.push("SelectGroupScreen", {
+                                            totalCartPrice : parseFloat(totalCartPrice)
+                                        })
+                                    }
+                                }
+                                style={[styles.CheckOutButtonContainer , {backgroundColor : COLORS.primaryOrangeHex}]}>
+                                <Text style={styles.CheckOutButtonText}>Buy in group and Save Money</Text>
+                            </Pressable>
                         </View>
                     )
                     }      
                     </View>
-                </View>
-
-                
-                
-            </ScrollView>
-
-        
+                </View>   
+            </ScrollView>   
         </BottomSheetModalProvider>
     </GestureHandlerRootView>
   )

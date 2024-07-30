@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux'
 import LottieView from 'lottie-react-native'
 import OrderItem from '../components/OrderItem'
 import OrderItemProduct from '../components/OrderItemProduct'
+import moment from 'moment'
 
 const OrderHistoryScreen = ({navigation} : any) => {
     const [ordersList , setOrdersList] = useState([])
@@ -156,7 +157,8 @@ const OrderHistoryScreen = ({navigation} : any) => {
                                                         </View>
                                                         <View style={styles.DeliveryStatusDateContainer}>
                                                             <Text style={styles.DeliveryStatusText}>{orderData.status}</Text>
-                                                            <Text style={styles.DeliveryStatusDate}>On {orderData.orderDate}</Text>
+                                                            <Text style={styles.DeliveryStatusDate}>Ordered On - { moment(orderData.orderDate).format("DD MMMM, YYYY")}</Text>
+                                                            <Text style={styles.DeliveryStatusDate}>Delivered By - { moment(orderData.deliveryDate).format("DD MMMM, YYYY")}</Text>
                                                             <View style={[ {flexDirection : "row", alignItems : "center"}]}>
                                                               <Text>Payment Status {"- "} </Text>
                                                               <View>
@@ -178,6 +180,16 @@ const OrderHistoryScreen = ({navigation} : any) => {
                                                                 )}
                                                               </View>
                                                             </View>
+                                                            {orderData.buyingGroup!=="none" && (
+                                                                <View style={[ {flexDirection : "row", alignItems : "center" , marginTop : SPACING.space_10}]}>
+                                                                <Text>Buying Group {"- "} </Text>
+                                                                <View>
+                                                                  <View style={styles.PaymentStatusContainer}>
+                                                                    <Text style={styles.PaymentStatusText}>{orderData.buyingGroup}</Text>
+                                                                  </View>
+                                                                </View>
+                                                              </View>
+                                                            )}
                                                         </View>
                                                     </View> 
                                                     <View style={[styles.HorizontalRule , ]}>
@@ -193,7 +205,8 @@ const OrderHistoryScreen = ({navigation} : any) => {
                                                                         itemPrice : orderItemData.ItemPrice,
                                                                         price : orderItemData.price,
                                                                         orderDate : orderData.orderDate,
-                                                                        orderStatus : orderData.status
+                                                                        orderStatus : orderData.status,
+                                                                        buyingGroup : orderData.buyingGroup
                                                                     })
                                                                 }}
                                                             >

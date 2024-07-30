@@ -21,6 +21,12 @@ import PrivacyPolicyScreen from '../screens/PrivacyPolicyScreen'
 import TermsScreen from '../screens/TermsScreen'
 import ShareFeedbackScreen from '../screens/ShareFeedbackScreen'
 import KrishiGyanScreen from '../screens/KrishiGyanScreen'
+import SelectCropScreen from '../screens/SelectCropScreen'
+import AddFarmDetailsScreen from '../screens/AddFarmDetailsScreen'
+import FarmListScreen from '../screens/FarmListScreen'
+import ChatScreen from '../screens/ChatScreen'
+import GroupInfoScreen from '../screens/GroupInfoScreen'
+import SelectGroupScreen from '../screens/SelectGroupScreen'
 
 const Stack = createNativeStackNavigator()
 
@@ -128,6 +134,36 @@ const StackNavigator = () => {
           <Stack.Screen
             name='KrishiGyanScreen'
             component={KrishiGyanScreen}
+            options={{ animation : "slide_from_bottom"}}
+          />
+          <Stack.Screen
+            name='SelectCropScreen'
+            component={SelectCropScreen}
+            options={{ animation : "slide_from_bottom"}}
+          />
+          <Stack.Screen
+            name='AddFarmDetailsScreen'
+            component={AddFarmDetailsScreen}
+            options={{ animation : "slide_from_bottom"}}
+          />
+          <Stack.Screen
+            name='FarmListScreen'
+            component={FarmListScreen}
+            options={{ animation : "slide_from_bottom"}}
+          />
+          <Stack.Screen
+            name='ChatScreen'
+            component={ChatScreen}
+            options={{ animation : "slide_from_bottom"}}
+          />
+          <Stack.Screen
+            name='GroupInfoScreen'
+            component={GroupInfoScreen}
+            options={{ animation : "slide_from_bottom"}}
+          />
+          <Stack.Screen
+            name='SelectGroupScreen'
+            component={SelectGroupScreen}
             options={{ animation : "slide_from_bottom"}}
           />
         </Stack.Navigator>
