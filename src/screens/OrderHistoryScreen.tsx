@@ -5,24 +5,27 @@ import { GestureHandlerRootView, ScrollView, TouchableOpacity } from 'react-nati
 import CustomIcon from '../components/CustomIcon'
 import { useSelector } from 'react-redux'
 import LottieView from 'lottie-react-native'
-import OrderItem from '../components/OrderItem'
-import OrderItemProduct from '../components/OrderItemProduct'
 import moment from 'moment'
+import {BASE_URL} from "@env"
+import OrderHistoryLoadingSkeleton from '../components/OrderHistoryLoadingSkeleton'
 
 const OrderHistoryScreen = ({navigation} : any) => {
     const [ordersList , setOrdersList] = useState([])
     const [selectedOrderCategory , setSelectedOrderCategory] = useState(0)
+    const [loading , setLoading ]  = useState(true)
+    const [noProducts , setNoProducts] = useState(false)
 
     const orderHistoryList = useSelector((state : any) => state.cart.orderHistoryList)
     const userId = useSelector((state : any) => state.user.id)
     const userToken = useSelector((state : any) => state.user.token)
+    const isLoggedIn = useSelector((state : any) => state.user.isLoggedIn)
 
     const backButtonHandler = () => {
         navigation.navigate("Tab")
     }
 
     const fetchAllOrders = async () => {
-        await fetch(`http://10.0.2.2:4000/order/fetch-orders/${userId}` , {
+        await fetch(`${BASE_URL}/order/fetch-orders/${userId}` , {
             headers : {
                 Accept : "application/json",
                 "Content-Type" : "application/json",
@@ -31,15 +34,21 @@ const OrderHistoryScreen = ({navigation} : any) => {
         })
         .then((res) => res.json())
         .then((res) => {
-            console.log(res.data)
-            setOrdersList(res.data)
+            // console.log(res.data)
+            setLoading(true)
+            if(res.data.length > 0) {
+              setOrdersList(res.data)
+            }else {
+              setNoProducts(true)
+            }
+            setLoading(false)
         }).catch((error) => {
             console.log(error)
         })
     }
 
     const fetchAllActiveOrders = async () => {
-        await fetch(`http://10.0.2.2:4000/order/fetch-active-orders/${userId}` , {
+        await fetch(`${BASE_URL}/order/fetch-active-orders/${userId}` , {
             headers : {
                 Accept : "application/json",
                 "Content-Type" : "application/json",
@@ -48,8 +57,14 @@ const OrderHistoryScreen = ({navigation} : any) => {
         })
         .then((res) => res.json())
         .then((res) => {
-            console.log(res.data)
+          setLoading(true)
+          // console.log(res.data)
+          if(res.data.length > 0) {
             setOrdersList(res.data)
+          }else {
+            setNoProducts(true)
+          }
+          setLoading(false)
         }).catch((error) => {
             console.log(error)
         })
@@ -58,16 +73,26 @@ const OrderHistoryScreen = ({navigation} : any) => {
 
     const activeOrdersButtonHandler = async () => {
         setSelectedOrderCategory(0)
-        fetchAllActiveOrders()
+        setLoading(true)
+        if(isLoggedIn) {
+          await fetchAllActiveOrders()
+        }
+        setLoading(false)
     }
 
     const pastOrdersButtonHandler = async () => {
         setSelectedOrderCategory(1)
-        fetchAllOrders()
+        setLoading(true)
+        if(isLoggedIn) {
+          await fetchAllOrders()
+        }
+        setLoading(false)
     }
 
     useEffect(() => {
-        activeOrdersButtonHandler()
+        if(isLoggedIn) {
+          activeOrdersButtonHandler()
+        }
     } , [])
 
   return (
@@ -119,33 +144,31 @@ const OrderHistoryScreen = ({navigation} : any) => {
     >
         <View>
             <View>
-                {ordersList.length === 0 ? 
-                    <View style={styles.EmptyCartContainer}>
-                        <LottieView
-                            style={styles.EmptyCartAnimation}
-                            source={require("../components/lottie/EmptyCart.json")}
-                            autoPlay
-                            loop
-                        />
-                        <Text style={styles.EmptyCartText}>There is no orders yet !</Text>
-                    </View>
+              {noProducts &&
+                  <View style={styles.EmptyCartContainer}>
+                    <LottieView
+                        style={styles.EmptyCartAnimation}
+                        source={require("../components/lottie/EmptyCart.json")}
+                        autoPlay
+                        loop
+                    />
+                    <Text style={styles.EmptyCartText}>There is no orders yet !</Text>
+                </View>
+              }
+                {loading ? 
+                    <OrderHistoryLoadingSkeleton />
                 :
                 (
                     <View>
                         {
                             ordersList.map((orderData :any , index : any) => {
                                 return (
-                                <View
-                                    key={index}
-                                    
-                                >
+                                <View key={index} >
                                         {/* <Text style={styles.OrderDataDate}>Order Date : {orderData.orderDate}</Text> */}
                                         <View>
                                             {orderData.orders.map((orderItem : any , index : any) => {
-                                                console.log("Order Item " + orderItem)
+                                                // console.log("Order Item " + orderItem)
                                                 return (
-                                                
-
                                                 <View key={index} style={styles.OrderDataContainer}> 
                                                     <View style={styles.DeliveryStatusContainer}>
                                                         <View style={styles.DeliveryStatusIcon}>
@@ -160,7 +183,7 @@ const OrderHistoryScreen = ({navigation} : any) => {
                                                             <Text style={styles.DeliveryStatusDate}>Ordered On - { moment(orderData.orderDate).format("DD MMMM, YYYY")}</Text>
                                                             <Text style={styles.DeliveryStatusDate}>Delivered By - { moment(orderData.deliveryDate).format("DD MMMM, YYYY")}</Text>
                                                             <View style={[ {flexDirection : "row", alignItems : "center"}]}>
-                                                              <Text>Payment Status {"- "} </Text>
+                                                              <Text style={styles.DeliveryStatusDate}>Payment Status {"- "} </Text>
                                                               <View>
                                                                 <View style={styles.PaymentStatusContainer}>
                                                                   <Text style={styles.PaymentStatusText}>{orderData.paymentMode}</Text>
@@ -182,7 +205,7 @@ const OrderHistoryScreen = ({navigation} : any) => {
                                                             </View>
                                                             {orderData.buyingGroup!=="none" && (
                                                                 <View style={[ {flexDirection : "row", alignItems : "center" , marginTop : SPACING.space_10}]}>
-                                                                <Text>Buying Group {"- "} </Text>
+                                                                <Text style={styles.DeliveryStatusDate}>Buying Group {"- "} </Text>
                                                                 <View>
                                                                   <View style={styles.PaymentStatusContainer}>
                                                                     <Text style={styles.PaymentStatusText}>{orderData.buyingGroup}</Text>
@@ -190,12 +213,14 @@ const OrderHistoryScreen = ({navigation} : any) => {
                                                                 </View>
                                                               </View>
                                                             )}
+                                                            <Text style={styles.DeliveryStatusDate}>Coins Earned - {orderData.rewardCoins}</Text>
                                                         </View>
                                                     </View> 
                                                     <View style={[styles.HorizontalRule , ]}>
                                                     </View>                            
                                                     {JSON.parse(orderItem).map((orderItemData : any , key :any) => {
                                                         // console.log("OrderItem" + JSON.stringify(orderItemData))
+                                                        // console.log(orderItemData.image)
                                                         return (
                                                             <TouchableOpacity
                                                                 key={key}
@@ -206,7 +231,8 @@ const OrderHistoryScreen = ({navigation} : any) => {
                                                                         price : orderItemData.price,
                                                                         orderDate : orderData.orderDate,
                                                                         orderStatus : orderData.status,
-                                                                        buyingGroup : orderData.buyingGroup
+                                                                        buyingGroup : orderData.buyingGroup,
+                                                                        image : orderItemData.image
                                                                     })
                                                                 }}
                                                             >
@@ -215,7 +241,7 @@ const OrderHistoryScreen = ({navigation} : any) => {
                                                                         style={styles.OrderHistoryImageContainer}
                                                                     >
                                                                         <Image 
-                                                                            source={require("../assets/Categories/nutrient.png")} 
+                                                                            source={{uri : orderItemData.image}} 
                                                                             style={styles.OrderHistoryImage}
                                                                         />
                                                                     </View>
@@ -229,7 +255,13 @@ const OrderHistoryScreen = ({navigation} : any) => {
                                                                                 name='pencil'
                                                                                 size={22}
                                                                             /> */}
-                                                                            <Text style={{fontSize : FONTSIZE.size_30, textAlign : "center"}}> {`>`}</Text>
+                                                                            <Text style={{fontSize : FONTSIZE.size_30, textAlign : "center"}}>
+                                                                                <CustomIcon
+                                                                                    name='circle-right'
+                                                                                    size={22}
+                                                                                    color={COLORS.primaryLightGreyHex}
+                                                                                />
+                                                                               </Text>
                                                                         </View>
                                                                     </View>
                                                                 </View>
@@ -277,7 +309,8 @@ const styles = StyleSheet.create({
       OrderHistoryScreenHeaderTitle : {
         marginLeft : SPACING.space_10,
         fontSize : FONTSIZE.size_18,
-        fontFamily : FONTFAMILY.poppins_semibold
+        fontFamily : FONTFAMILY.poppins_semibold,
+        color : COLORS.primaryLightGreyHex,
       }, 
       OrdersCategoryContainer : {
         flexDirection : "row",
@@ -290,7 +323,7 @@ const styles = StyleSheet.create({
       OrderCategorySelectedLine : {
         backgroundColor : COLORS.primaryLightGreenHex,
         padding : 2,
-        flex : 1
+        flex : 1,
       },
       ActiveOrdersTitle : {
         fontSize : FONTSIZE.size_16,
@@ -319,13 +352,15 @@ const styles = StyleSheet.create({
           margin : SPACING.space_18,
           textAlign : "center",
           fontSize : FONTSIZE.size_20,
-          fontFamily : FONTFAMILY.poppins_semibold
+          fontFamily : FONTFAMILY.poppins_semibold,
+          color : COLORS.primaryLightGreyHex,
       },
       OrderDataDate : {
         fontSize : FONTSIZE.size_16,
         fontFamily : FONTFAMILY.poppins_medium,
         marginLeft : SPACING.space_18,
         marginRight : SPACING.space_18,
+        color : COLORS.primaryLightGreyHex,
       },
       DeliveryStatusContainer : {
         padding : SPACING.space_10,
@@ -353,6 +388,7 @@ const styles = StyleSheet.create({
       DeliveryStatusDate : {
         fontSize : FONTSIZE.size_12*1.1,
         fontFamily : FONTFAMILY.poppins_regular,
+        color : COLORS.primaryLightGreyHex,
       },
       PaymentStatusContainer : {
         backgroundColor : COLORS.primaryLightGreenHex,

@@ -3,8 +3,10 @@ import React, { useEffect, useState } from 'react'
 import { GestureHandlerRootView, ScrollView, TextInput, TouchableOpacity } from 'react-native-gesture-handler'
 import CustomIcon from '../components/CustomIcon'
 import { BORDERRADIUS, COLORS, FONTFAMILY, FONTSIZE, SPACING } from '../theme/theme'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import LottieView from 'lottie-react-native'
+import { updateEnterInAppStatus } from '../features/userSlice'
+import {BASE_URL} from "@env"
 
 const ShareFeedbackScreen = ({navigation}  : any) => {
 
@@ -18,6 +20,9 @@ const ShareFeedbackScreen = ({navigation}  : any) => {
 
   const userToken = useSelector((state : any) => state.user.token)
   const userId = useSelector((state:any) => state.user.id)
+  const isLoggedIn = useSelector((state : any) => state.user.isLoggedIn)
+
+  const dispatch = useDispatch()
 
 
   const backButtonHandler = () => {
@@ -33,7 +38,7 @@ const ShareFeedbackScreen = ({navigation}  : any) => {
         setAddDescriptionError(true)
       }
     }else {
-      await fetch(`http://10.0.2.2:4000/feedback/add-feedback`, {
+      await fetch(`${BASE_URL}/feedback/add-feedback`, {
         method : "POST",
         headers : {
             "Content-Type" : "application/json",
@@ -136,13 +141,26 @@ const ShareFeedbackScreen = ({navigation}  : any) => {
             </TextInput>
         </Pressable>
 
-        <Pressable
-            onPress={() => {
-                shareFeedbackButtonHandler()
-            }}
-            style={[styles.ShareFeedbackButtonContainer , { marginBottom : SPACING.space_18}]}>
-            <Text style={styles.ShareFeedbackButtonText}>Submit</Text>
-        </Pressable>
+        {isLoggedIn ? (
+          <Pressable
+              onPress={() => {
+                  shareFeedbackButtonHandler()
+              }}
+              style={[styles.ShareFeedbackButtonContainer , { marginBottom : SPACING.space_18}]}>
+              <Text style={styles.ShareFeedbackButtonText}>Submit</Text>
+          </Pressable>
+        ) : (
+          <Pressable
+              onPress={async () => {
+                  const updateEnterInApp : any = false
+                  await dispatch(updateEnterInAppStatus(updateEnterInApp))
+                  navigation.navigate("PhoneLoginScreen")
+
+              }}
+              style={[styles.ShareFeedbackButtonContainer , { marginBottom : SPACING.space_18}]}>
+              <Text style={styles.ShareFeedbackButtonText}>Login to share feedback</Text>
+          </Pressable>
+        )}
       </ScrollView>
 
     </GestureHandlerRootView>

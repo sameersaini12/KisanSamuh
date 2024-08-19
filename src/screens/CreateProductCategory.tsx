@@ -7,6 +7,7 @@ import * as ImagePicker from "react-native-image-picker"
 import { useSelector } from 'react-redux'
 import { ToastAndroid } from 'react-native'
 import LottieView from 'lottie-react-native'
+import {BASE_URL} from "@env"
 
 const ImageCardWidth = Dimensions.get("screen").width-SPACING.space_18*2
 
@@ -51,7 +52,7 @@ const CreateProductCategory = ({navigation} : any) => {
 
     const getPreSignedUrlToUploadImageOnAws = async () => {
         // console.log(selectedImage._data.type)
-        return await fetch(`http://10.0.2.2:4000/product/get-url-for-category-image`, {
+        return await fetch(`${BASE_URL}/product/get-url-for-category-image`, {
             method : "POST",
             headers : {
                 "Content-Type" : "application/json",
@@ -100,7 +101,7 @@ const CreateProductCategory = ({navigation} : any) => {
             await uploadImageOnPresignedURL(url)
             setUploadLoadingAnimation(true)
 
-            await fetch(`http://10.0.2.2:4000/product/add-category`, {
+            await fetch(`${BASE_URL}/product/add-category`, {
                 method : "POST",
                 headers : {
                     "Content-Type" : "application/json",

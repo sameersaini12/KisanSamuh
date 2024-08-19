@@ -18,7 +18,7 @@ const OrderedProductInfoScreen = ({navigation, route} : any) => {
     <GestureHandlerRootView>
         <StatusBar backgroundColor={COLORS.primaryBlackHex} />
 
-        <View style={[styles.OrderHistoryScreenHeader, {marginBottom : SPACING.space_18}]}>
+        <View style={[styles.OrderHistoryScreenHeader, {}]}>
             <View style={styles.OrderHistoryScreenHeaderLeft}>
                 <Pressable
                 onPress={backButtonHandler}
@@ -38,9 +38,9 @@ const OrderedProductInfoScreen = ({navigation, route} : any) => {
             contentContainerStyle={styles.ScrollView}
         >
             <View>
-                <Image 
+                <Image
                     style={styles.OrderedProductImage}
-                    source={require("../assets/Categories/nutrient.png")} 
+                    source={{uri : route.params.image}} 
                 />
             </View>
             <View style={styles.OrderedProductDetails}>
@@ -91,9 +91,9 @@ const OrderedProductInfoScreen = ({navigation, route} : any) => {
                 <View style={styles.ButtonContainer}>
                     <Text style={styles.ButtonText}>Download Invoice</Text>
                 </View>
-                <View style={styles.ButtonContainer}>
+                {/* <View style={styles.ButtonContainer}>
                     <Text style={styles.ButtonText}>Rate this product</Text>
-                </View>
+                </View> */}
             </View>
         </ScrollView>
     </GestureHandlerRootView>
@@ -117,7 +117,8 @@ const styles = StyleSheet.create({
     OrderHistoryScreenHeaderTitle : {
         marginLeft : SPACING.space_10,
         fontSize : FONTSIZE.size_18,
-        fontFamily : FONTFAMILY.poppins_semibold
+        fontFamily : FONTFAMILY.poppins_semibold,
+        color : COLORS.primaryLightGreyHex,
     },
     OrderedProductImage : {
         height : screen_width,

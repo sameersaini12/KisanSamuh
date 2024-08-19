@@ -1,11 +1,11 @@
-import { Image, StyleSheet, Text, Touchable, TouchableOpacity, View } from 'react-native'
+import { Image, Pressable, StyleSheet, Text, Touchable, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 import { BORDERRADIUS, COLORS, FONTFAMILY, FONTSIZE, SPACING } from '../theme/theme'
 import { useDispatch } from 'react-redux'
 import { calculateCartPrice, decrementCartItemQuantity, incrementCartItemQuantity } from '../features/cartSlice'
 import CustomIcon from './CustomIcon'
 
-const CartItem = ({id, title , price , itemPrice} : any) => {
+const CartItem = ({id, title , price , itemPrice , navigation , image} : any) => {
   
   const dispatch = useDispatch()
 
@@ -30,10 +30,19 @@ const CartItem = ({id, title , price , itemPrice} : any) => {
   return (
     <View style={styles.CartItemContainer}>
       <View style={styles.CartItem}>
+      <Pressable
+          onPress={() => {
+              navigation.push("ProductDetails" , {
+                  id
+              })
+          }}
+          style={styles.CartItemImageContainer}
+      >
         <Image
-            source={require("../assets/Categories/nutrients_image.jpg")}
+            source={{uri : image}}
             style={styles.CartItemImage}
         />
+      </Pressable>
         <View style={styles.CartItemInfo}>
             <Text style={styles.CartItemTitle}>{title}</Text>
             {price.map((item : any , index : any) => {
@@ -92,6 +101,10 @@ const styles = StyleSheet.create({
   CartItem: {
     flexDirection : 'row',
 
+  },
+  CartItemImageContainer : {
+    backgroundColor : COLORS.secondaryWhiteHex,
+    borderRadius : BORDERRADIUS.radius_15
   },
   CartItemImage : {
     height: 130,

@@ -2,8 +2,10 @@ import { Pressable, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import CustomIcon from './CustomIcon'
 import { BORDERRADIUS, COLORS, FONTFAMILY, FONTSIZE, SPACING } from '../theme/theme'
+import { useSelector } from 'react-redux'
 
 const AddFarmCard = ({navigation , openBottomModel , closeBottomModel, totalFarms} : any) => {
+    const isLoggedIn = useSelector((state : any) => state.user.isLoggedIn)
   return (
     <View>
         {totalFarms > 0 ? (

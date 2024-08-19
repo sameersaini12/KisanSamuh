@@ -2,6 +2,10 @@
   "migIndex": 1,
   "data": [
     {
+      "path": "src/assets/android/mipmap-hdpi/ic_launcher.png",
+      "sha1": "a29b56a132925c020271326734578af37bce6962"
+    },
+    {
       "path": "src/assets/Banners/banner_1.jpg",
       "sha1": "eaaaae9e9c3d627248aea30978b80060f8ca9cc9"
     },
@@ -103,7 +107,7 @@
     },
     {
       "path": "src/assets/fonts/icomoon.ttf",
-      "sha1": "33488cfecfe631f718f44e056fb1b3babcdfb62e"
+      "sha1": "dbbbdc7f5f0d6bbdc32885d64f5ca716a1fd7a93"
     },
     {
       "path": "src/assets/fonts/Poppins-Black.ttf",
@@ -140,6 +144,14 @@
     {
       "path": "src/assets/fonts/Poppins-Thin.ttf",
       "sha1": "09ba4dcd5509c8085bf88c665dcc51cbdfced27b"
+    },
+    {
+      "path": "src/assets/launch_screen.png",
+      "sha1": "2fd991e6b7407d49771735794f42ca2e44277f72"
+    },
+    {
+      "path": "src/assets/reward_coin.png",
+      "sha1": "cb7fd3e0111fe4430320cf900622898f55d95eec"
     }
   ]
 }

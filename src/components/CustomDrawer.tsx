@@ -7,10 +7,12 @@ import CustomIcon from './CustomIcon'
 import { BORDERRADIUS, COLORS, FONTFAMILY, FONTSIZE, SPACING } from '../theme/theme'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useDispatch, useSelector } from 'react-redux'
-import { updateIsLoggedInStatus, updateToken, updateid } from '../features/userSlice'
+import { updateEmail, updateEnterInAppStatus, updateIsAdmin, updateIsLoggedInStatus, updateName, updatePhone, updateToken, updateid } from '../features/userSlice'
 import languages from '../data/languageList'
 import Share from "react-native-share"
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs'
+import { updateAfterSignOut } from '../features/cartSlice'
+import { updateTotalFarms } from '../features/farmSlice'
 
 
 
@@ -29,13 +31,21 @@ const CustomDrawer = ({navigation} : any) => {
   const tabBarHeight = useBottomTabBarHeight()
 
 
-  const handleSignOut = () => {
+  const handleSignOut = async () => {
     const loginStatus : any = false
     dispatch(updateIsLoggedInStatus(loginStatus))
     const userId : any = ''
     dispatch(updateid(userId))
     const token : any = ''
     dispatch(updateToken(token))
+    dispatch(updateEmail(userId))
+    dispatch(updatePhone(userId))
+    dispatch(updateIsAdmin(loginStatus))
+    dispatch(updateName(userId))
+    dispatch(updateAfterSignOut())
+    const totalFarms : any  = 0
+    dispatch(updateTotalFarms(totalFarms))
+    await dispatch(updateEnterInAppStatus(loginStatus))
     navigation.navigate('GetStartScreen')
   }
 
@@ -57,47 +67,72 @@ const CustomDrawer = ({navigation} : any) => {
           <View style={styles.DrawerProfilePicContainer}>
             <Image style={styles.DrawerProfilePicImage} source={require("../assets/default_profile_pic.png")} />
           </View>
-          <View>
-            <TouchableOpacity
-              onPress={() => {
-                navigation.push("ProfileScreen")
+          {!userLoginStatus ? (
+            <Pressable 
+              onPress={async ()=> {
+                const enterInAppStatus : any = false
+                await dispatch(updateEnterInAppStatus(enterInAppStatus))
+                navigation.push("PhoneLoginScreen")
               }}
-            >
-                {userName.length==0 ? (
-                  <Text style={[styles.DrawerProfileInfoText , {fontSize :FONTSIZE.size_20*0.85}]}>
-                    Enter Your Name {" "}
-                    <CustomIcon
-                      name='pencil'
-                      size={16}
-                      color={COLORS.primaryWhiteHex}
-                      style={styles.DrawerEditPencilIcon}
-                    />
-                  </Text>
-                ): (
-                  <Text style={[styles.DrawerProfileInfoText , {fontSize :FONTSIZE.size_20*0.85 , textTransform : "capitalize"}]}>{userName}</Text>
-                )}
+              style={{alignItems : "center", justifyContent : "center" , marginLeft : SPACING.space_15}}>
+              <Text style={{fontSize : FONTSIZE.size_16,fontFamily : FONTFAMILY.poppins_semibold , color : COLORS.primaryWhiteHex , textDecorationLine : "underline"}}>Please Login First</Text>
+            </Pressable>
+          ) : (
+              <View>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.push("ProfileScreen")
+                }}
+              >
+                  {userName.length==0 ? (
+                    <Text style={[styles.DrawerProfileInfoText , {fontSize :FONTSIZE.size_20*0.84}]}>
+                      Enter Your Name {" "}
+                      <CustomIcon
+                        name='pencil'
+                        size={16}
+                        color={COLORS.primaryWhiteHex}
+                        style={styles.DrawerEditPencilIcon}
+                      />
+                    </Text>
+                  ): (
+                    <Text style={[styles.DrawerProfileInfoText , {fontSize :FONTSIZE.size_20*0.85 , textTransform : "capitalize"}]}>{userName}</Text>
+                  )}
+                  
                 
-              
-            </TouchableOpacity>
-            <View>
-              <Text  style={styles.DrawerProfileInfoText}>{phoneNumber}</Text>
+              </TouchableOpacity>
+              <View>
+                <Text  style={styles.DrawerProfileInfoText}>{phoneNumber}</Text>
+              </View>
+              <View>
+                <Text  style={styles.DrawerProfileInfoText}>{languages[selectedLanguageId].name}</Text>
+              </View>
             </View>
-            <View>
-              <Text  style={styles.DrawerProfileInfoText}>{languages[selectedLanguageId].name}</Text>
-            </View>
-          </View>
+          )}
           
-        </View>
+          </View>
 
-
-        <Pressable
-          onPress={() => {
-            navigation.push("ProfileScreen")
-          }}
-          style={styles.DrawerViewProfileContainer}
-        >
-          <Text style={styles.DrawerViewProfileText}>View Profile</Text>
-        </Pressable>
+          {userLoginStatus ? (
+              <Pressable
+                onPress={() => {
+                  navigation.push("ProfileScreen")
+                }}
+                style={styles.DrawerViewProfileContainer}
+              >
+                <Text style={styles.DrawerViewProfileText}>View Profile</Text>
+              </Pressable>
+          ) : (
+            <Pressable
+              onPress={async () => {
+                const enterInAppStatus : any = false
+                await dispatch(updateEnterInAppStatus(enterInAppStatus))
+                navigation.push("PhoneLoginScreen")
+              }}
+              style={styles.DrawerViewProfileContainer}
+            >
+              <Text style={styles.DrawerViewProfileText}>Login to view Profile</Text>
+            </Pressable>
+          )}
+        
 
         <ScrollView
             showsVerticalScrollIndicator={false}
@@ -172,7 +207,7 @@ const CustomDrawer = ({navigation} : any) => {
 
           {/* Krishi gayan  */}
           
-          <TouchableOpacity
+          {/* <TouchableOpacity
             onPress={() => {
               navigation.navigate("KrishiGyanScreen")
             }}
@@ -184,7 +219,7 @@ const CustomDrawer = ({navigation} : any) => {
               />
               <Text style={styles.DrawerSignOutText}>Krishi Gyan</Text>
           </TouchableOpacity>
-          <View style={styles.HorizontalRule}></View>
+          <View style={styles.HorizontalRule}></View> */}
 
           <TouchableOpacity
             onPress={() => {
@@ -286,16 +321,19 @@ const CustomDrawer = ({navigation} : any) => {
 
             {/* Sign Out  */}
 
-          <TouchableOpacity
-            onPress={handleSignOut}
-            style={[styles.DrawerSignOut , {marginBottom : SPACING.space_18}]}>
-              <CustomIcon
-                name='exit'
-                size={22}
-                color={COLORS.primaryLightGreenHex}
-              />
-              <Text style={styles.DrawerSignOutText}>Sign Out</Text>
-          </TouchableOpacity>
+            {userLoginStatus===true && 
+              <TouchableOpacity
+                onPress={handleSignOut}
+                style={[styles.DrawerSignOut , {marginBottom : SPACING.space_18}]}>
+                  <CustomIcon
+                    name='exit'
+                    size={22}
+                    color={COLORS.primaryLightGreenHex}
+                  />
+                  <Text style={styles.DrawerSignOutText}>Sign Out</Text>
+              </TouchableOpacity>
+            }
+          
         </ScrollView>
         
       </DrawerContentScrollView>

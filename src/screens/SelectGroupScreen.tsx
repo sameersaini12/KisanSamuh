@@ -4,6 +4,8 @@ import CustomIcon from '../components/CustomIcon'
 import { BORDERRADIUS, COLORS, FONTFAMILY, FONTSIZE, SPACING } from '../theme/theme'
 import { useSelector } from 'react-redux'
 import { GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler'
+import {BASE_URL} from "@env"
+import GroupsLoadingSkeleton from '../components/GroupsLoadingSkeleton'
 
 const SelectGroupScreen = ({navigation, route} : any) => {
 
@@ -13,6 +15,8 @@ const SelectGroupScreen = ({navigation, route} : any) => {
     const [selectedGroup , setSelectedGroup] = useState(-1)
     const [selectedGroupName , setSelectedGroupName] = useState('')
     const [totalCartPrice , setTotalCartPrice] = useState(route.params.totalCartPrice)
+    const [loading , setLoading ] = useState(true)
+    const [noGroups , setNoGroups ] = useState(false)
 
     const userToken = useSelector((state : any) => state.user.token)
     const userId = useSelector((state : any) => state.user.id)
@@ -24,24 +28,30 @@ const SelectGroupScreen = ({navigation, route} : any) => {
 
 
     const fetchUserFarms = async () => {
-        await fetch(`http://10.0.2.2:4000/farm/get-farms/${userId}` , {
+        await fetch(`${BASE_URL}/farm/get-farms/${userId}` , {
           headers : {
             "Content-Type" : "application/json",
             Authorization : `Bearer ${userToken}`
           }
         }).then((res) => res.json())
         .then((res) => {
-          setFarmList(res.data)
-          const locationList : any = []
-          const cityList : any = []
-          for(let i=0;i<res.data.length;i++) {
-            if(locationList.indexOf(res.data[i].location) === -1) {
-              locationList.push(res.data[i].location)
-              cityList.push(res.data[i].city)
+            setLoading(true)
+            if(res.data.length> 0) {
+                setFarmList(res.data)
+                const locationList : any = []
+                const cityList : any = []
+                for(let i=0;i<res.data.length;i++) {
+                    if(locationList.indexOf(res.data[i].location) === -1) {
+                    locationList.push(res.data[i].location)
+                    cityList.push(res.data[i].city)
+                    }
+                }
+                setFarmLocations(locationList)
+                setCityLocations(cityList)
+            }else {
+                setNoGroups(true)
             }
-          }
-          setFarmLocations(locationList)
-          setCityLocations(cityList)
+            setLoading(false)
         }).catch((err) => {
           console.log(err)
         })
@@ -67,18 +77,22 @@ const SelectGroupScreen = ({navigation, route} : any) => {
             </View>
         </View>
 
-        {farmLocations.length===0 ? (
-        <View style={styles.NoGroupsContainer}>
-            <Text style={styles.NoGroupsText}>No groups yet! Add your farms to get group benefits</Text>
-            <Pressable 
-              onPress={() => {
-                navigation.push("SelectCropScreen")
-              }}
-              style={styles.AddYourFarmButtonContainer}
-            >
-              <Text style={styles.AddYourFarmButtonText}>Add Your farms</Text>
-            </Pressable>
-        </View>
+        {noGroups && 
+            <View style={styles.NoGroupsContainer}>
+                <Text style={styles.NoGroupsText}>No groups yet! Add your farms to get group benefits</Text>
+                <Pressable 
+                onPress={() => {
+                    navigation.push("SelectCropScreen")
+                }}
+                style={styles.AddYourFarmButtonContainer}
+                >
+                <Text style={styles.AddYourFarmButtonText}>Add Your farms</Text>
+                </Pressable>
+            </View>
+        }
+
+        {loading ? (
+            <GroupsLoadingSkeleton />
       ) : (
         <View>
           <ScrollView
@@ -96,6 +110,11 @@ const SelectGroupScreen = ({navigation, route} : any) => {
                         style={styles.MessageCartContainer}
                     >
                         <View style={styles.MessageCardDP}>
+                            <CustomIcon
+                                name='users'
+                                size={40}
+                                color={COLORS.secondaryLightGreyHex}
+                            />
                         </View>
                         <View style={styles.MessageCardRightContainer}>
                             <View style={styles.MessageCardDetails}>
@@ -108,7 +127,7 @@ const SelectGroupScreen = ({navigation, route} : any) => {
                             </View>
                             <View style={[styles.SelectedGroupCircleContainer , {backgroundColor : selectedGroup===key ? COLORS.primaryWhiteHex : COLORS.primaryWhiteHex , borderWidth : selectedGroup===key ? 0 : 1}]}>
                                 <CustomIcon
-                                    name='add-solid'
+                                    name='checkmark'
                                     size={24}
                                     color={COLORS.primaryLightGreenHex}
                                     style={{display : selectedGroup===key ? "flex" : "none"}}
@@ -159,7 +178,8 @@ const styles = StyleSheet.create({
     CartScreenHeaderTitle : {
         marginLeft : SPACING.space_10,
         fontSize : FONTSIZE.size_18,
-        fontFamily : FONTFAMILY.poppins_semibold
+        fontFamily : FONTFAMILY.poppins_semibold,
+        color : COLORS.primaryLightGreyHex
     },
     NoGroupsContainer : {
         alignItems : "center",
@@ -168,7 +188,8 @@ const styles = StyleSheet.create({
     NoGroupsText : {
         fontSize :FONTSIZE.size_20,
         fontFamily : FONTFAMILY.poppins_medium,
-        textAlign : "center"
+        textAlign : "center",
+        color : COLORS.primaryLightGreyHex,
     },
     AddYourFarmButtonContainer : {
         backgroundColor : COLORS.primaryLightGreenHex,
@@ -194,7 +215,9 @@ const styles = StyleSheet.create({
         backgroundColor : COLORS.primaryLightestGreyHex,
         borderRadius : BORDERRADIUS.radius_25*5,
         marginLeft : SPACING.space_18,
-        marginRight : SPACING.space_16
+        marginRight : SPACING.space_16,
+        alignItems : "center",
+        justifyContent: 'center',
     },
     MessageCardDetails : {
         

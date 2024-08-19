@@ -1,4 +1,4 @@
-import { Button, Pressable, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Button, Pressable, ScrollView, StatusBar, StyleSheet, Text, ToastAndroid, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { BORDERRADIUS, COLORS, FONTFAMILY, FONTSIZE, SPACING } from '../theme/theme'
 import CustomIcon from '../components/CustomIcon'
@@ -11,6 +11,10 @@ import { BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import ChangeAddressModal from '../components/ChangeAddressModal.tsx'
 import BottomSheet from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheet/BottomSheet'
+import { updateEnterInAppStatus } from '../features/userSlice.ts'
+import {BASE_URL} from "@env"
+import AddressLoadingSkeleton from '../components/AddressLoadingSkeleton.tsx'
+import { Image } from 'react-native'
 
 const CartScreen = ({navigation , route} : any) => {
     const cartItemList = useSelector((state : any) => state.cart.CartList)
@@ -20,10 +24,13 @@ const CartScreen = ({navigation , route} : any) => {
     const userToken = useSelector((state : any) => state.user.token)
     const currentAddressIndex = useSelector((state : any) => state.user.currentAddressIndex)
 
+
     const [addressList , setAddressList] = useState([])
     const [selectedAddress, setSelectedAddress ] = useState(currentAddressIndex)
     const [selectedAddressName , setSelectedAddressName] = useState('')
     const [openAddressModal , setOpenAddressModal] = useState(false)
+    const [addressLoading , setAddressLoading ] = useState(true)
+    const [noAddresses, setNoAddresses] = useState(false)
 
     const dispatch = useDispatch()
 
@@ -45,7 +52,7 @@ const CartScreen = ({navigation , route} : any) => {
     }
 
     const fetchAllAddresses = async () => {
-       await  fetch(`http://10.0.2.2:4000/users/get-address/${userId}`, {
+       await  fetch(`${BASE_URL}/users/get-address/${userId}`, {
             method : "GET",
             headers : {
                 Accept : "application/json",
@@ -55,11 +62,15 @@ const CartScreen = ({navigation , route} : any) => {
         })
         .then((res) => res.json())
         .then((res) => {
+            setAddressLoading(true)
             if(res.data) {
                 setAddressList(res.data.address)
                 if(res.data.address.length>0)
-                setSelectedAddressName(`${res.data.address[currentAddressIndex].landmark}, ${res.data.address[currentAddressIndex].address}, ${res.data.address[currentAddressIndex].city}, ${res.data.address[currentAddressIndex].state}`)
+                    setSelectedAddressName(`${res.data.address[currentAddressIndex].landmark}, ${res.data.address[currentAddressIndex].address}, ${res.data.address[currentAddressIndex].city}, ${res.data.address[currentAddressIndex].state}`)
+            }else {
+                setNoAddresses(true)
             }
+            setAddressLoading(false)
         })
         .catch((err) => {
             console.log(err)
@@ -67,7 +78,9 @@ const CartScreen = ({navigation , route} : any) => {
     }
 
     useEffect(() => {
-        fetchAllAddresses()
+        if(userLoginStatus) {
+            fetchAllAddresses()
+        }
     } , [])
   return (
     <GestureHandlerRootView>
@@ -122,29 +135,27 @@ const CartScreen = ({navigation , route} : any) => {
                         <View style={styles.ListItemContainer}>
                             {cartItemList.map((item : any , index : any)=> {
                                 return (
-                                <Pressable
-                                    key={index}
-                                    onPress={() => {
-                                        navigation.push("ProductDetails" , {
-                                            id : item.id
-                                        })
-                                    }}
-                                >
                                     <CartItem
+                                        key={index}
                                         id={item.id}
                                         title={item.title}
                                         price={item.price}
                                         itemPrice = {item.ItemPrice}
+                                        navigation={navigation}
+                                        image={item.image}
                                     />
-                                </Pressable>
                                 )
                             })}
 
                             <View style={styles.BillDetailsContainer}>
                                 <Text style={styles.BillDetailsHeading}>Address Details</Text>
                                 <View style={styles.AddressListContainer}>
-                                    {addressList.length==0 ? 
-                                    <Text>No address added yet</Text> :
+                                    {noAddresses && 
+                                        <Text style={{marginLeft : SPACING.space_18 , color : COLORS.primaryLightGreyHex}}>No address added yet</Text>
+                                    }
+                                    {addressLoading ? 
+                                        <AddressLoadingSkeleton />
+                                     :
                                     (
                                         addressList.map((address :any , index) => {
                                             return (
@@ -172,7 +183,15 @@ const CartScreen = ({navigation , route} : any) => {
                                     
                                 }
                                 <Pressable
-                                    onPress={() => openBottomModel()}
+                                    onPress={async () => {
+                                        if(userLoginStatus)
+                                            openBottomModel()
+                                        else {
+                                            const enterInAppStatus : any = false
+                                            await dispatch(updateEnterInAppStatus(enterInAppStatus))
+                                            navigation.push("PhoneLoginScreen")
+                                        }
+                                    }}
                                     style={styles.AddAddressContainer}
                                 >
                                     {/* <View style={[styles.AddressListItemRadio , 
@@ -184,7 +203,7 @@ const CartScreen = ({navigation , route} : any) => {
                                         color={COLORS.primaryLightGreenHex}
                                         style={{marginLeft : SPACING.space_10}}
                                     />
-                                    <Text style={[styles.AddressListItemText, {marginLeft : SPACING.space_10}]}>Add new Address</Text>
+                                    <Text style={[styles.AddressListItemText, {marginLeft : SPACING.space_10}]}>{userLoginStatus ? "Add new Address" : "Login to add new Address"}</Text>
                                 </Pressable>
                                 
                                 </View>
@@ -209,24 +228,39 @@ const CartScreen = ({navigation , route} : any) => {
                                 <Text style={styles.NetPrice}>{70 + parseFloat(totalCartPrice)}</Text>
                             </View>
 
-                            <Pressable 
-                                onPress={userLoginStatus===false ? 
-                                    () => navigation.push("PhoneLoginScreen") :
-                                    () => {
-                                        navigation.push("PaymentCheckoutScreen", {
-                                            address : selectedAddressName,
-                                            totalCartPrice : parseFloat(totalCartPrice)
-                                            
-                                        })
-                                    }
-                                }
-                                style={styles.CheckOutButtonContainer}>
-                                <Text style={styles.CheckOutButtonText}>Proceed to Checkout</Text>
-                            </Pressable>
+                            <View style={{marginBottom : SPACING.space_10}}>
+                                <Text style={{textAlign : "center" , fontSize : FONTSIZE.size_16, color : COLORS.primaryLightGreyHex, fontFamily :FONTFAMILY.poppins_regular }}>You will get {Math.floor(totalCartPrice/10)} <Image style={{height: 20, width:35, }} source={require("../assets/reward_coin.png")} /> coins</Text>
+                            </View>
 
                             <Pressable 
                                 onPress={userLoginStatus===false ? 
-                                    () => navigation.push("PhoneLoginScreen") :
+                                    async () => {
+                                        const enterInAppStatus : any = false
+                                        await dispatch(updateEnterInAppStatus(enterInAppStatus))
+                                        navigation.push("PhoneLoginScreen")
+                                    } :
+                                    () => {
+                                        if(selectedAddressName==='') {
+                                            ToastAndroid.show("Select Delivery Address" , ToastAndroid.SHORT)
+                                        }else {
+                                            navigation.push("PaymentCheckoutScreen", {
+                                                address : selectedAddressName,
+                                                totalCartPrice : parseFloat(totalCartPrice)
+                                                
+                                            })
+                                        }
+                                    }
+                                }
+                                style={styles.CheckOutButtonContainer}>
+                                <Text style={styles.CheckOutButtonText}>{userLoginStatus ? "Proceed to Checkout" : "Login to Proceed"}</Text>
+                            </Pressable>
+                            <Pressable 
+                                onPress={userLoginStatus===false ? 
+                                    async () => {
+                                        const enterInAppStatus : any = false
+                                        await dispatch(updateEnterInAppStatus(enterInAppStatus))
+                                        navigation.push("PhoneLoginScreen")
+                                    }:
                                     () => {
                                         navigation.push("SelectGroupScreen", {
                                             totalCartPrice : parseFloat(totalCartPrice)
@@ -234,7 +268,7 @@ const CartScreen = ({navigation , route} : any) => {
                                     }
                                 }
                                 style={[styles.CheckOutButtonContainer , {backgroundColor : COLORS.primaryOrangeHex}]}>
-                                <Text style={styles.CheckOutButtonText}>Buy in group and Save Money</Text>
+                                <Text style={styles.CheckOutButtonText}>{userLoginStatus ? "Buy in group and Save Money" : "Login to buy in group"}</Text>
                             </Pressable>
                         </View>
                     )
@@ -264,7 +298,8 @@ const styles = StyleSheet.create({
     CartScreenHeaderTitle : {
         marginLeft : SPACING.space_10,
         fontSize : FONTSIZE.size_18,
-        fontFamily : FONTFAMILY.poppins_semibold
+        fontFamily : FONTFAMILY.poppins_semibold,
+        color : COLORS.primaryLightGreyHex
     },
     ScrollViewFlex : {
 
@@ -340,10 +375,12 @@ const styles = StyleSheet.create({
     BillDetailsTotalPriceHeading : {
         fontSize :FONTSIZE.size_16,
         fontFamily : FONTFAMILY.poppins_regular,
+        color : COLORS.primaryLightGreyHex
     },
     BillDetailsTotalPrice : {
         fontSize :FONTSIZE.size_16,
         fontFamily : FONTFAMILY.poppins_regular,
+        color : COLORS.primaryLightGreyHex
     },
     HorizontalRule : {
         padding : 1,
@@ -361,10 +398,12 @@ const styles = StyleSheet.create({
     NetPriceHeading : {
         fontSize :FONTSIZE.size_16,
         fontFamily : FONTFAMILY.poppins_regular,
+        color : COLORS.primaryLightGreyHex
     },
     NetPrice: {
         fontSize :FONTSIZE.size_16,
         fontFamily : FONTFAMILY.poppins_regular,
+        color : COLORS.primaryLightGreyHex
     },
     CheckOutButtonContainer : {
         flex : 1,

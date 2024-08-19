@@ -1,4 +1,4 @@
-import { ScrollView, StatusBar, StyleSheet, Text, Image, TextInput, TouchableOpacity, View, Dimensions } from 'react-native'
+import { ScrollView, StatusBar, StyleSheet, Text, Image, TextInput, TouchableOpacity, View, Dimensions, Pressable } from 'react-native'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { BORDERRADIUS, COLORS, FONTFAMILY, FONTSIZE, SPACING } from '../theme/theme'
 import HeaderBar from '../components/HomeHeaderBar'
@@ -12,6 +12,9 @@ import { BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet
 import WhyAddFarmCard from '../components/WhyAddFarmCard'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateTotalFarms } from '../features/farmSlice'
+import { updateEnterInAppStatus } from '../features/userSlice'
+import {BASE_URL} from "@env"
+// console.log(BASE_URL)
 
 const screenWidth = Dimensions.get("screen").width-SPACING.space_18*2
 const ImageCardWidth = Dimensions.get("screen").width-SPACING.space_18*2
@@ -31,10 +34,12 @@ const HomeScreen = ({navigation} : any) => {
   const [refreshPage, setRefreshPage] = useState(false)
   const [currentBannerImageIndex , setCurrentBannerImageIndex] = useState(0)
   const [farmList , setFarmList] = useState([])
+  const [loading , setLoading ] = useState(true)
 
   const userId = useSelector((state : any) => state.user.id)
   const userToken = useSelector((state : any) => state.user.token)
   const totalFarms = useSelector((state : any) => state.farm.totalFarms)
+  const isLoggedIn = useSelector((state : any) => state.user.isLoggedIn)
 
   const dispatch = useDispatch()
 
@@ -70,7 +75,7 @@ const HomeScreen = ({navigation} : any) => {
   };
 
   const fetchUserFarms = async () => {
-    await fetch(`http://10.0.2.2:4000/farm/get-farms/${userId}` , {
+    await fetch(`${BASE_URL}/farm/get-farms/${userId}` , {
       headers : {
         "Content-Type" : "application/json",
         Authorization : `Bearer ${userToken}`
@@ -85,7 +90,9 @@ const HomeScreen = ({navigation} : any) => {
   }
 
   useEffect(() => {
-    fetchUserFarms()
+    if(isLoggedIn) {
+      fetchUserFarms()
+    }
   }, [])
 
   return (
@@ -183,12 +190,41 @@ const HomeScreen = ({navigation} : any) => {
 
           <Text style={styles.CategoryTitle}>Your Farms</Text>
 
-          <AddFarmCard 
+          {isLoggedIn ? (
+            <AddFarmCard 
               navigation={navigation} 
               openBottomModel={openBottomModel} 
               closeBottomaModel={closeBottomModel}
               totalFarms={totalFarms}
             />
+          ): (
+            <View style={styles.AddFardmCardContainer}>
+                <Pressable 
+                    onPress={async () => {
+                        const enterInAppStatus : any = false
+                        await dispatch(updateEnterInAppStatus(enterInAppStatus))
+                        navigation.push("PhoneLoginScreen")
+                    }}
+                    style={styles.AddFarmCardLeftContainer}
+                >
+                    <CustomIcon
+                        name='add-solid'
+                        size={35}
+                        color={COLORS.primaryLightGreenHex}
+                    />
+                    <Text style={styles.AddYourFarmText}>Login to add farm</Text>
+                </Pressable>
+                <Pressable 
+                    onPress={() => {
+                        openBottomModel()
+                    }}
+                    style={styles.AddFarmCardRightContainer}
+                >
+                    <Text style={styles.WhyAddFarmText}>?</Text>
+                </Pressable>
+            </View>
+          )}
+          
 
           <Text style={styles.CategoryTitle}>Categories</Text>
 
@@ -270,5 +306,37 @@ const styles = StyleSheet.create({
     marginTop: SPACING.space_20,
     fontFamily: FONTFAMILY.poppins_semibold,
     color: COLORS.primaryBlackHex,
-  }
+  },
+  AddFardmCardContainer : {
+    backgroundColor : COLORS.secondaryLightGreenHex,
+    padding : SPACING.space_12,
+    margin : SPACING.space_18,
+    borderRadius : BORDERRADIUS.radius_15,
+    elevation : 2,
+    borderColor : COLORS.primaryBlackHex,
+    flexDirection : "row",
+    alignItems : "center",
+    justifyContent : "space-between"
+  },
+  AddFarmCardLeftContainer : {
+      flexDirection : "row",
+      alignItems : "center",
+  },
+  AddFarmCardRightContainer : {
+      backgroundColor : COLORS.primaryLightGreenHex,
+      width : 25,
+      height : 25,
+      borderRadius : BORDERRADIUS.radius_15,
+      justifyContent : "center",
+      alignItems : "center",
+  },
+  WhyAddFarmText : {
+    color : COLORS.primaryWhiteHex
+  },
+  AddYourFarmText : {
+      fontSize : FONTSIZE.size_18,
+      fontFamily : FONTFAMILY.poppins_medium,
+      color : COLORS.primaryBlackHex,
+      marginLeft : SPACING.space_18,
+  },
 })

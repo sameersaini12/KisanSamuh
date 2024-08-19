@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import languages from "../data/languageList";
 
 const loginUserDetails = {
+    enterInApp : true,
     isLoggedIn : true,
     id : '666976d3482f5f7ff691e574',
     email  : 'sameer@gmail.com',
@@ -14,6 +15,7 @@ const loginUserDetails = {
 }
 
 const adminUserDetails = {
+    enterInApp : true,
     isLoggedIn : true,
     id : '663f66309e69fb4f2bca0b33',
     email  : 'admin@gmail.com',
@@ -23,9 +25,24 @@ const adminUserDetails = {
     token : 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjNmNjYzMDllNjlmYjRmMmJjYTBiMzMiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE3MTk3MjI4OTN9.K04xraC_SumiQMpfe9UoER_KLsH44NWoVVsdBBzQM_o',
     currentAddressIndex : 0,
     name : 'admin',
+    coins : 0,
 }
 
-const initialState = loginUserDetails
+const userDetails = {
+    enterInApp : false,
+    isLoggedIn : false,
+    id : '',
+    email  : '',
+    phone : '',
+    language : 0,
+    isAdmin : false,
+    token : '',
+    currentAddressIndex : 0,
+    name : '',
+    coins : 0,
+}
+
+const initialState = userDetails
 
 export const userSlice = createSlice({
     name : 'user',
@@ -58,10 +75,24 @@ export const userSlice = createSlice({
         },
         updateName : (state : any , action : any) => {
             state.name = action.payload
+        },
+        updateEnterInAppStatus : (state : any , action : any) => {
+            state.enterInApp = action.payload
         }
     }
 })
 
-export const { updateEmail , updateid , updateIsAdmin , updateIsLoggedInStatus , updatePhone  , updateToken , updateLanguage , updateCurrentAddressIndex , updateName} = userSlice.actions
+export const { 
+    updateEmail, 
+    updateid,
+    updateIsAdmin,
+    updateIsLoggedInStatus, 
+    updatePhone, 
+    updateToken, 
+    updateLanguage, 
+    updateCurrentAddressIndex, 
+    updateName,
+    updateEnterInAppStatus
+} = userSlice.actions
 
 export default userSlice.reducer

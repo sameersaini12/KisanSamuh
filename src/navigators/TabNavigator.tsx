@@ -14,11 +14,6 @@ const Tab = createBottomTabNavigator()
 
 
 const TabNavigator = ({navigation , route} : any) => {
-
-
-    // useEffect(()=> {
-    //     console.log("route " + (route.params===undefined) ? '' : route.params.searchTextFromPreviousScreen)
-    // } , [(route.params===undefined) ? '' : route.params.searchTextFromPreviousScreen])
   return (
     <Tab.Navigator
         // initialRouteName='Shop'
@@ -27,15 +22,6 @@ const TabNavigator = ({navigation , route} : any) => {
             tabBarHideOnKeyboard : true,
             tabBarStyle : styles.tabBarStyle,
             tabBarLabelStyle : styles.tabBarLabelStyle,
-            // tabBarBackground : () => {
-            //     return (
-            //         <BlurView
-            //             overlayColor=''
-            //             blurAmount={15}
-            //             style={styles.blurViewStyle}
-            //         />
-            //     )
-            // }
         }}
         sceneContainerStyle={{backgroundColor: COLORS.primaryWhiteHex}}
     >

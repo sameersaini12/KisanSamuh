@@ -4,6 +4,7 @@ import { TextInput } from 'react-native-gesture-handler'
 import { TouchableOpacity } from '@gorhom/bottom-sheet'
 import { useDispatch, useSelector } from 'react-redux'
 import { BORDERRADIUS, COLORS, FONTFAMILY, FONTSIZE, SPACING } from '../theme/theme'
+import {BASE_URL} from "@env"
 
 const ModalWidth = Dimensions.get('window').width*0.5 - SPACING.space_18*1.5;
 
@@ -45,7 +46,7 @@ const ChangeAddressModal = ({navigation , closeBottomModel , fetchAllAddresses ,
             }
         }
         else {
-            fetch(`http://10.0.2.2:4000/users/add-address/${userId}`, {
+            fetch(`${BASE_URL}/users/add-address/${userId}`, {
                 method : "POST",
                 headers : {
                     Accept : "application/json",
@@ -103,6 +104,7 @@ const ChangeAddressModal = ({navigation , closeBottomModel , fetchAllAddresses ,
             value={address}
             onChangeText={setAddress}
             placeholder='Address*'
+            placeholderTextColor={COLORS.secondaryLightGreyHex}
          />
          <View style={styles.AddressModalInputContainer}>
             <TextInput 
@@ -110,12 +112,14 @@ const ChangeAddressModal = ({navigation , closeBottomModel , fetchAllAddresses ,
                 value={landmark}
                 onChangeText={setLandMark}
                 placeholder='Landmark*'
+                placeholderTextColor={COLORS.secondaryLightGreyHex}
             />
             <TextInput
                 style={[styles.AddressInput , {width : ModalWidth , borderColor : addCityError ? "red" : COLORS.secondaryLightGreyHex}]}
                 value={city}
                 onChangeText={setCity}
                 placeholder='City*'
+                placeholderTextColor={COLORS.secondaryLightGreyHex}
             />
          </View>
          <View style={styles.AddressModalInputContainer}>
@@ -126,17 +130,18 @@ const ChangeAddressModal = ({navigation , closeBottomModel , fetchAllAddresses ,
                 maxLength={6}
                 onChangeText={setPincode}
                 placeholder='Pincode*'
+                placeholderTextColor={COLORS.secondaryLightGreyHex}
             />
             <TextInput
                 style={[styles.AddressInput , {width : ModalWidth, borderColor : addStateError ? "red" : COLORS.secondaryLightGreyHex}]}
                 value={state}
                 onChangeText={setState}
                 placeholder='State*'
+                placeholderTextColor={COLORS.secondaryLightGreyHex}
             />
          </View>
          <Pressable 
             onPress={() => {
-                console.log("address new ")
                 AddAddressButtonHandler()
             }}
             style={styles.AddressModalSubmitButtonContainer}
@@ -178,6 +183,7 @@ const styles = StyleSheet.create({
         paddingLeft : SPACING.space_10,
         fontFamily : FONTFAMILY.poppins_regular,
         marginBottom : SPACING.space_16,
+        color : COLORS.primaryLightGreyHex
         
     },
     AddressModalSubmitButtonContainer : {

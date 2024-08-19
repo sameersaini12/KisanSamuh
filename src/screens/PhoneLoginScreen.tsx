@@ -1,33 +1,83 @@
-import { Dimensions, StyleSheet, Text, TextInput, Touchable, TouchableOpacity, View } from 'react-native'
-import React, { useState } from 'react'
+import { Dimensions, Pressable, StyleSheet, Text, TextInput, ToastAndroid, Touchable, TouchableOpacity, View } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import StartingHeader from '../components/StartingHeader'
 import { BORDERRADIUS, COLORS, FONTFAMILY, FONTSIZE, SPACING } from '../theme/theme'
+import CustomIcon from '../components/CustomIcon'
+import { useDispatch } from 'react-redux'
+import { updateEnterInAppStatus } from '../features/userSlice'
+import {BASE_URL} from "@env"
 
 const PhoneLoginScreen = ({navigation} : any) => {
   const [phoneNumber , setPhoneNumber] = useState('')
+  const [addPhoneNumberError , setAddPhoneNumberError] = useState(false)
+  const [otpError , setOtpError ] = useState(false)
+
+  const backButtonHandler = () => {
+      navigation.pop()
+  }
+
+  const dispatch = useDispatch()
 
   const handleSendOTPButton = async () => {
-    await fetch("http://10.0.2.2:4000/auth/send-otp" , {
-      method : "POST",
-      headers : {
-        Accept : "application/json",
-        "Content-Type" : "application/json"
-      },
-      body : JSON.stringify({
-        phone : '+91'+phoneNumber
+    if(phoneNumber.length!==10) {
+      ToastAndroid.show("Phone Number is incorrent" , ToastAndroid.SHORT)
+      setAddPhoneNumberError(true)
+    }else {
+      await fetch(`${BASE_URL}/auth/send-otp` , {
+        method : "POST",
+        headers : {
+          Accept : "application/json",
+          "Content-Type" : "application/json"
+        },
+        body : JSON.stringify({
+          phone : '+91'+phoneNumber
+        })
+      }).then((resp) => resp.json())
+      .then((res) => {
+        console.log(JSON.stringify(res))
+        if(res.data) {
+          navigation.push('PhoneOTPScreen' , {
+            number : '+91'+phoneNumber,
+            otp : res.data,
+          })
+        }else {
+          setOtpError(true)
+          ToastAndroid.show("Error Occurs" , ToastAndroid.SHORT)
+        }
       })
-    }).then((resp) => resp.json())
-    .then((res) => {
-      console.log(JSON.stringify(res))
-      navigation.push('PhoneOTPScreen' , {
-        number : '+91'+phoneNumber
-      })
-    })
+    }
   }
+
+  useEffect(() => {
+    if(phoneNumber!=='') {
+      setAddPhoneNumberError(false)
+    }
+  }, [phoneNumber])
 
   return (
     <View>
-      <StartingHeader navigation={navigation} />
+      <View style={styles.StartingHeaderContainer}>
+          <Pressable 
+              onPress={backButtonHandler}
+              style={styles.StartingHeaderBackButton}
+          >
+              <CustomIcon
+                  name='arrow-left2'
+                  size={FONTSIZE.size_24}
+                  color={COLORS.primaryBlackHex}
+              />
+          </Pressable>
+          <Pressable 
+            onPress={() => {
+              const enterInAppStatus : any = true
+              dispatch(updateEnterInAppStatus(enterInAppStatus))
+              navigation.navigate('Tab')
+            }}
+            style={styles.StartingHeaderSkipButton}>
+              <Text style={styles.StartingHeaderSkipButtonText}>Skip</Text>
+          </Pressable>
+
+      </View>
       <Text style={styles.PhoneLoginHeading}>Login or Sign up</Text>
       <Text style={styles.PhoneInputHeading}>Enter your mobile number</Text>
 
@@ -36,15 +86,16 @@ const PhoneLoginScreen = ({navigation} : any) => {
           <Text style={styles.PhoneNumberCountry}>🇮🇳  +91</Text>
         </TouchableOpacity>
         <TouchableOpacity 
-          style={styles.PhoneNumberInputContainer}
+          style={[styles.PhoneNumberInputContainer , {borderColor : addPhoneNumberError ? COLORS.primaryRedHex : "" , borderWidth : addPhoneNumberError ? 1 : 0}]}
         >
           <TextInput 
             inputMode='numeric'
             style={styles.PhoneNumberInput}
             value={phoneNumber}
             maxLength={10}
-            placeholder='1234567890'
+            placeholder='9887898878'
             onChangeText={setPhoneNumber}
+            placeholderTextColor={COLORS.primaryLightGreyHex}
           >
             
           </TextInput>
@@ -52,7 +103,13 @@ const PhoneLoginScreen = ({navigation} : any) => {
       </View>
 
       <TouchableOpacity
-            onPress={handleSendOTPButton}
+            onPress={() => {
+              if(phoneNumber==='') {
+                ToastAndroid.show("Enter Mobile Number" , ToastAndroid.SHORT)
+                setAddPhoneNumberError(true)
+              }else 
+                handleSendOTPButton()
+            }}
             style={styles.NextButtonContainer}
         >
             <Text style={styles.NextButtonText}>Next</Text>
@@ -65,6 +122,23 @@ const PhoneLoginScreen = ({navigation} : any) => {
 export default PhoneLoginScreen
 
 const styles = StyleSheet.create({
+  StartingHeaderContainer : {
+    flexDirection : 'row',
+    padding : SPACING.space_18,
+    alignItems : "center",
+    justifyContent : 'space-between',
+  },
+  StartingHeaderBackButton : {
+
+  },
+  StartingHeaderSkipButton : {
+
+  },
+  StartingHeaderSkipButtonText : {
+      fontSize : FONTSIZE.size_16,
+      fontFamily : FONTFAMILY.poppins_regular,
+      color : COLORS.primaryBlackHex
+  },
   PhoneLoginHeading: {
     fontSize : FONTSIZE.size_20,
     fontFamily : FONTFAMILY.poppins_medium,
@@ -104,7 +178,8 @@ const styles = StyleSheet.create({
   PhoneNumberInput : {
     fontSize : FONTSIZE.size_18,
     fontFamily : FONTFAMILY.poppins_medium,
-    padding :SPACING.space_18
+    padding :SPACING.space_18,
+    color : COLORS.primaryBlackHex,
   },
   NextButtonContainer : {
     backgroundColor : COLORS.primaryLightGreenHex,

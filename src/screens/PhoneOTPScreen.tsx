@@ -4,7 +4,8 @@ import StartingHeader from '../components/StartingHeader'
 import { BORDERRADIUS, COLORS, FONTFAMILY, FONTSIZE, SPACING } from '../theme/theme'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useDispatch } from 'react-redux'
-import { updateIsLoggedInStatus, updateName, updatePhone, updateToken, updateid } from '../features/userSlice'
+import { updateEmail, updateEnterInAppStatus, updateIsAdmin, updateIsLoggedInStatus, updateName, updatePhone, updateToken, updateid } from '../features/userSlice'
+import {BASE_URL} from "@env"
 
 const PhoneOTPScreen = ({navigation , route} : any) => {
     const [otp , setOtp] = useState('')
@@ -14,7 +15,7 @@ const PhoneOTPScreen = ({navigation , route} : any) => {
 
 
     const handleOTPVerifyButton = async () => {
-        await fetch("http://10.0.2.2:4000/auth/verify-otp" , {
+        await fetch(`${BASE_URL}/auth/verify-otp` , {
             method : "POST",
             headers : {
                 Accept : "application/json",
@@ -28,17 +29,18 @@ const PhoneOTPScreen = ({navigation , route} : any) => {
         .then((resp) => resp.json())
         .then(async (res) => {
             console.log(JSON.stringify(res))
-            await AsyncStorage.setItem('isLoggedIn' , JSON.stringify(true))
-            await AsyncStorage.setItem('token' , JSON.stringify(res.data.token))
-            await AsyncStorage.setItem('id' , JSON.stringify(res.data._id))
             const loginStatus : any = true
             dispatch(updateIsLoggedInStatus(loginStatus))
             dispatch(updateid(res.data._id))
             dispatch(updateToken(res.data.token))
             dispatch(updatePhone(res.data.phone))
+            dispatch(updateEmail(res.data.email))
             if(res.data.name) {
                 dispatch(updateName(res.data.name))
             }
+            dispatch(updateIsAdmin(res.data.isAdmin))
+            const enterInAppStatus : any = true
+            dispatch(updateEnterInAppStatus(enterInAppStatus))
             navigation.push('Tab')
         })
     }
@@ -49,6 +51,7 @@ const PhoneOTPScreen = ({navigation , route} : any) => {
       <StartingHeader navigation={navigation} />
       <Text style={styles.OTPHeading}>OTP Verification</Text>
       <Text style={styles.OTPInputHeading}>Enter the four digit code sent you at +91****{route.params.number.substr(route.params.number.length - 4)}</Text>
+      <Text style={styles.OTPInputHeading}>Your OTP is {route.params.otp}</Text>
 
       <TouchableOpacity style={styles.OTPInputContainer}>
           <TextInput 
@@ -58,6 +61,7 @@ const PhoneOTPScreen = ({navigation , route} : any) => {
             placeholder='OTP'
             value={otp}
             onChangeText={setOtp}
+            placeholderTextColor={COLORS.primaryLightGreyHex}
           >
             
           </TextInput>
@@ -97,7 +101,8 @@ const styles = StyleSheet.create({
     OTPInput : {
         fontSize : FONTSIZE.size_18,
         fontFamily : FONTFAMILY.poppins_medium,
-        padding :SPACING.space_18
+        padding :SPACING.space_18,
+        color : COLORS.primaryBlackHex,
     },
     NextButtonContainer : {
         backgroundColor : COLORS.primaryLightGreenHex,

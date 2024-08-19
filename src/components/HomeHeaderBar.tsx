@@ -1,14 +1,18 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 import GradientBGIcon from './GradientBGIcon'
 import { BORDERRADIUS, COLORS, FONTFAMILY, FONTSIZE, SPACING } from '../theme/theme'
 import ProfilePic from './ProfilePic'
 import CustomIcon from './CustomIcon'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { updateEnterInAppStatus } from '../features/userSlice'
 
 
 const HeaderBar = ({navigation} : any) => {
     const totalItemInCartStore = useSelector((state : any) => state.cart.totalItemInCart)
+    const loginStatus = useSelector((state : any) => state.user.isLoggedIn)
+
+    const dispatch = useDispatch()
   return (
     <View style={styles.HeaderContainer}>
         <View style={styles.HeaderLeftContainer}>
@@ -18,12 +22,19 @@ const HeaderBar = ({navigation} : any) => {
         </View>
         
         <View style={styles.HeaderRightContainer}>
-            {/* <CustomIcon 
-                name='heart-o'
-                size={25}
-                color={COLORS.primaryLightGreyHex}
-                style={styles.HeaderRightHeartIcon}
-            /> */}
+            <TouchableOpacity
+                onPress={async () => {
+                    if(loginStatus)
+                    navigation.push("RewardScreen")
+                    else {
+                        const enterInAppStatus : any = false
+                        await dispatch(updateEnterInAppStatus(enterInAppStatus))
+                        navigation.push("PhoneLoginScreen")
+                    }
+                }}
+            >
+                <Image style={styles.RewardsCoinImage} source={require("../assets/reward_coin.png")} />
+            </TouchableOpacity>
             <TouchableOpacity
                 onPress={() => {
                     navigation.push("CartScreen")
@@ -86,6 +97,10 @@ const styles = StyleSheet.create({
     HeaderRightContainer : {
         flexDirection : 'row',
         alignItems : 'center',
+    },
+    RewardsCoinImage : {
+        height : 30,
+        width : 45
     },
     HeaderRightHeartIcon : {
 

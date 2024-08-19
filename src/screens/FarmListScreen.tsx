@@ -7,6 +7,8 @@ import { BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet
 import WhyAddFarmCard from '../components/WhyAddFarmCard'
 import moment from 'moment'
 import { useSelector } from 'react-redux'
+import {BASE_URL} from "@env"
+import FarmListLoadingSkeleton from '../components/FarmListLoadingSkeleton'
 
 const cropImageFetcher : any = {
   paddy : require("../assets/crops/paddy.jpg"),
@@ -17,6 +19,8 @@ const cropImageFetcher : any = {
 const FarmListScreen = ({navigation , route} : any) => {
 
   const [farmList, setFarmList] = useState([])
+  const [loading , setLoading ] = useState(true)
+  const [noFarms , setNoFarms ] = useState(false)
 
   const userToken = useSelector((state : any) => state.user.token)
   const userId = useSelector((state : any) => state.user.id)
@@ -37,14 +41,22 @@ const FarmListScreen = ({navigation , route} : any) => {
   }
 
   const fetchUserFarms = async () => {
-    await fetch(`http://10.0.2.2:4000/farm/get-farms/${userId}` , {
+    console.log(userId)
+    await fetch(`${BASE_URL}/farm/get-farms/${userId}` , {
       headers : {
         "Content-Type" : "application/json",
         Authorization : `Bearer ${userToken}`
       }
     }).then((res) => res.json())
     .then((res) => {
-      setFarmList(res.data)
+      setLoading(true)
+      // console.log("hi")
+      if(res.data.length > 0) {
+        setFarmList(res.data)
+      }else {
+        setNoFarms(true)
+      }
+      setLoading(false)
     }).catch((err) => {
       console.log(err)
     })
@@ -106,58 +118,68 @@ const FarmListScreen = ({navigation , route} : any) => {
 
         <Text style={styles.YourFarmsTitle}>Your farms</Text>
 
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-        >
-          {farmList.map((farm : any , index : any) => {
-            return (
-              <View style={styles.FarmContainer} key={index}>
-                <View style={styles.CropTypeContainer}>
-                    <Image style={styles.CropTypeImage} source={cropImageFetcher[farm.cropName.toLowerCase()]} />
-                    <View style={styles.CropNameContainer}>
-                        <Text style={styles.CropNameText}>{farm.cropName}</Text>
-                        <CustomIcon
-                            name='arrow-right2'
-                            size={25}
-                            color={COLORS.primaryBlackHex}
-                        />
+        {noFarms && 
+          <Text style={{color : COLORS.primaryLightGreyHex}}>You didn't added any farms</Text>
+        }
+
+        {loading ? 
+          <FarmListLoadingSkeleton />
+          : 
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+          >
+            {farmList.map((farm : any , index : any) => {
+              return (
+                <View style={styles.FarmContainer} key={index}>
+                  <View style={styles.CropTypeContainer}>
+                      <Image style={styles.CropTypeImage} source={cropImageFetcher[farm.cropName.toLowerCase()]} />
+                      <View style={styles.CropNameContainer}>
+                          <Text style={styles.CropNameText}>{farm.cropName}</Text>
+                          <CustomIcon
+                              name='arrow-right2'
+                              size={25}
+                              color={COLORS.primaryBlackHex}
+                          />
+                      </View>
+                  </View>
+
+                  <View style={styles.HorizontalRule}></View>
+
+                  <View style={{marginTop : SPACING.space_15}}>
+                    <View style={styles.FarmDetailsContainer}>
+                      <CustomIcon
+                          name='location21'
+                          size={20}
+                          color={COLORS.primaryLightGreenHex}
+                      />
+                      <Text style={styles.FarmDetailsText}> <Text style={{color : COLORS.primaryLightGreyHex}}>Location:</Text>  {farm.location}, {farm.city}</Text>
                     </View>
+                    <View style={[styles.FarmDetailsContainer , {marginTop : SPACING.space_10*0.5}]}>
+                      <CustomIcon
+                          name='leaf'
+                          size={20}
+                          color={COLORS.primaryLightGreenHex}
+                      />
+                      <Text style={styles.FarmDetailsText}> <Text style={{color : COLORS.primaryLightGreyHex}}>Farm Area:</Text>  {farm.farmSize} Acres</Text>
+                    </View>
+                    <View style={[styles.FarmDetailsContainer , {marginTop : SPACING.space_10*0.5}]}>
+                      <CustomIcon
+                          name='calendar'
+                          size={20}
+                          color={COLORS.primaryLightGreenHex}
+                      />
+                      <Text style={styles.FarmDetailsText}> <Text style={{color : COLORS.primaryLightGreyHex}}>Sowing Date:</Text>  {moment(farm.sowingDate).format(`DD MMMM, YYYY`)} </Text>
+                    </View>
+                  </View>
+                  
                 </View>
+              )
+            })}
+          </ScrollView>
 
-                <View style={styles.HorizontalRule}></View>
+        }
 
-                <View style={{marginTop : SPACING.space_15}}>
-                  <View style={styles.FarmDetailsContainer}>
-                    <CustomIcon
-                        name='location21'
-                        size={20}
-                        color={COLORS.primaryLightGreenHex}
-                    />
-                    <Text style={styles.FarmDetailsText}> <Text style={{color : COLORS.primaryLightGreyHex}}>Location:</Text>  {farm.location}, {farm.city}</Text>
-                  </View>
-                  <View style={[styles.FarmDetailsContainer , {marginTop : SPACING.space_10*0.5}]}>
-                    <CustomIcon
-                        name='leaf'
-                        size={20}
-                        color={COLORS.primaryLightGreenHex}
-                    />
-                    <Text style={styles.FarmDetailsText}> <Text style={{color : COLORS.primaryLightGreyHex}}>Farm Area:</Text>  {farm.farmSize} Acres</Text>
-                  </View>
-                  <View style={[styles.FarmDetailsContainer , {marginTop : SPACING.space_10*0.5}]}>
-                    <CustomIcon
-                        name='calendar'
-                        size={20}
-                        color={COLORS.primaryLightGreenHex}
-                    />
-                    <Text style={styles.FarmDetailsText}> <Text style={{color : COLORS.primaryLightGreyHex}}>Sowing Date:</Text>  {moment(farm.sowingDate).format(`DD MMMM, YYYY`)} </Text>
-                  </View>
-                </View>
-                
-              </View>
-            )
-          })}
-        </ScrollView>
-        </BottomSheetModalProvider>
+                </BottomSheetModalProvider>
     </GestureHandlerRootView>
   )
 }

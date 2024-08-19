@@ -11,6 +11,7 @@ import ChangeAddressModal from '../components/ChangeAddressModal'
 import { updateCurrentAddressIndex, updateLanguage, updateName } from '../features/userSlice'
 import languages from '../data/languageList'
 import LottieView from 'lottie-react-native'
+import {BASE_URL} from "@env"
 
 const SCREEN_WIDTH = Dimensions.get("screen").height
 
@@ -23,6 +24,7 @@ const ProfileScreen = ({navigation} : any) => {
     const currentAddressIndex = useSelector((state : any) => state.user.currentAddressIndex)
     const name = useSelector((state : any) => state.user.name)
     const languageIndex = useSelector((state : any) => state.user.language)
+    const isLoggedIn = useSelector((state : any) => state.user.isLoggedIn)
 
     const [addressList , setAddressList ] = useState([])
     const [addressId , setAddressId] = useState('')
@@ -53,7 +55,7 @@ const ProfileScreen = ({navigation} : any) => {
     }
 
     const saveProfileInfoHandler = async() => {
-        await fetch(`http://10.0.2.2:4000/users/update/${userId}` , {
+        await fetch(`${BASE_URL}/users/update/${userId}` , {
             method : "PUT",
             headers : {
                 Accept : "application/json",
@@ -78,7 +80,7 @@ const ProfileScreen = ({navigation} : any) => {
 
     const removeAddressHandler = async (addresId : any, addressIndex : any) => {
         console.log(addressId+ " " + addressIndex)
-        await fetch(`http://10.0.2.2:4000/users/delete-address/${addressId}`, {
+        await fetch(`${BASE_URL}/users/delete-address/${addressId}`, {
             method : "POST",
             headers : {
                 Accept : "application/json",
@@ -107,7 +109,7 @@ const ProfileScreen = ({navigation} : any) => {
     }
 
     const fetchAllAddresses = async () => {
-        await fetch(`http://10.0.2.2:4000/users/get-address/${userId}`, {
+        await fetch(`${BASE_URL}/users/get-address/${userId}`, {
              method : "GET",
              headers : {
                  Accept : "application/json",
@@ -117,10 +119,11 @@ const ProfileScreen = ({navigation} : any) => {
          })
          .then((res) => res.json())
          .then((res) => {
-             console.log(res.data)
-             setAddressList(res.data.address)
-             setAddressId(res.data._id)
-             setSelectedAddressName(res.data.address[currentAddressIndex].address)
+             if(res.data) {
+                setAddressList(res.data.address)
+                setAddressId(res.data._id)
+                setSelectedAddressName(res.data.address[currentAddressIndex].address)
+             }
          })
          .catch((err) => {
              console.log(err)
@@ -128,7 +131,9 @@ const ProfileScreen = ({navigation} : any) => {
      }
 
     useEffect(() => {
-        fetchAllAddresses()
+        if(isLoggedIn) {
+            fetchAllAddresses()
+        }
     } , [])
 
   return (

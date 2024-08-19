@@ -7,6 +7,7 @@ import * as ImagePicker from "react-native-image-picker"
 import { ColorProperties } from 'react-native-reanimated/lib/typescript/reanimated2/Colors'
 import { useSelector } from 'react-redux'
 import LottieView from 'lottie-react-native'
+import {BASE_URL} from "@env"
 
 const ImageCardWidth = Dimensions.get("screen").width-SPACING.space_18*2
 const screenWidth = Dimensions.get("screen").width-SPACING.space_18*2
@@ -33,6 +34,7 @@ const CreateProductScreen = ({ navigation} : any) => {
     const [currentProductPrice , setCurrentProductPrice] = useState('')
     const [productPrice, setProductPrice ] = useState<any>([])
     const [discount , setDiscount ] = useState('')
+    const [reward, setReward] = useState('')
     const [currentImageIndex , setCurrentImageIndex] = useState(0)
     const [selectedImages , setSelectedImages] = useState<Array<any>>([])
     const [imagesBlob , setImagaeBlob] = useState<Array<any>>([])
@@ -82,7 +84,7 @@ const CreateProductScreen = ({ navigation} : any) => {
     } , [])
 
     const getPreSignedUrlToUploadImageOnAws = async (imageName: any , imageNumber : any) => {
-        return await fetch(`http://10.0.2.2:4000/product/get-url-for-category-image`, {
+        return await fetch(`${BASE_URL}/product/get-url-for-category-image`, {
             method : "POST",
             headers : {
                 "Content-Type" : "application/json",
@@ -104,19 +106,23 @@ const CreateProductScreen = ({ navigation} : any) => {
 
     const uploadImageOnPresignedURL = async (url : any , image  : any ) => {
         console.log(url)
-        // console.log(typeOfImage)
+        console.log(image._data.type)
+        let imageUploaded : boolean = true
         await fetch(url , {
             method : "PUT",
             headers : {
                 "Content-Type" : image._data.type
             },
             body : image
-        }).then((res) => {
-            console.log("Image Upload Successfully")
+        }).then(async (res) => {
+            console.log("Image uploaded")
+            imageUploaded = true
         })
         .catch((err) => {
-            console.log(" " +err)
+            console.log("Error"+err)
+            imageUploaded = false
         })
+        return imageUploaded
     }
 
     const scrollImageHandler = (event :any) => {
@@ -142,65 +148,77 @@ const CreateProductScreen = ({ navigation} : any) => {
         }
         else{
             setUploadLoadingAnimation(true)
+            var isImagesUploaded : boolean = true
             for(let i=1;i<=imagesBlob.length;i++) {
                 const url = await getPreSignedUrlToUploadImageOnAws(`image_${i}` , i )
                 console.log(imagesBlob[i-1])
-                await uploadImageOnPresignedURL(url , imagesBlob[i-1])
+                let imageUploaded  = await uploadImageOnPresignedURL(url , imagesBlob[i-1])
+                // console.log(imageUploaded)
+                isImagesUploaded = isImagesUploaded && imageUploaded
+                // console.log(isImagesUploaded)
             }
 
-            await fetch(`http://10.0.2.2:4000/product/create-product`, {
-                method : "POST",
-                headers : {
-                    "Content-Type" : "application/json",
-                    Authorization : `Bearer ${userToken}`
-                },
-                body : JSON.stringify({
-                    title : productName,
-                    brand : brandName,
-                    about : aboutProduct,
-                    technicalDetails : productTechnicalDetails,
-                    features : productFeatures,
-                    howToUse : productHowToUse,
-                    additionalInformation : productAdditionalFeatures,
-                    categories : categories,
-                    price : productPrice,
-                    discount : discount,
-                    numberOfImages : imagesBlob.length
-                })
-            }).then((res) => res.json())
-            .then((res) => {
-                setShowDoneAnimation(true)
-                setTimeout(() => {
-                    setShowDoneAnimation(false)
-                }, 3000);
+            if(!isImagesUploaded) {
+                ToastAndroid.show("Error while uploading image",ToastAndroid.SHORT)
                 setUploadLoadingAnimation(false)
-                setProductName('')
-                setBrandName('')
-                setCurrentAboutProduct('')
-                setAboutProduct([])
-                setCurrentTechnicalDetailHeading('')
-                setCurrentTechnicalDetailData('')
-                setProudctTechnicalDetails([{}])
-                setCurrentProductFeatures('')
-                setProductFeatures([])
-                setCurrentHowToUseData('')
-                setCurrentHowToUseHeading('')
-                setProductHowToUse([{}])
-                setCurrentProductAdditionalFeature('')
-                setProductAdditionalFeatures([])
-                setCurrentCategory('')
-                setCategories([])
-                setCurrentProductSize('')
-                setCurrentProductPrice('')
-                setProductPrice([])
-                setDiscount('')
-                setSelectedImages([])
-                setImagaeBlob([])
-                setCurrentImageIndex(0)
-            })
-            .catch((err) => {
-                console.log(err)
-            })
+            }else {
+                await fetch(`${BASE_URL}/product/create-product`, {
+                    method : "POST",
+                    headers : {
+                        "Content-Type" : "application/json",
+                        Authorization : `Bearer ${userToken}`
+                    },
+                    body : JSON.stringify({
+                        title : productName,
+                        brand : brandName,
+                        about : aboutProduct,
+                        technicalDetails : productTechnicalDetails,
+                        features : productFeatures,
+                        howToUse : productHowToUse,
+                        additionalInformation : productAdditionalFeatures,
+                        categories : categories,
+                        price : productPrice,
+                        discount : discount,
+                        numberOfImages : imagesBlob.length,
+                        reward : Number(reward)
+                    })
+                }).then((res) => res.json())
+                .then((res) => {
+                    console.log(res)
+                    setShowDoneAnimation(true)
+                    setTimeout(() => {
+                        setShowDoneAnimation(false)
+                    }, 2000);
+                    setUploadLoadingAnimation(false)
+                    // setProductName('')
+                    // setBrandName('')
+                    // setCurrentAboutProduct('')
+                    // setAboutProduct([])
+                    // setCurrentTechnicalDetailHeading('')
+                    // setCurrentTechnicalDetailData('')
+                    // setProudctTechnicalDetails([{}])
+                    // setCurrentProductFeatures('')
+                    // setProductFeatures([])
+                    // setCurrentHowToUseData('')
+                    // setCurrentHowToUseHeading('')
+                    // setProductHowToUse([{}])
+                    // setCurrentProductAdditionalFeature('')
+                    // setProductAdditionalFeatures([])
+                    // setCurrentCategory('')
+                    // setCategories([])
+                    // setCurrentProductSize('')
+                    // setCurrentProductPrice('')
+                    // setProductPrice([])
+                    // setDiscount('')
+                    // setReward('')
+                    // setSelectedImages([])
+                    // setImagaeBlob([])
+                    // setCurrentImageIndex(0)
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+            }
         }
     }
 
@@ -1155,6 +1173,27 @@ const CreateProductScreen = ({ navigation} : any) => {
                         value={discount}
                         onChangeText={setDiscount}
                         placeholder='Discount in Percentage'
+                    >
+                    
+                    </TextInput>
+                </Pressable>
+            </View>
+
+            {/* Reward  */}
+
+            <View>
+                <Text style={styles.ProductInputHeading}>Reward Coins</Text>
+
+                <Pressable 
+                    style={styles.ProductInputContainer}
+                >
+                    <TextInput
+                        multiline
+                        inputMode='numeric'
+                        style={styles.ProductInput}
+                        value={reward}
+                        onChangeText={setReward}
+                        placeholder='Reward Coins'
                     >
                     
                     </TextInput>

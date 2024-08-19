@@ -1,4 +1,4 @@
-import { StatusBar, StyleSheet, Text, View, Image } from 'react-native'
+import { StatusBar, StyleSheet, Text, View, Image, ToastAndroid } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler'
 import { BORDERRADIUS, COLORS, FONTFAMILY, FONTSIZE, SPACING } from '../theme/theme'
@@ -7,10 +7,15 @@ import CustomIcon from '../components/CustomIcon'
 import { useSelector } from 'react-redux'
 import LottieView from 'lottie-react-native'
 import moment from 'moment'
+import {BASE_URL} from "@env"
+import OrderHistoryLoadingSkeleton from '../components/OrderHistoryLoadingSkeleton'
 
 const UpdateOrderStatusScreen = ({navigation } : any) => {
 
   const [ordersList , setOrdersList] = useState([])
+  const [loading , setLoading] = useState(true)
+  const [deliveryStatusLoading , setDeliveryStatusLoading ] = useState(false)
+  const [paymentChangeLodaing , setPaymentChangeLoading ] = useState(false)
 
   const userToken = useSelector((state : any) => state.user.token)
 
@@ -19,7 +24,7 @@ const UpdateOrderStatusScreen = ({navigation } : any) => {
   }
 
   const fetchAllOrders = async () => {
-    await fetch(`http://10.0.2.2:4000/order/fetch-all-orders` , {
+    await fetch(`${BASE_URL}/order/fetch-all-orders` , {
       headers : {
         Accept : "application/json",
         "Content-Type" : "application/json",
@@ -28,14 +33,19 @@ const UpdateOrderStatusScreen = ({navigation } : any) => {
     })
     .then((res) => res.json())
     .then((res) => {
-        setOrdersList(res.data)
+        setLoading(true)
+        if(res.data.length > 0) {
+          setOrdersList(res.data)
+        }
+        setLoading(false)
     }).catch((error) => {
         console.log(error)
     })
   }
 
   const updatePaymentStatusHandler = async (orderId : any , paymentStatus : any) => {
-    await fetch(`http://10.0.2.2:4000/order/update-order/${orderId}` , {
+    setPaymentChangeLoading(true)
+    await fetch(`${BASE_URL}/order/update-order/${orderId}` , {
       method : "POST",
       headers : {
         "Content-Type" : "application/json",
@@ -46,14 +56,36 @@ const UpdateOrderStatusScreen = ({navigation } : any) => {
       })
     })
     .then((res : any) => res.json())
+    .then(async (res : any) => {
+      await fetchAllOrders()
+      setPaymentChangeLoading(false)
+    }).catch((error) => {
+      console.log(error)
+    })
+    setPaymentChangeLoading(false)
+  }
+
+  const updateRewardCoins = async (userId : any, coins : any) => {
+    await fetch(`${BASE_URL}/users/update-user-coins/${userId}` , {
+      method : "POST",
+      headers : {
+        "Content-Type" : "application/json",
+        Authorization : `Bearer ${userToken}`
+      },
+      body : JSON.stringify({
+        coins : coins
+      })
+    })
+    .then((res : any) => res.json())
     .then((res : any) => {
-      fetchAllOrders()
+      console.log(res)
     }).catch((error) => {
       console.log(error)
     })
   }
 
-  const updateStatusHandler = async (orderStatus : any, orderId : any) => {
+  const updateStatusHandler = async (orderStatus : any, orderId : any , userId : any, coins : any) => {
+    setDeliveryStatusLoading(true)
     let nextOrderStatus;
     if(orderStatus.toLowerCase() ==='ordered') {
       nextOrderStatus = 'packed'
@@ -61,11 +93,12 @@ const UpdateOrderStatusScreen = ({navigation } : any) => {
       nextOrderStatus = 'shipped'
     }else if(orderStatus.toLowerCase() ==='shipped') {
       nextOrderStatus = 'delivered'
-    }else if(orderStatus.toLowerCase() ==='delivered') {
-      nextOrderStatus = 'ordered'
+      updateRewardCoins(userId, coins)
+    }else {
+      ToastAndroid.show("Order is already deliverd", ToastAndroid.SHORT)
     }
 
-    await fetch(`http://10.0.2.2:4000/order/update-order/${orderId}` , {
+    await fetch(`${BASE_URL}/order/update-order/${orderId}` , {
       method : "POST",
       headers : {
         "Content-Type" : "application/json",
@@ -76,12 +109,14 @@ const UpdateOrderStatusScreen = ({navigation } : any) => {
       })
     })
     .then((res : any) => res.json())
-    .then((res : any) => {
-      console.log(res)
-      fetchAllOrders()
+    .then(async (res : any) => {
+      // console.log(res)
+      await fetchAllOrders()
+      setDeliveryStatusLoading(false)
     }).catch((error) => {
       console.log(error)
     })
+    setDeliveryStatusLoading(false)
 
   }
 
@@ -107,6 +142,8 @@ const UpdateOrderStatusScreen = ({navigation } : any) => {
             </View>
         </View>
 
+        {loading ? 
+            <OrderHistoryLoadingSkeleton /> :
         <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.OrderHistoryScrollView}
@@ -131,12 +168,11 @@ const UpdateOrderStatusScreen = ({navigation } : any) => {
                                 return (
                                 <View
                                     key={index}
-                                    
                                 >
                                         {/* <Text style={styles.OrderDataDate}>Order Date : {orderData.orderDate}</Text> */}
                                         <View>
                                             {orderData.orders.map((orderItem : any , index : any) => {
-                                                console.log("Order Item " + orderItem)
+                                                // console.log("Order Item " + orderItem)
                                                 return (
                                                 
 
@@ -151,11 +187,21 @@ const UpdateOrderStatusScreen = ({navigation } : any) => {
                                                         </View>
                                                         <View style={styles.DeliveryStatusDateContainer}>
                                                             <View style={{flexDirection : "row" , alignItems : "center" }}>
-                                                                <Text style={styles.DeliveryStatusText}>{orderData.status}</Text>
+                                                                <Text style={styles.DeliveryStatusText}>{orderData.status}
+                                                                  
+                                                                </Text>
                                                                 <TouchableOpacity
-                                                                  onPress={() => updateStatusHandler(orderData.status, orderData._id)}
-                                                                  style={{marginLeft : SPACING.space_10}}
+                                                                  onPress={() => updateStatusHandler(orderData.status, orderData._id , orderData.userId, orderData.rewardCoins)}
+                                                                  style={{marginLeft : SPACING.space_10 , flexDirection : "row", alignItems : "center"}}
                                                                 >
+                                                                  {deliveryStatusLoading && 
+                                                                    <LottieView
+                                                                      source={require("../components/lottie/Loading.json")}
+                                                                      autoPlay
+                                                                      loop
+                                                                      style={{height : 35 , width : 30}}
+                                                                    />
+                                                                  }
                                                                   <Text style={[styles.DeliveryStatusDate , {color : COLORS.primaryLightGreenHex}]}>Update Status</Text>
                                                                 </TouchableOpacity>
                                                             </View>
@@ -168,13 +214,13 @@ const UpdateOrderStatusScreen = ({navigation } : any) => {
                                                               </Text>
                                                             </Text>
                                                             <View style={[ {flexDirection : "row", alignItems : "center"}]}>
-                                                              <Text>Payment {"- "} </Text>
+                                                              <Text style={styles.DeliveryStatusDate}>Payment {"- "} </Text>
                                                               <View>
                                                                 <View style={styles.PaymentStatusContainer}>
                                                                   <Text style={styles.PaymentStatusText}>{orderData.paymentMode}</Text>
                                                                 </View>
                                                               </View>
-                                                              <View style={{marginLeft : SPACING.space_10}}>
+                                                              <View style={{marginLeft : SPACING.space_10 , flexDirection : "row" , alignItems : "center"}}>
                                                                 {orderData.paymentStatus ? (
                                                                   <TouchableOpacity
                                                                   onPress={() => updatePaymentStatusHandler(orderData._id , !orderData.paymentStatus)} 
@@ -196,11 +242,19 @@ const UpdateOrderStatusScreen = ({navigation } : any) => {
                                                                     </Text>
                                                                   </TouchableOpacity> 
                                                                 )}
+                                                                  {paymentChangeLodaing && 
+                                                                    <LottieView
+                                                                      source={require("../components/lottie/Loading.json")}
+                                                                      autoPlay
+                                                                      loop
+                                                                      style={{height : 35 , width : 30}}
+                                                                    />
+                                                                  }
                                                               </View>
                                                             </View>
                                                             {orderData.buyingGroup!=="none" && (
                                                                 <View style={[ {flexDirection : "row", alignItems : "center" , marginTop : SPACING.space_10}]}>
-                                                                <Text>Buying Group {"- "} </Text>
+                                                                <Text style={styles.DeliveryStatusDate}>Buying Group {"- "} </Text>
                                                                 <View>
                                                                   <View style={styles.PaymentStatusContainer}>
                                                                     <Text style={styles.PaymentStatusText}>{orderData.buyingGroup}</Text>
@@ -208,6 +262,7 @@ const UpdateOrderStatusScreen = ({navigation } : any) => {
                                                                 </View>
                                                               </View>
                                                             )}
+                                                            <Text style={styles.DeliveryStatusDate}>Coins Earned - {orderData.rewardCoins}</Text>
                                                         </View>
                                                     </View> 
                                                     <View style={[styles.HorizontalRule , ]}>
@@ -224,7 +279,8 @@ const UpdateOrderStatusScreen = ({navigation } : any) => {
                                                                         price : orderItemData.price,
                                                                         orderDate : orderData.orderDate,
                                                                         orderStatus : orderData.status,
-                                                                        buyingGroup : orderData.buyingGroup
+                                                                        buyingGroup : orderData.buyingGroup,
+                                                                        image : orderItemData.image
                                                                     })
                                                                 }}
                                                             >
@@ -233,7 +289,7 @@ const UpdateOrderStatusScreen = ({navigation } : any) => {
                                                                         style={styles.OrderHistoryImageContainer}
                                                                     >
                                                                         <Image 
-                                                                            source={require("../assets/Categories/nutrient.png")} 
+                                                                            source={{uri : orderItemData.image}} 
                                                                             style={styles.OrderHistoryImage}
                                                                         />
                                                                     </View>
@@ -247,7 +303,13 @@ const UpdateOrderStatusScreen = ({navigation } : any) => {
                                                                                 name='pencil'
                                                                                 size={22}
                                                                             /> */}
-                                                                            <Text style={{fontSize : FONTSIZE.size_30, textAlign : "center"}}> {`>`}</Text>
+                                                                            <Text style={{fontSize : FONTSIZE.size_30, textAlign : "center"}}> 
+                                                                              <CustomIcon
+                                                                                  name='circle-right'
+                                                                                  size={22}
+                                                                                  color={COLORS.primaryLightGreyHex}
+                                                                              />
+                                                                            </Text>
                                                                         </View>
                                                                     </View>
                                                                 </View>
@@ -273,6 +335,7 @@ const UpdateOrderStatusScreen = ({navigation } : any) => {
             </View>
         </View>
     </ScrollView>
+    }
     </GestureHandlerRootView>
   )
 }
@@ -294,7 +357,8 @@ OrderHistoryScreenHeaderLeft : {
 OrderHistoryScreenHeaderTitle : {
     marginLeft : SPACING.space_10,
     fontSize : FONTSIZE.size_18,
-    fontFamily : FONTFAMILY.poppins_semibold
+    fontFamily : FONTFAMILY.poppins_semibold,
+    color : COLORS.primaryLightGreyHex
 },
 OrderHistoryScrollView : {
 
@@ -309,13 +373,15 @@ EmptyCartText : {
     margin : SPACING.space_18,
     textAlign : "center",
     fontSize : FONTSIZE.size_20,
-    fontFamily : FONTFAMILY.poppins_semibold
+    fontFamily : FONTFAMILY.poppins_semibold,
+    color : COLORS.primaryLightGreyHex
 },
 OrderDataDate : {
   fontSize : FONTSIZE.size_16,
   fontFamily : FONTFAMILY.poppins_medium,
   marginLeft : SPACING.space_18,
   marginRight : SPACING.space_18,
+  color : COLORS.primaryLightGreyHex
 },
 DeliveryStatusContainer : {
   padding : SPACING.space_10,
@@ -338,11 +404,12 @@ DeliveryStatusText : {
   fontSize : FONTSIZE.size_18,
   fontFamily : FONTFAMILY.poppins_semibold,
   color : COLORS.primaryBlackHex,
-  textTransform : "capitalize"
+  textTransform : "capitalize",
 },
 DeliveryStatusDate : {
   fontSize : FONTSIZE.size_12*1.1,
   fontFamily : FONTFAMILY.poppins_regular,
+  color : COLORS.primaryLightGreyHex
 },
 PaymentStatusContainer : {
   backgroundColor : COLORS.primaryLightGreenHex,

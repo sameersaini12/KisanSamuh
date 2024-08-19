@@ -27,12 +27,20 @@ import FarmListScreen from '../screens/FarmListScreen'
 import ChatScreen from '../screens/ChatScreen'
 import GroupInfoScreen from '../screens/GroupInfoScreen'
 import SelectGroupScreen from '../screens/SelectGroupScreen'
+import { useSelector } from 'react-redux'
+import RewardScreen from '../screens/RewardScreen'
+import RewardHistoryScreen from '../screens/RewardHistoryScreen'
+import ReddemHistoryScreen from '../screens/ReddemHistoryScreen'
 
 const Stack = createNativeStackNavigator()
 
 const StackNavigator = () => {
+
+  const enterInApp = useSelector((state : any) => state.user.enterInApp)
+  // console.log(enterInApp)
+
   return (
-    <Stack.Navigator 
+    <Stack.Navigator
           screenOptions={{ 
             headerShown : false,
             contentStyle : {
@@ -41,26 +49,35 @@ const StackNavigator = () => {
           }}
           
         >
-          {/* <Stack.Screen
-            name="GetStartScreen"
-            component={GetStartScreen}
-            options={{animation : "slide_from_bottom"}}
-          />
-          <Stack.Screen
-            name="LanguageScreen"
-            component={ChooseLanguageScreen}
-            options={{animation : "slide_from_bottom"}}
-          />
-          <Stack.Screen
-            name="PhoneLoginScreen"
-            component={PhoneLoginScreen}
-            options={{animation : "slide_from_bottom"}}
-          />
-          <Stack.Screen
-            name="PhoneOTPScreen"
-            component={PhoneOTPScreen}
-            options={{animation : "slide_from_bottom"}}
-          /> */}
+          {enterInApp===false && 
+            <Stack.Screen
+              name="GetStartScreen"
+              component={GetStartScreen}
+              options={{animation : "slide_from_bottom"}}
+            />
+          }
+          
+          {enterInApp===false && 
+            <Stack.Screen
+              name="LanguageScreen"
+              component={ChooseLanguageScreen}
+              options={{animation : "slide_from_bottom"}}
+            />
+          }
+          {enterInApp===false && 
+            <Stack.Screen
+              name="PhoneLoginScreen"
+              component={PhoneLoginScreen}
+              options={{animation : "slide_from_bottom"}}
+            />
+          }
+          {enterInApp===false && 
+            <Stack.Screen
+              name="PhoneOTPScreen"
+              component={PhoneOTPScreen}
+              options={{animation : "slide_from_bottom"}}
+            />
+          }
           <Stack.Screen
             name='Tab'
             component={TabNavigator}
@@ -166,6 +183,22 @@ const StackNavigator = () => {
             component={SelectGroupScreen}
             options={{ animation : "slide_from_bottom"}}
           />
+          <Stack.Screen
+            name='RewardScreen'
+            component={RewardScreen}
+            options={{ animation : "slide_from_bottom"}}
+          />
+          <Stack.Screen
+            name='RewardHistoryScreen'
+            component={RewardHistoryScreen}
+            options={{ animation : "slide_from_bottom"}}
+          />
+          <Stack.Screen
+            name='RedeemHistoryScreen'
+            component={ReddemHistoryScreen}
+            options={{ animation : "slide_from_bottom"}}
+          />
+
         </Stack.Navigator>
   )
 }

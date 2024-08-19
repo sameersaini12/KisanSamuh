@@ -1,11 +1,17 @@
 import { Dimensions, Pressable, ScrollView, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import CustomIcon from '../components/CustomIcon'
 import { BORDERRADIUS, COLORS, FONTFAMILY, FONTSIZE, SPACING } from '../theme/theme'
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs'
 import ProductCard from '../components/ProductCard'
 import LottieView from 'lottie-react-native'
 import { useSelector } from 'react-redux'
+import {BASE_URL} from "@env"
+import ProductDetailsLoadingSkeleton from '../components/ProductDetailsLoadingSkeleton'
+import ShopScreenLoadingSkeleton from '../components/ShopScreenLoadingSkeleton'
+import { FlatList, GestureHandlerRootView } from 'react-native-gesture-handler'
+import { ActivityIndicator } from 'react-native'
+import _ from "lodash";
 
 const Screen_width  = Dimensions.get("screen").width
 const Screen_height = Dimensions.get("screen").height
@@ -13,9 +19,30 @@ const Screen_height = Dimensions.get("screen").height
 const ShopScreen = ({navigation  , searchTextFromPreviousScreen = ''} : any) => {
   
   const [searchText , setSearchText] = useState(searchTextFromPreviousScreen)
-  const [productList , setProductList] = useState<Array<any> | undefined>(undefined)
+  const [productList , setProductList] = useState<Array<any>>([])
   const [retryButton , setRetryButton] = useState(false)
   const [categories , setCategories] = useState(searchTextFromPreviousScreen)
+  const [loading , setLoading] = useState(true)
+  const [noProducts , setNoProducts] = useState(false)
+  const [productListPageNumber, setProductListPageNumber] = useState(1)
+  const [loadingProductsByPage , setLoadingProductsByPage] = useState(false)
+  const [loadedAllProducts , setLoadedAllProducts] = useState(false)
+
+  const scrollRef = useRef<any>(null)
+  const scrollPosition = useRef(0)
+
+  const saveScrollPosition = () => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollToOffset({
+        offset: scrollPosition.current,
+        animated: false,
+      });
+    }
+  };
+
+  const handleScroll = (event : any) => {
+    scrollPosition.current = event.nativeEvent.contentOffset.y;
+  };
 
   const totalItemInCartStore = useSelector((state : any) => state.cart.totalItemInCart)
 
@@ -42,25 +69,61 @@ const ShopScreen = ({navigation  , searchTextFromPreviousScreen = ''} : any) => 
   }
 
   const fetchAllProducts = async () => {
-    await fetch("http://10.0.2.2:4000/product/all-products"+`?categories=${JSON.stringify(categories)}`)
+    if(loadingProductsByPage ||  loadedAllProducts) {
+      return 
+    }
+    setLoadingProductsByPage(true)
+    await fetch(`${BASE_URL}/product/all-products`+`?categories=${JSON.stringify(categories)}` ,{
+      method : "POST",
+      headers : {
+          Accept : "application/json",
+          "Content-Type" : "application/json",
+      },
+      body : JSON.stringify({
+        pageNumber : productListPageNumber,
+        pageSize : 10
+      })
+    })
     .then((resp) => resp.json())
     .then((res) => {
-      setProductList(res.data)
+      setLoading(true)
+      if(res.data.length > 0) {
+        if(productListPageNumber===1)
+          setProductList(res.data)
+        else 
+          setProductList(prevProductList => [...prevProductList , ...res.data])
+      }else if (productList.length>=0) {
+        setLoadedAllProducts(true)
+      }else {
+        setNoProducts(true)
+      }
+      setLoading(false)
+      setLoadingProductsByPage(false)
     })
     .catch((error) => {
       console.log("Err" +error)
     })
   }
 
+  const loadMoreProductsHandler = useCallback(
+    _.debounce(() => {
+      if (!loadingProductsByPage && !loadedAllProducts) {
+        setProductListPageNumber(productListPageNumber+1);
+      }
+    }, 500),
+    [loadingProductsByPage, loadedAllProducts]
+  );
+  
+
   useEffect(() => {
     setSearchText(searchTextFromPreviousScreen)
     setCategories(searchTextFromPreviousScreen)
     fetchAllProducts()
-  } , [retryButton , categories , searchTextFromPreviousScreen])
+  } , [retryButton , categories , searchTextFromPreviousScreen , productListPageNumber])
 
   return (
   
-    <View style={styles.CartContainer}>
+    <GestureHandlerRootView style={styles.CartContainer}>
       <StatusBar backgroundColor={COLORS.primaryBlackHex} />
       <View style={styles.ShopScreenUpperHeader}>
         <View style={styles.SearchInputContainer}>
@@ -130,53 +193,66 @@ const ShopScreen = ({navigation  , searchTextFromPreviousScreen = ''} : any) => 
           </Pressable>
         </View>
 
-        { productList === undefined ? 
-              <View style={styles.LoadingAnimationContainer}>
-                  <LottieView
-                    style={styles.LoadingAnimation}
-                    source={require("../components/lottie/Loading.json")}
-                    autoPlay
-                    loop
-                  />
-                  <Pressable
-                      onPress={() => setRetryButton(!retryButton)}
-                      style={styles.LoadingRetryButton}
-                  >
-                    <Text style={styles.LoadingRetryButtonText}>Retry</Text>
-                  </Pressable>
-              </View>
-              
-          :
-        <ScrollView style={[styles.ProductListContainerScrollView , {marginBottom : tabBarHeight + SPACING.space_18}]}>
-          <View style={[styles.ProductListContainer, {marginBottom : tabBarHeight}]}>
-            { productList.length === 0 ?
-                <Text>No Products available</Text>
-             :
-            productList.map((product,index) => {
-              return (
-                <Pressable
-                  key={index}
-                  onPress={() => {
-                    navigation.push('ProductDetails', {
-                      id : product['_id']
-                    })
-                  }}
-                >
-                  <ProductCard
-                    id= {product['_id']}
-                    imageLink={require("../assets/Categories/nutrients_image.jpg")}
-                    title= {product['title']}
-                    companyName= {product['brand']}
-                    price= {product['price'][0]['price']}
-                  />
-                </Pressable>
-              )
-            })}
-          </View>
-        </ScrollView>
+        {noProducts && 
+          <Text style={{color : COLORS.primaryLightGreyHex , marginLeft : SPACING.space_18}}>No Products Available</Text>
         }
 
-    </View>
+        { loading ? 
+          // <View style={styles.LoadingAnimationContainer}>
+          //     <LottieView
+          //       style={styles.LoadingAnimation}
+          //       source={require("../components/lottie/Loading.json")}
+          //       autoPlay
+          //       loop
+          //     />
+          //     <Pressable
+          //         onPress={() => setRetryButton(!retryButton)}
+          //         style={styles.LoadingRetryButton}
+          //     >
+          //       <Text style={styles.LoadingRetryButtonText}>Retry</Text>
+          //     </Pressable>
+          // </View>  
+          <ShopScreenLoadingSkeleton /> 
+          :
+            <FlatList
+              ref={scrollRef}
+              onScroll={handleScroll}
+              onContentSizeChange={saveScrollPosition}
+              showsVerticalScrollIndicator={false}
+              data={productList}
+              keyExtractor={(item : any) => item._id.toString() + Math.random()*1000}
+              numColumns={2}
+              columnWrapperStyle={{justifyContent : "space-between"}}
+              onEndReached={loadMoreProductsHandler}
+              removeClippedSubviews={true}
+              // ListFooterComponent={<ActivityIndicator size="large" color="lightgreen" />}
+              contentContainerStyle={[styles.ProductListContainer , {paddingBottom : tabBarHeight*2 + SPACING.space_18*2}]}
+              renderItem={({item , index}) => {
+                // console.log(index + " " + item._id)
+                return (
+                  <Pressable
+                    key={index}
+                    onPress={() => {
+                      navigation.push('ProductDetails', {
+                        id : item['_id']
+                      })
+                    }}
+                  >
+                    <ProductCard
+                      id= {item['_id']}
+                      imageLink={item['image'][0]}
+                      title= {item['title']}
+                      companyName= {item['brand']}
+                      price= {item['price'][0]['price']}
+                      discount={item['discount']}
+                    />
+                  </Pressable>
+                )
+              }}
+            />
+        }
+
+    </GestureHandlerRootView>
   )
 }
 
@@ -193,7 +269,10 @@ const styles = StyleSheet.create({
   },
   SearchInputContainer : {
     flexDirection: 'row',
-    margin: SPACING.space_18,
+    marginLeft: SPACING.space_18,
+    marginTop: SPACING.space_18,
+    marginRight: SPACING.space_18,
+    marginBottom : SPACING.space_10,
     borderRadius: BORDERRADIUS.radius_20,
     backgroundColor: COLORS.secondaryLightGreenHex,
     alignItems: 'center',
@@ -229,9 +308,7 @@ const styles = StyleSheet.create({
   ProductListContainerScrollView : {
   },
   ProductListContainer : {
-    flexDirection : 'row',
-    justifyContent : 'space-between',
-    flexWrap : "wrap",
+    flexDirection : 'column',
     padding : SPACING.space_18,
   },
   LoadingRetryButton : {

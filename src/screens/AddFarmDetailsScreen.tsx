@@ -12,6 +12,7 @@ import moment from 'moment'
 import DatePicker from 'react-native-date-picker'
 import { TouchableOpacity } from '@gorhom/bottom-sheet'
 import { updateTotalFarms } from '../features/farmSlice.ts'
+import {BASE_URL} from "@env"
 
 const ModalWidth = Dimensions.get('window').width*0.5 - SPACING.space_18*1.5;
 
@@ -51,7 +52,7 @@ const AddFarmDetailsScreen = ({ navigation , route} : any) => {
     }
 
     const addFarmButtonHandler = async () => {
-      await fetch(`http://10.0.2.2:4000/farm/add-farm` , {
+      await fetch(`${BASE_URL}/farm/add-farm` , {
         method : "POST",
         headers : {
           "Content-Type" : "application/json",

@@ -45,10 +45,13 @@
 		CEA49D876F63499496F840CE /* banner_1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 13BE2D79448C41BAABD5542E /* banner_1.jpg */; };
 		615E86E35221443580384CB7 /* banner_2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AF08294D33D7497D8EAC0B2A /* banner_2.jpg */; };
 		BAC82257CE0A4ACAADF8C36A /* farmer_call.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 515A9A23E767462BB4582D27 /* farmer_call.jpg */; };
-		C86CF7D16F8D43719EDAF8B8 /* icomoon.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C791303827D94BBFAD0A5EFC /* icomoon.ttf */; };
 		10ED2AB1102D4F4DA3769D9E /* paddy.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 441BF91892E641979ABDCD19 /* paddy.jpg */; };
 		C468350D0C924442989B260E /* wheat.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 5DC41513F70D4E1BB4B47858 /* wheat.jpg */; };
 		774D1D01165849F9A4AA34FE /* sugarcane.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C41567E111A84A0582F5C3C1 /* sugarcane.jpg */; };
+		09867F981ED64C19988B6E31 /* icomoon.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4704BDBA7D8746EE90C5B6AE /* icomoon.ttf */; };
+		F0B2F78A05AA4B5E80F4C182 /* ic_launcher.png in Resources */ = {isa = PBXBuildFile; fileRef = 7BEB719B84D34C329EBBC32E /* ic_launcher.png */; };
+		B884F4E3D67C48D28B5679E5 /* launch_screen.png in Resources */ = {isa = PBXBuildFile; fileRef = B869C9D637B24E85842CF14C /* launch_screen.png */; };
+		F12D2BA8D7B84F418CE04247 /* reward_coin.png in Resources */ = {isa = PBXBuildFile; fileRef = 92E60D51E23D4C9DB8BD360E /* reward_coin.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -111,10 +114,13 @@
 		13BE2D79448C41BAABD5542E /* banner_1.jpg */ = {isa = PBXFileReference; name = "banner_1.jpg"; path = "../src/assets/Banners/banner_1.jpg"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		AF08294D33D7497D8EAC0B2A /* banner_2.jpg */ = {isa = PBXFileReference; name = "banner_2.jpg"; path = "../src/assets/Banners/banner_2.jpg"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		515A9A23E767462BB4582D27 /* farmer_call.jpg */ = {isa = PBXFileReference; name = "farmer_call.jpg"; path = "../src/assets/Banners/farmer_call.jpg"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		C791303827D94BBFAD0A5EFC /* icomoon.ttf */ = {isa = PBXFileReference; name = "icomoon.ttf"; path = "../src/assets/fonts/icomoon.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		441BF91892E641979ABDCD19 /* paddy.jpg */ = {isa = PBXFileReference; name = "paddy.jpg"; path = "../src/assets/crops/paddy.jpg"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		5DC41513F70D4E1BB4B47858 /* wheat.jpg */ = {isa = PBXFileReference; name = "wheat.jpg"; path = "../src/assets/crops/wheat.jpg"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		C41567E111A84A0582F5C3C1 /* sugarcane.jpg */ = {isa = PBXFileReference; name = "sugarcane.jpg"; path = "../src/assets/crops/sugarcane.jpg"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		4704BDBA7D8746EE90C5B6AE /* icomoon.ttf */ = {isa = PBXFileReference; name = "icomoon.ttf"; path = "../src/assets/fonts/icomoon.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		7BEB719B84D34C329EBBC32E /* ic_launcher.png */ = {isa = PBXFileReference; name = "ic_launcher.png"; path = "../src/assets/android/mipmap-hdpi/ic_launcher.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		B869C9D637B24E85842CF14C /* launch_screen.png */ = {isa = PBXFileReference; name = "launch_screen.png"; path = "../src/assets/launch_screen.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		92E60D51E23D4C9DB8BD360E /* reward_coin.png */ = {isa = PBXFileReference; name = "reward_coin.png"; path = "../src/assets/reward_coin.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -255,10 +261,13 @@
 				13BE2D79448C41BAABD5542E /* banner_1.jpg */,
 				AF08294D33D7497D8EAC0B2A /* banner_2.jpg */,
 				515A9A23E767462BB4582D27 /* farmer_call.jpg */,
-				C791303827D94BBFAD0A5EFC /* icomoon.ttf */,
 				441BF91892E641979ABDCD19 /* paddy.jpg */,
 				5DC41513F70D4E1BB4B47858 /* wheat.jpg */,
 				C41567E111A84A0582F5C3C1 /* sugarcane.jpg */,
+				4704BDBA7D8746EE90C5B6AE /* icomoon.ttf */,
+				7BEB719B84D34C329EBBC32E /* ic_launcher.png */,
+				B869C9D637B24E85842CF14C /* launch_screen.png */,
+				92E60D51E23D4C9DB8BD360E /* reward_coin.png */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -390,10 +399,13 @@
 				CEA49D876F63499496F840CE /* banner_1.jpg in Resources */,
 				615E86E35221443580384CB7 /* banner_2.jpg in Resources */,
 				BAC82257CE0A4ACAADF8C36A /* farmer_call.jpg in Resources */,
-				C86CF7D16F8D43719EDAF8B8 /* icomoon.ttf in Resources */,
 				10ED2AB1102D4F4DA3769D9E /* paddy.jpg in Resources */,
 				C468350D0C924442989B260E /* wheat.jpg in Resources */,
 				774D1D01165849F9A4AA34FE /* sugarcane.jpg in Resources */,
+				09867F981ED64C19988B6E31 /* icomoon.ttf in Resources */,
+				F0B2F78A05AA4B5E80F4C182 /* ic_launcher.png in Resources */,
+				B884F4E3D67C48D28B5679E5 /* launch_screen.png in Resources */,
+				F12D2BA8D7B84F418CE04247 /* reward_coin.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

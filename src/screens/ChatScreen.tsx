@@ -6,6 +6,9 @@ import { GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler
 import { useSelector } from 'react-redux'
 import OrderMessage from '../components/OrderMessage'
 import ServerMessage from '../components/ServerMessage'
+import {BASE_URL} from "@env"
+import ChatLoadingSkeleton from '../components/ChatLoadingSkeleton'
+import LottieView from 'lottie-react-native'
 
 const ChatScreen = ({navigation, route} : any) => {
 
@@ -13,6 +16,11 @@ const ChatScreen = ({navigation, route} : any) => {
     const [currentGroupOrdersList, setCurrentGroupOrdersList] = useState([])
     const [previousGroupOrdersList, setPreviousGroupOrdersList] = useState([])
     const [userDetails , setUserDetails] = useState<any>({})
+    const [showServerMessage , setShowServerMessage ] = useState(false)
+    const [loadingContent , setLoadingContent] = useState(true)
+    const [loadPreviousLoading , setLoadPreviousLoading ] = useState(false)
+    const [previousOrderNumber , setPreviousOrderNumer] = useState(0)
+    const [totalOrdersToFetchNumber, setTotalOrdersToFetchNumber] = useState(2)
 
 
     const userToken = useSelector((state : any) => state.user.token)
@@ -25,7 +33,7 @@ const ChatScreen = ({navigation, route} : any) => {
 
     const fetchUserDetails = async (searchId : any) => {
         // console.log(searchId)
-        await fetch(`http://10.0.2.2:4000/users/get-user-details/${searchId}` , {
+        await fetch(`${BASE_URL}/users/get-user-details/${searchId}` , {
             headers : {
               "Content-Type" : "application/json",
               Authorization : `Bearer ${userToken}`
@@ -33,7 +41,10 @@ const ChatScreen = ({navigation, route} : any) => {
           }).then((res) => res.json())
           .then(async (res) => {
             let prevUserDetails = userDetails
-            prevUserDetails[res.data[0]._id] = res.data[0].name
+            prevUserDetails[res.data[0]._id] = {
+                name : res.data[0].name,
+                phone : res.data[0].phone
+            }
             setUserDetails(prevUserDetails)
             // console.log(userDetails)
           }).catch((err) => {
@@ -42,7 +53,7 @@ const ChatScreen = ({navigation, route} : any) => {
     }
 
     const fetchPreviousGroupOrders = async () => {
-        await fetch(`http://10.0.2.2:4000/order/get-previous-group-order/${groupName}`, {
+        await fetch(`${BASE_URL}/order/get-previous-group-order/${groupName}/${previousOrderNumber}/${totalOrdersToFetchNumber}`, {
             method : "GET",
             headers : {
                 Accept : "application/json",
@@ -53,17 +64,21 @@ const ChatScreen = ({navigation, route} : any) => {
         .then((res) => res.json())
         .then(async (res) => {
             // console.log(res.data)
+            setLoadPreviousLoading(true)
+            let previosuOrderList : any = previousGroupOrdersList
             if(res.data.length>0){
                 for(let i=0;i<res.data.length;i++) {
+                    previosuOrderList.unshift(res.data[i])
                     for(let j=0;j<res.data[i].orders.length;j++) {
                         await fetchUserDetails(res.data[i].orders[j].userId)
                     }
                 }
-                setPreviousGroupOrdersList(res.data)
+                setPreviousGroupOrdersList(previosuOrderList)
             }
             else{
                 ToastAndroid.show("No More Previous Orders" , ToastAndroid.SHORT)
             }
+            setLoadPreviousLoading(false)
             // console.log(currentGroupOrdersList)
         })
         .catch((err) => {
@@ -73,11 +88,12 @@ const ChatScreen = ({navigation, route} : any) => {
     }
 
     const loadPreviousOrdersButtonHandler = () => {
+        setPreviousOrderNumer(previousOrderNumber+1)
         fetchPreviousGroupOrders()
     }
 
     const fetchGroupOrders = async () => {
-        await fetch(`http://10.0.2.2:4000/order/get-current-group-order/${groupName}`, {
+        await fetch(`${BASE_URL}/order/get-current-group-order/${groupName}`, {
             method : "GET",
             headers : {
                 Accept : "application/json",
@@ -88,13 +104,19 @@ const ChatScreen = ({navigation, route} : any) => {
         .then((res) => res.json())
         .then(async (res) => {
             
-            // console.log(res.data)
-            for(let i=0;i<res.data.length;i++) {
-                for(let j=0;j<res.data[i].orders.length;j++) {
-                    await fetchUserDetails(res.data[i].orders[j].userId)
+            // console.log(res.data.length)
+            setLoadingContent(true)
+            if(res.data.length>0) {
+                for(let i=0;i<res.data.length;i++) {
+                    for(let j=0;j<res.data[i].orders.length;j++) {
+                        await fetchUserDetails(res.data[i].orders[j].userId)
+                    }
                 }
-            }
-            setCurrentGroupOrdersList(res.data)
+                await setCurrentGroupOrdersList(res.data)
+            }else {
+                setShowServerMessage(true)
+            }  
+            setLoadingContent(false)
             // console.log(currentGroupOrdersList)
         })
         .catch((err) => {
@@ -120,7 +142,10 @@ const ChatScreen = ({navigation, route} : any) => {
                 />
             </Pressable>
             <View style={styles.GroupDPContainer}>
-
+                <CustomIcon
+                    name='users'
+                    size={27}
+                />
             </View>
             <Pressable
                 onPress={()=> {
@@ -133,67 +158,81 @@ const ChatScreen = ({navigation, route} : any) => {
                 <Text style={styles.GroupMembers}>See all group members</Text>
             </Pressable>
         </View>
-        <ScrollView
-            ref={scrollViewRef}
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={styles.ScrollViewStyle}
-            
-        >
-            <Pressable
-                onPress={loadPreviousOrdersButtonHandler}
-                style={styles.LoadPreviousOrdersButtonContainer}
+        {loadingContent ? (
+            <ChatLoadingSkeleton  />
+        ) : (
+            <ScrollView
+                ref={scrollViewRef}
+                showsVerticalScrollIndicator={false}
+                contentContainerStyle={styles.ScrollViewStyle}
+                
             >
-                <Text style={styles.LoadPreviousOrdersButtonText}>Load Previous orders</Text>
-            </Pressable>
-            {previousGroupOrdersList.length>0 && previousGroupOrdersList.map((item :any , index : any)=> {
-                // console.log(item)
-                return (
-                    <View key={index} >
+                <Pressable
+                    onPress={loadPreviousOrdersButtonHandler}
+                    style={styles.LoadPreviousOrdersButtonContainer}
+                >
+                    {loadPreviousLoading && 
+                        <LottieView
+                            source={require("../components/lottie/Loading.json")}
+                            style={{height : 27, width : 27}}
+                            autoPlay
+                            loop
+                        />
+                    }
+                    <Text style={styles.LoadPreviousOrdersButtonText}>
+                        Load Previous orders
+                    </Text>
+                </Pressable>
+                {previousGroupOrdersList.length>0 && previousGroupOrdersList.map((item :any , index : any)=> {
+                    // console.log(item)
+                    return (
+                        <View key={index} >
+                            <OrderMessage 
+                                navigation={navigation} 
+                                orderList={item.orders} 
+                                deliveryDate={item._id}
+                                totalGroupOrderAmount={item.totalGroupOrderAmount}
+                                deliveryStatus="Delivered"
+                                userDetails={userDetails}
+                            />
+                        </View>
+                    )
+                })}
+                {
+                    previousGroupOrdersList.length>0 && (
+                        <View style={styles.CurrentOrderHRLineContainer}>
+                            <View style={styles.HorizontalRuleHalf}>
+                            </View>
+                            <Text style={styles.CurrentOrdersLineText}>Current Orders</Text>
+                            <View style={styles.HorizontalRuleHalf}>
+                            </View>
+                        </View>
+                    )
+                }
+                
+                {currentGroupOrdersList.length>0 ? currentGroupOrdersList.map((item :any , index : any)=> {
+                    // console.log(item)
+                    return (
                         <OrderMessage 
+                            key={index} 
                             navigation={navigation} 
                             orderList={item.orders} 
                             deliveryDate={item._id}
                             totalGroupOrderAmount={item.totalGroupOrderAmount}
-                            deliveryStatus="Delivered"
+                            deliveryStatus="Not delivered"
                             userDetails={userDetails}
                         />
-                    </View>
-                )
-            })}
-            {
-                previousGroupOrdersList.length>0 && (
-                    <View style={styles.CurrentOrderHRLineContainer}>
-                        <View style={styles.HorizontalRuleHalf}>
-                        </View>
-                        <Text style={styles.CurrentOrdersLineText}>Current Orders</Text>
-                        <View style={styles.HorizontalRuleHalf}>
-                        </View>
-                    </View>
-                )
-            }
-            
-            {currentGroupOrdersList.length>0 ? currentGroupOrdersList.map((item :any , index : any)=> {
-                // console.log(item)
-                return (
-                    <OrderMessage 
-                        key={index} 
-                        navigation={navigation} 
-                        orderList={item.orders} 
-                        deliveryDate={item._id}
-                        totalGroupOrderAmount={item.totalGroupOrderAmount}
-                        deliveryStatus="Not delivered"
-                        userDetails={userDetails}
+                    )
+                }) :
+                    showServerMessage && 
+                    <ServerMessage 
+                        groupName={groupName}
+                        navigation={navigation}
                     />
-                )
-            }) : 
-            (
-                <ServerMessage 
-                    groupName={groupName}
-                    navigation={navigation}
-                />
-            )}
-            
-        </ScrollView>
+                }                
+            </ScrollView>
+        )}
+        
     </GestureHandlerRootView>
   )
 }
@@ -222,6 +261,8 @@ const styles = StyleSheet.create({
         height : 45,
         borderRadius : BORDERRADIUS.radius_25*5,
         marginLeft : SPACING.space_12,
+        alignItems : "center",
+        justifyContent: 'center',
     },
     GroupMembers : {
         marginTop : -SPACING.space_10*0.5,
@@ -234,9 +275,12 @@ const styles = StyleSheet.create({
         backgroundColor : COLORS.primaryLightestGreyHex,
         padding : SPACING.space_10*0.5,
         margin : SPACING.space_10,
-        marginLeft : "27%",
-        marginRight : "27%",
-        borderRadius : BORDERRADIUS.radius_25
+        marginLeft : "26%",
+        marginRight : "26%",
+        borderRadius : BORDERRADIUS.radius_25,
+        flexDirection : "row",
+        alignItems : "center",
+        justifyContent : "center"
     },
     LoadPreviousOrdersButtonText : {
         textAlign : "center",
@@ -263,6 +307,7 @@ const styles = StyleSheet.create({
         fontSize :FONTSIZE.size_16,
         fontFamily : FONTFAMILY.poppins_medium,
         textAlign : "center",
+        color : COLORS.primaryBlackHex
     }
 
 })

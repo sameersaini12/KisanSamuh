@@ -5,7 +5,7 @@ const languages = [
     },
     {
         id : 1,
-        name : "Hindi"
+        name : "Hindi (हिंदी)"
     }
 ]
 

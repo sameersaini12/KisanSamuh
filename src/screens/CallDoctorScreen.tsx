@@ -1,9 +1,11 @@
 import { StyleSheet, Text, View, Linking, Pressable, Image, Dimensions } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import LottieView from 'lottie-react-native'
 import { BORDERRADIUS, COLORS, FONTFAMILY, FONTSIZE, SPACING } from '../theme/theme'
 import CustomIcon from '../components/CustomIcon'
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs'
+import { BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet'
+import WhyAddFarmCard from '../components/WhyAddFarmCard'
 
 
 const CallDoctorScreen = () => {
@@ -14,6 +16,17 @@ const CallDoctorScreen = () => {
     }
     const tabBarHeight = useBottomTabBarHeight()
 
+    const bottomSheetModalRef  = useRef<any | null>(null)
+    const snapPoints = useMemo(() => ["42%"],[])
+
+    const openBottomModel= () => {
+      bottomSheetModalRef.current?.present()
+    }
+
+    const closeBottomModel = () => {
+        bottomSheetModalRef.current?.close()
+    }
+
     useEffect(() => {
         setInterval(() => {
             setCurrentTime(new Date().getHours())
@@ -21,6 +34,17 @@ const CallDoctorScreen = () => {
     } , [currentTime])
   return (
     <View >
+        <BottomSheetModalProvider>
+
+        <BottomSheetModal
+          ref={bottomSheetModalRef}
+          index={0}
+          snapPoints={snapPoints}  
+        >
+          <View>
+            <WhyAddFarmCard closeBottomSheet ={closeBottomModel}/>
+          </View>
+        </BottomSheetModal>
         {(currentTime>9 && currentTime<24) ?
         (
             <View style={{height : "100%"}}>
@@ -62,6 +86,7 @@ const CallDoctorScreen = () => {
             </View>
         )
         }
+        </BottomSheetModalProvider>
     </View>
   )
 }
@@ -85,6 +110,7 @@ const styles = StyleSheet.create({
     CallingDetailLine : {
         fontSize : FONTSIZE.size_16,
         fontFamily : FONTFAMILY.poppins_medium,
+        color : COLORS.primaryLightGreyHex
     },
     CallButtonContainer : {
         flexDirection : "row",

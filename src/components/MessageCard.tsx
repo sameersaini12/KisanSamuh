@@ -2,6 +2,7 @@ import { Dimensions, Pressable, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { BORDERRADIUS, COLORS, FONTFAMILY, FONTSIZE, SPACING } from '../theme/theme'
+import CustomIcon from './CustomIcon'
 
 const MessageCard = ({item, socket , navigation} : any) => {
 
@@ -20,6 +21,10 @@ const MessageCard = ({item, socket , navigation} : any) => {
             style={styles.MessageCartContainer}
         >
             <View style={styles.MessageCardDP}>
+                <CustomIcon
+                    name='users'
+                    size={40}
+                />
             </View>
             <View style={styles.MessageCardDetails}>
                 <View style={styles.MessageCardNameContainer}>
@@ -49,7 +54,10 @@ const styles = StyleSheet.create({
         backgroundColor : COLORS.primaryLightestGreyHex,
         borderRadius : BORDERRADIUS.radius_25*5,
         marginLeft : SPACING.space_18,
-        marginRight : SPACING.space_16
+        marginRight : SPACING.space_16,
+        alignItems : "center",
+        justifyContent : "center",
+
     },
     MessageCardDetails : {
         width : Dimensions.get("screen").width-(70+SPACING.space_18*2+SPACING.space_16),

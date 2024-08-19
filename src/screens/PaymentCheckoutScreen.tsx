@@ -1,4 +1,4 @@
-import { Pressable, StatusBar, StyleSheet, Text, View } from 'react-native'
+import { Image, Pressable, StatusBar, StyleSheet, Text, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { GestureHandlerRootView, ScrollView, TouchableOpacity } from 'react-native-gesture-handler'
 import { BORDERRADIUS, COLORS, FONTFAMILY, FONTSIZE, SPACING } from '../theme/theme'
@@ -10,6 +10,7 @@ import sha256 from "sha256"
 import { updateAfterOrder } from '../features/cartSlice'
 import LottieView from 'lottie-react-native'
 import moment from 'moment'
+import {BASE_URL} from "@env"
 
 
 const paymentMethodList = [
@@ -21,6 +22,7 @@ const PaymentCheckoutScreen = ({navigation , route} : any) => {
 
   const dispatch = useDispatch()
   const [buyingGroupName , setBuyingGroupName] = useState(route.params.buyingGroupName)
+  const [deliveryCost , setDeliveryCost] = useState(buyingGroupName===undefined? 50 : 0)
   // console.log(buyingGroupName)
     
   const [ selectedPaymentMethod , setSelectedPaymentMethod ] = useState(1)
@@ -36,7 +38,7 @@ const PaymentCheckoutScreen = ({navigation , route} : any) => {
   const [uploadDeliveryDate , setUploadDeliveryDate ] = useState('')
 
   const addToOrderHistoryUPI = async () => {
-    await fetch("http://10.0.2.2:4000/order/add-to-order-history" ,{
+    await fetch(`${BASE_URL}/order/add-to-order-history` ,{
       method : "POST",
       headers : {
           Accept : "application/json",
@@ -47,12 +49,13 @@ const PaymentCheckoutScreen = ({navigation , route} : any) => {
         userId : userId,
         orders : JSON.stringify(cartItemList),
         address : route.params.address,
-        amount : totalCartPrice,
+        amount : Number(totalCartPrice)+deliveryCost,
         orderDate : new Date(),
         paymentStatus : true,
         paymentMode : "Online",
         buyingGroup : buyingGroupName===undefined? "none" : buyingGroupName,
-        deliveryDate : uploadDeliveryDate
+        deliveryDate : uploadDeliveryDate,
+        rewardCoins : Math.floor(route.params.totalCartPrice/10),
       })
     }).then((res) => res.json())
     .then((res) => {
@@ -76,7 +79,7 @@ const PaymentCheckoutScreen = ({navigation , route} : any) => {
         merchantId : merchandId,
         merchantTransactionId : generateTransactionId(),
         merchantUserId : "",
-        amount : (route.params.totalCartPrice)*100,
+        amount : (route.params.totalCartPrice + deliveryCost)*100,
         mobileNumber : "123456789",
         callbackUrl : "",
         paymentInstrument : {
@@ -161,7 +164,7 @@ const PaymentCheckoutScreen = ({navigation , route} : any) => {
   const d = new Date()
 
   const cashOnDeliveryButtonHandler = async () => {
-    await fetch("http://10.0.2.2:4000/order/add-to-order-history" ,{
+    await fetch(`${BASE_URL}/order/add-to-order-history` ,{
       method : "POST",
       headers : {
           Accept : "application/json",
@@ -172,10 +175,11 @@ const PaymentCheckoutScreen = ({navigation , route} : any) => {
         userId : userId,
         orders : JSON.stringify(cartItemList),
         address : route.params.address,
-        amount : totalCartPrice,
+        amount : Number(totalCartPrice)+deliveryCost,
         orderDate : new Date(),
         buyingGroup : buyingGroupName===undefined? "none" : buyingGroupName,
-        deliveryDate : uploadDeliveryDate
+        deliveryDate : uploadDeliveryDate,
+        rewardCoins : Math.floor(route.params.totalCartPrice/10),
       })
     }).then((res) => res.json())
     .then((res) => {
@@ -235,18 +239,22 @@ const PaymentCheckoutScreen = ({navigation , route} : any) => {
               <Text style={styles.ItemPriceHeading}>Item Price</Text>
               <Text style={styles.ItemPriceText}>Rs. {route.params.totalCartPrice}</Text>
             </View>
-            <View style={{flexDirection : "row" , justifyContent : "space-between" , alignItems : "center" ,marginBottom: SPACING.space_10*0.4}}>
+            {/* <View style={{flexDirection : "row" , justifyContent : "space-between" , alignItems : "center" ,marginBottom: SPACING.space_10*0.4}}>
               <Text style={styles.ItemPriceHeading}>Discount Applied</Text>
               <Text style={styles.ItemPriceText}>Rs. 20</Text>
-            </View>
+            </View> */}
             <View style={{flexDirection : "row" , justifyContent : "space-between" , alignItems : "center", marginBottom: SPACING.space_10*0.4}}>
               <Text style={styles.ItemPriceHeading}>Delivery</Text>
-              <Text style={styles.ItemPriceText}>Rs. 70</Text>
+              <Text style={styles.ItemPriceText}>Rs. {deliveryCost}</Text>
             </View>
             <View style={[styles.AddressHorizontailRule , {backgroundColor : COLORS.primaryLightGreyHex, marginBottom: SPACING.space_10*0.4}]}></View>
-            <View style={{flexDirection : "row" , justifyContent : "space-between" , alignItems : "center"}}>
+            <View style={{flexDirection : "row" , justifyContent : "space-between" , alignItems : "center" , marginTop : SPACING.space_10}}>
               <Text style={styles.ItemPriceHeading}>Total Price</Text>
-              <Text style={styles.ItemPriceText}>Rs. {route.params.totalCartPrice}</Text>
+              <Text style={styles.ItemPriceText}>Rs. {Number(route.params.totalCartPrice) + Number(deliveryCost)}</Text>
+            </View>
+            <View style={{flexDirection : "row" , justifyContent : "space-between" , alignItems : "center"}}>
+              <Text style={styles.ItemPriceHeading}>You will get</Text>
+              <Text style={styles.ItemPriceText}><Image style={{height: 20, width:35, }} source={require("../assets/reward_coin.png")} />x {Math.floor(route.params.totalCartPrice/10)}</Text>
             </View>
         </View>
 
@@ -289,7 +297,7 @@ const PaymentCheckoutScreen = ({navigation , route} : any) => {
                 onPress={UIPPaymentButtonHandler}
                 style={[styles.PlaceOrderButtonContainer , {display : selectedPaymentMethod == 0 ? "flex" : "none"}]}
               >
-                  <Text style={styles.PlaceOrderButtonText}>{`Pay  ₹ ${route.params.totalCartPrice}`}</Text>
+                  <Text style={styles.PlaceOrderButtonText}>{`Pay  ₹ ${route.params.totalCartPrice + deliveryCost}`}</Text>
               </Pressable>
           </Pressable>
 
@@ -347,7 +355,8 @@ const styles = StyleSheet.create({
     PaymentScreenHeaderTitle : {
       marginLeft : SPACING.space_10,
       fontSize : FONTSIZE.size_18,
-      fontFamily : FONTFAMILY.poppins_semibold
+      fontFamily : FONTFAMILY.poppins_semibold,
+      color : COLORS.primaryLightGreyHex
     },
     ItemPriceContainer : {
       backgroundColor : COLORS.primaryLightestGreyHex,

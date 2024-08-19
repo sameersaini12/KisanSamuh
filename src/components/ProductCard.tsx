@@ -1,4 +1,4 @@
-import { Dimensions, ImageBackground, ImageProps, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Dimensions, ImageBackground, ImageProps, StyleSheet, Text, TouchableOpacity, View , Image } from 'react-native'
 import React from 'react'
 import CustomIcon from './CustomIcon'
 import { BORDERRADIUS, COLORS, FONTFAMILY, FONTSIZE, SPACING } from '../theme/theme'
@@ -11,6 +11,7 @@ interface ProductCardProps {
     title: string,
     companyName: string,
     price: any,
+    discount : string,
 }
 
 const ProductCard : React.FC<ProductCardProps> = ({
@@ -19,20 +20,27 @@ const ProductCard : React.FC<ProductCardProps> = ({
     title,
     companyName,
     price,
+    discount
 }) => {
   return (
     <View style={styles.ProductCardContainer}>
-      <ImageBackground
-        source={imageLink}
-        style={styles.CardImageBG}
-        resizeMode="cover">
-      </ImageBackground>
+      <Image style={styles.CardImageBG} source={{ uri : imageLink}} />
       <View style={styles.ProductDetails}>
         <Text style={styles.CardTitle}>{title}</Text>
         <Text style={styles.CardSubtitle}>{companyName}</Text>
         <View style={styles.CardFooterRow}>
             <Text style={styles.CardPriceCurrency}>
-            Rs <Text style={styles.CardPrice}>{price}</Text>
+            {discount!=='' ? 
+                <Text>
+                    ₹{price}{" "}
+                    <Text style={{fontSize : FONTSIZE.size_14,
+                    fontFamily : FONTFAMILY.poppins_medium, 
+                    textDecorationLine : "line-through",
+                    color : COLORS.primaryLightGreyHex,
+                    }}>₹{Number(price) +(price*Number(discount))/100}</Text>
+                </Text>:
+                <Text>₹{price}</Text>
+            }
             </Text>
             <TouchableOpacity
             onPress={() => {
@@ -75,6 +83,7 @@ const styles = StyleSheet.create({
     CardSubtitle : {
         fontSize : FONTSIZE.size_14,
         fontFamily : FONTFAMILY.poppins_regular,
+        color : COLORS.primaryLightGreyHex,
     },
     CardFooterRow : {
 
@@ -82,6 +91,7 @@ const styles = StyleSheet.create({
     CardPriceCurrency: {
         color : COLORS.primaryLightGreenHex,
         fontFamily : FONTFAMILY.poppins_regular,
+        fontSize : FONTSIZE.size_16*1.05
     },
     CardPrice: {
     }

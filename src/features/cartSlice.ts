@@ -4,7 +4,7 @@ const initialState = {
     CartPrice : 0,
     CartList : [],
     OrderHistoryList : [],
-    totalItemInCart : 0
+    totalItemInCart : 0,
 }
 
 export const cartSlice = createSlice({
@@ -111,6 +111,11 @@ export const cartSlice = createSlice({
         },
         updateTotalItemInCart : (state : any , action : any) => {
             state.totalItemInCart = action.payload
+        },
+        updateAfterSignOut : (state: any) => {
+            state.CartList = []
+            state.CartPrice = 0
+            state.totalItemInCart = 0
         }
         // addItemToOrderHistoryFromCart : (state : any) => {
         //     let temp = state.CartList.reduce(
@@ -146,6 +151,13 @@ export const cartSlice = createSlice({
     }
 })
 
-export const {addToCart , calculateCartPrice , incrementCartItemQuantity , decrementCartItemQuantity, updateAfterOrder} = cartSlice.actions
+export const {
+    addToCart,
+    calculateCartPrice,
+    incrementCartItemQuantity, 
+    decrementCartItemQuantity, 
+    updateAfterOrder, 
+    updateAfterSignOut
+} = cartSlice.actions
 
 export default cartSlice.reducer

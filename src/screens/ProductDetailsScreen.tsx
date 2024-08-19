@@ -1,13 +1,21 @@
-import { Button, ScrollView, StatusBar, StyleSheet, Text, ToastAndroid, Touchable, TouchableOpacity, View } from 'react-native'
+import { Button, Dimensions, Image, ScrollView, StatusBar, StyleSheet, Text, ToastAndroid, Touchable, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { BORDERRADIUS, COLORS, FONTFAMILY, FONTSIZE, SPACING } from '../theme/theme'
 import CustomIcon from '../components/CustomIcon'
 import ProductImageBackground from '../components/ProductImageBackground'
 import { useDispatch, useSelector } from 'react-redux'
 import { addToCart, calculateCartPrice } from '../features/cartSlice.ts'
+import { updateEnterInAppStatus } from '../features/userSlice.ts'
+import {BASE_URL} from "@env"
+import ProductDetailsLoadingSkeleton from '../components/ProductDetailsLoadingSkeleton.tsx'
+import { Linking } from 'react-native'
 
+
+const ImageCardWidth = Dimensions.get("screen").width
+const screenWidth = Dimensions.get("screen").width
 
 const ProductDetailsScreen  = ({navigation , route} : any) => {
+  const [productImages, setProductImages] = useState([])
   const [productTitle , setProductTitle] = useState('')
   const [productBrand , setProductBrand ] = useState('')
   const [productAboutDetails , setProductAboutDetails] = useState([])
@@ -20,6 +28,10 @@ const ProductDetailsScreen  = ({navigation , route} : any) => {
   const [productPrice , setProductPrice ] = useState([])
   const [productDiscount , setProductDiscount] = useState('')
   const [sizeSelect , setSizeSelect] = useState(0)
+  const [reward , setReward] = useState(0)
+  const [loading , setLoading ] = useState(true)
+  const [currentImageIndex , setCurrentImageIndex] = useState(0)
+  const [imageLoading , setImageLoading ] = useState(false)
 
   const dispatch = useDispatch()
   const userLoginStatus = useSelector((state : any) => state.user.isLoggedIn)
@@ -29,12 +41,13 @@ const ProductDetailsScreen  = ({navigation , route} : any) => {
     navigation.pop()
   }
 
-  const addToCartButtonHandler = ({id , title , price} :any) => {
+  const addToCartButtonHandler = ({id , title , price , image} :any) => {
     ToastAndroid.show('Item Added to Cart', ToastAndroid.SHORT)
     const addToCartData : any = {
         id,
         title,
-        price : [{ ...price , quantity : 1}]
+        price : [{ ...price , quantity : 1}],
+        image
     }
     dispatch(addToCart(addToCartData))
     dispatch(calculateCartPrice())
@@ -43,9 +56,11 @@ const ProductDetailsScreen  = ({navigation , route} : any) => {
   useEffect(() => {
     //total cart Item
 
-    fetch(`http://10.0.2.2:4000/product/product-details/${route.params.id}`)
+    fetch(`${BASE_URL}/product/product-details/${route.params.id}`)
     .then((resp) => resp.json())
     .then((res) => {
+      setLoading(true)
+      setProductImages(res.data[0].image)
       setProductTitle(res.data[0].title)
       setProductBrand(res.data[0].brand)
       setProductAboutDetails(res.data[0].about)
@@ -57,11 +72,20 @@ const ProductDetailsScreen  = ({navigation , route} : any) => {
       setProductSize(res.data[0].size)
       setProductPrice(res.data[0].price)
       setProductDiscount(res.data[0].discount)
+      setReward(res.data[0].reward)
+      setLoading(false)
     })
     .catch((error) => {
       console.log(error)
     })
   } , [])
+
+  const scrollImageHandler = (event :any) => {
+    const scrollPosition = event.nativeEvent.contentOffset.x
+    
+    const currentImageIndex = scrollPosition / screenWidth
+    setCurrentImageIndex(Math.round(currentImageIndex))
+}
 
 
   return (
@@ -112,174 +136,253 @@ const ProductDetailsScreen  = ({navigation , route} : any) => {
         </View>
       </View>
 
-      <View style={styles.PaymentFooterButtonContainer}>
-        <TouchableOpacity 
-          style={styles.PaymentFooterButton}
-          onPress={ 
-            () => addToCartButtonHandler({
-            id : route.params.id,
-            title : productTitle,
-            price : productPrice[sizeSelect]
-          })
-        }
-        >
-          <Text style={styles.PaymentFooterButtonTextCart}>Add to Cart</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-         style={[styles.PaymentFooterButton , {marginLeft : SPACING.space_10 , backgroundColor : COLORS.primaryLightGreenHex}]}
-         onPress={ userLoginStatus === false ? () => navigation.push("PhoneLoginScreen") :
-          () => {
-            addToCartButtonHandler({
-              id : route.params.id,
-              title : productTitle,
-              price : productPrice[sizeSelect]
-            })
-            navigation.push("CartScreen")}
-         }
-         >
-          <Text style={styles.PaymentFooterButtonTextBuy} >Buy Now</Text>
-        </TouchableOpacity>
-      </View>
-
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.ScrollViewFlex}
-      >
-        <ProductImageBackground
-
-        />
-
-        <View style={styles.ProductDetailInfo}>
-          <Text style={styles.ProductDetailTitle}>{productTitle}</Text>
-          <Text style={styles.ProductDetailBrand}>{productBrand}</Text>
-          <View style={styles.ProductPriceContainer}>
-            <Text style={styles.ProductPriceHeading}>Price</Text>
-            {/* <Text style={styles.ProductPrice}>₹{productPrice[0]['price']}</Text> */}
-              {productPrice[0] === undefined ?
-                <Text></Text> :
-                (
-                  <Text style={styles.ProductPrice}>₹{productPrice[sizeSelect]['price']}</Text>
-                )
-              }   
-          </View>
-
-          {productDiscount!=='' && (
-            <View>
-              <Text style={styles.ProductDiscount}>Save money by discount {productDiscount}%</Text>
-              <View style={styles.ProductSizeContainer}>
-                <Text style={styles.ProductSizeHeading}>Size </Text>
-                {/* <Text style={styles.ProductSizeMeasurement}>{productPrice[0]['size']}</Text> */}
-                {productPrice[0] === undefined ?
-                    <Text></Text> :
-                    (
-                      <Text style={styles.ProductPrice}>{productPrice[sizeSelect]['size']}</Text>
-                    )
-                  }
-              </View>
-            </View>
-          )}
-          
-
-          <View style={styles.ProductSizeChooseContainer}>
-            {
-              productPrice.map((item :any , index : any) => {
-                return (
-                  <TouchableOpacity
-                    key={index}
-                    onPress={() => setSizeSelect(index)}
-                    style={[styles.ProductSizeChoose , { backgroundColor : (index===sizeSelect ? COLORS.secondaryLightGreenHex : COLORS.primaryWhiteHex)  }]}
-                  >
-                      <Text style={styles.ProductSizeChooseText}>{item.size}</Text>
-                  </TouchableOpacity>
-                )
+      {!loading && 
+          <View style={styles.PaymentFooterButtonContainer}>
+            <TouchableOpacity
+            style={[styles.PaymentFooterButton , {marginRight : SPACING.space_10 }]}
+            onPress={() =>{
+              Linking.openURL(`tel:9817620774`)
+            }
+            }
+            >
+              <CustomIcon 
+                    name='phone'
+                    size={20}
+                    color={COLORS.primaryWhiteHex}
+                />
+              <Text style={styles.PaymentFooterButtonTextBuy}>Ask to Doctor
+                
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity 
+              style={[styles.PaymentFooterButton , {backgroundColor : COLORS.primaryLightGreenHex}]}
+              onPress={ 
+                () => addToCartButtonHandler({
+                id : route.params.id,
+                title : productTitle,
+                price : productPrice[sizeSelect],
+                image : productImages[0]
               })
             }
+            >
+              <Text style={styles.PaymentFooterButtonTextCart}>Add to Cart</Text>
+            </TouchableOpacity>
+            {/* <TouchableOpacity
+            style={[styles.PaymentFooterButton , {marginLeft : SPACING.space_10 , backgroundColor : COLORS.primaryLightGreenHex}]}
+            onPress={ userLoginStatus === false ? async () => {
+                const enterInAppStatus : any = false
+                await dispatch(updateEnterInAppStatus(enterInAppStatus))
+                navigation.push("PhoneLoginScreen")
+            } :
+              () => {
+                addToCartButtonHandler({
+                  id : route.params.id,
+                  title : productTitle,
+                  price : productPrice[sizeSelect],
+                  image : productImages[0]
+                })
+                navigation.push("CartScreen")}
+            }
+            >
+              <Text style={styles.PaymentFooterButtonTextBuy}>{userLoginStatus ? "Buy Now" : "Login to buy"}</Text>
+            </TouchableOpacity> */}
           </View>
+      }
 
-            {productAboutDetails.length>0 && (
-                <View style={styles.AboutProductContainer}>
-                  <Text style={styles.AboutHeading}>About Product</Text>
-                  {productAboutDetails.map((line : any, index : any) => {
+        {loading ? 
+            <ProductDetailsLoadingSkeleton /> 
+          : (
+            <ScrollView
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={styles.ScrollViewFlex}
+            >
+              <ScrollView
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  pagingEnabled={true}
+                  onScroll={scrollImageHandler}
+              >
+                  {productImages.length>0 && productImages.map((image : any, index : any) => {
+                    // console.log(image)
                     return (
-                        <Text key={index} style={styles.ProductAboutLine}>
-                          {`\u25CF ${line}`}
-                        </Text>
-                      )
-                    })}
-                </View>
-            )}
-          
-          {Object.keys(productTechnicalDetails[0]).length>0 && (
-              <View style={styles.AboutProductContainer}>
-                <Text style={styles.AboutHeading}>Technical Details</Text>
-                {productTechnicalDetails[0] === undefined ?
-                <Text>Loading</Text> :
-                (
-                  Object.keys(productTechnicalDetails[0]).map((key, index)=>(
-                    <View key={index} style={styles.ProductTechnicalDetailsLine}>
-                      <Text style={styles.ProductTechnicalDetailsValue}>
-                        {`\u25CF`}{" "}
-                        <Text style={styles.ProductTechnicalDetailsHeading}>{key} : </Text> 
-                        {productTechnicalDetails[0][key]}
-                      </Text>
-                    </View>
-                  ))
-                )}
-              </View>
-          )}
-          
+                      <View key={index} style={styles.ProductImageContainer}>
+                          {/* {imageLoading ? null :
+                            <View style={styles.ProuctImageLoading}>
 
-            {productFeatureDetails.length>0 && (
-                <View style={styles.AboutProductContainer}>
-                  <Text style={styles.AboutHeading}>Features</Text>
-                  {productFeatureDetails.map((line : any,index : any) => {
-                    return (
-                        <Text key={index} style={styles.ProductAboutLine}>
-                          {`\u25CF ${line}`}
-                        </Text>
-                      )
-                    })}
-                </View>
-            )}
-          
-
-            {Object.keys(productHowToUse[0]).length>0 && (
-                <View style={styles.AboutProductContainer}>
-                  <Text style={styles.AboutHeading}>Usage</Text>
-                  {productHowToUse[0] === undefined ?
-                  <Text>Loading</Text> :
-                  (
-                    Object.keys(productHowToUse[0]).map((key, index)=>(
-                      <View key={index} style={styles.ProductTechnicalDetailsLine}>
-                        <Text style={styles.ProductTechnicalDetailsValue}>
-                          {`\u25CF`}{" "}
-                          <Text style={styles.ProductTechnicalDetailsHeading}>{key} : </Text> 
-                          {productHowToUse[0][key]}
-                        </Text>
+                            </View>
+                          } */}
+                          <Image onLoad={() => setImageLoading(true)} style={styles.ProductImage} source={{ uri : image}} />
                       </View>
-                    ))
-                  )}
-                </View>
-            )}
-          
+                    )
+                  })}
+              </ScrollView>
 
-            {productAdditionalInformation.length>0 && (
-                <View style={styles.AboutProductContainer}>
-                  <Text style={styles.AboutHeading}>Additional Information</Text>
-                  {productAdditionalInformation.map((line : any , index : any) => {
-                    return (
-                        <Text key={index} style={styles.ProductAboutLine}>
-                          {`\u25CF ${line}`}
+              {productImages.length > 1 && 
+                <View style={styles.ImagesScrollIndicatorContainer}>
+                  {productImages.map((image : any, index : any) => {
+                      return (
+                          <View
+                              style={[styles.ImagesScrollIndicator, {backgroundColor : (currentImageIndex == (index)) ? COLORS.primaryLightGreenHex : COLORS.secondaryLightGreyHex}]}
+                              key={index}>
+                          </View>
+                      )
+                  }) }
+              </View>
+              }
+              
+      
+              <View style={styles.ProductDetailInfo}>
+                <Text style={styles.ProductDetailTitle}>{productTitle}</Text>
+                <Text style={styles.ProductDetailBrand}>{productBrand}</Text>
+                <View style={styles.ProductPriceContainer}>
+                  <Text style={styles.ProductPriceHeading}>Price</Text>
+                    {productPrice[0] === undefined ?
+                      <Text></Text> :
+                      (
+                        <Text style={styles.ProductPrice}>
+                            {productDiscount!=='' ? 
+                            <Text>
+                              ₹{productPrice[sizeSelect]['price']}{" "}
+                              <Text style={{fontSize : FONTSIZE.size_18,
+                                fontFamily : FONTFAMILY.poppins_medium, 
+                                textDecorationLine : "line-through",
+                                color : COLORS.primaryLightGreyHex,
+                                }}>₹{Number(productPrice[sizeSelect]['price']) + (productPrice[sizeSelect]['price']*Number(productDiscount))/100}</Text>
+                            </Text>:
+                            <Text>₹{productPrice[sizeSelect]['price']}</Text>
+                            }
                         </Text>
                       )
-                    })}
+                    } 
+                    {/* {reward!==0 && 
+                      <View style={{flexDirection : "row" , alignItems : "center", }}>
+                        <Text style={styles.EarnCoinHeading}>  ( Get {reward} x</Text>
+                        <Image style={{height: 25, width:40, }} source={require("../assets/reward_coin.png")} />
+                        <Text style={styles.EarnCoinHeading}>)</Text>
+                      </View>  
+                    } */}
+                    
                 </View>
-            )}
-         
-
-          
-        </View>
-      </ScrollView>
+      
+                {productDiscount!=='' && (
+                  <Text style={styles.ProductDiscount}>Save money by {productDiscount}% from Market price</Text>  
+                )}
+                  <View>
+                    <View style={styles.ProductSizeContainer}>
+                      <Text style={styles.ProductSizeHeading}>Size </Text>
+                      {/* <Text style={styles.ProductSizeMeasurement}>{productPrice[0]['size']}</Text> */}
+                      {productPrice[0] === undefined ?
+                          <Text></Text> :
+                          (
+                            <Text style={styles.ProductPrice}>{productPrice[sizeSelect]['size']}</Text>
+                          )
+                        }
+                    </View>
+                  </View>
+                
+      
+                <View style={styles.ProductSizeChooseContainer}>
+                  {
+                    productPrice.map((item :any , index : any) => {
+                      return (
+                        <TouchableOpacity
+                          key={index}
+                          onPress={() => setSizeSelect(index)}
+                          style={[styles.ProductSizeChoose , { backgroundColor : (index===sizeSelect ? COLORS.secondaryLightGreenHex : COLORS.primaryWhiteHex)  }]}
+                        >
+                            <Text style={styles.ProductSizeChooseText}>{item.size}</Text>
+                        </TouchableOpacity>
+                      )
+                    })
+                  }
+                </View>
+      
+                  {productAboutDetails.length>0 && (
+                      <View style={styles.AboutProductContainer}>
+                        <Text style={styles.AboutHeading}>About Product</Text>
+                        {productAboutDetails.map((line : any, index : any) => {
+                          return (
+                              <Text key={index} style={styles.ProductAboutLine}>
+                                {`\u25CF ${line}`}
+                              </Text>
+                            )
+                          })}
+                      </View>
+                  )}
+                
+                {Object.keys(productTechnicalDetails[0]).length>0 && (
+                    <View style={styles.AboutProductContainer}>
+                      <Text style={styles.AboutHeading}>Technical Details</Text>
+                      {productTechnicalDetails[0] === undefined ?
+                      <Text>Loading</Text> :
+                      (
+                        Object.keys(productTechnicalDetails[0]).map((key, index)=>(
+                          <View key={index} style={styles.ProductTechnicalDetailsLine}>
+                            <Text style={styles.ProductTechnicalDetailsValue}>
+                              {`\u25CF`}{" "}
+                              <Text style={styles.ProductTechnicalDetailsHeading}>{key} : </Text> 
+                              {productTechnicalDetails[0][key]}
+                            </Text>
+                          </View>
+                        ))
+                      )}
+                    </View>
+                )}
+                
+      
+                  {productFeatureDetails.length>0 && (
+                      <View style={styles.AboutProductContainer}>
+                        <Text style={styles.AboutHeading}>Features</Text>
+                        {productFeatureDetails.map((line : any,index : any) => {
+                          return (
+                              <Text key={index} style={styles.ProductAboutLine}>
+                                {`\u25CF ${line}`}
+                              </Text>
+                            )
+                          })}
+                      </View>
+                  )}
+                
+      
+                  {Object.keys(productHowToUse[0]).length>0 && (
+                      <View style={styles.AboutProductContainer}>
+                        <Text style={styles.AboutHeading}>Usage</Text>
+                        {productHowToUse[0] === undefined ?
+                        <Text>Loading</Text> :
+                        (
+                          Object.keys(productHowToUse[0]).map((key, index)=>(
+                            <View key={index} style={styles.ProductTechnicalDetailsLine}>
+                              <Text style={styles.ProductTechnicalDetailsValue}>
+                                {`\u25CF`}{" "}
+                                <Text style={styles.ProductTechnicalDetailsHeading}>{key} : </Text> 
+                                {productHowToUse[0][key]}
+                              </Text>
+                            </View>
+                          ))
+                        )}
+                      </View>
+                  )}
+                
+      
+                  {productAdditionalInformation.length>0 && (
+                      <View style={styles.AboutProductContainer}>
+                        <Text style={styles.AboutHeading}>Additional Information</Text>
+                        {productAdditionalInformation.map((line : any , index : any) => {
+                          return (
+                              <Text key={index} style={styles.ProductAboutLine}>
+                                {`\u25CF ${line}`}
+                              </Text>
+                            )
+                          })}
+                      </View>
+                  )}
+              
+      
+                
+              </View>
+            </ScrollView>
+          )
+        }
       
     </View>
   )
@@ -305,7 +408,8 @@ const styles = StyleSheet.create({
   ProductDetailHeaderTitle : {
     marginLeft : SPACING.space_10,
     fontSize : FONTSIZE.size_18,
-    fontFamily : FONTFAMILY.poppins_semibold
+    fontFamily : FONTFAMILY.poppins_semibold,
+    color : COLORS.primaryLightGreyHex
   },
   ProductDetailHeaderRightCartIcon : {
     marginLeft : SPACING.space_15
@@ -313,7 +417,10 @@ const styles = StyleSheet.create({
   PaymentFooterButtonContainer : {
     flexDirection : "row",
     alignItems : "center",
-    padding : SPACING.space_18,
+    paddingLeft : SPACING.space_18,
+    paddingRight : SPACING.space_18,
+    paddingBottom : SPACING.space_18,
+    paddingTop : SPACING.space_10,
     position : 'absolute',
     bottom : SPACING.space_20 *3,
     zIndex : 1,
@@ -326,6 +433,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     height: SPACING.space_20 * 3,
     borderRadius: BORDERRADIUS.radius_20,
+    flexDirection : "row",
   },
   PaymentFooterButtonTextCart : {
     color : COLORS.primaryWhiteHex,
@@ -336,10 +444,32 @@ const styles = StyleSheet.create({
     color : COLORS.primaryWhiteHex,
     fontFamily : FONTFAMILY.poppins_medium,
     fontSize : FONTSIZE.size_16,
+    marginLeft : SPACING.space_10*0.5,
   },
   ScrollViewFlex : {
     flexGrow: 1,
     justifyContent: 'space-between',
+  },
+  ProuctImageLoading : {
+    backgroundColor : COLORS.secondaryLightGreyHex,
+    width : ImageCardWidth,
+    height : ImageCardWidth,
+  },
+  ProductImage : {
+    width : ImageCardWidth,
+    height : ImageCardWidth,
+  },
+  ImagesScrollIndicatorContainer : {
+    flexDirection : "row",
+    alignItems : "center",
+    justifyContent : "center",
+    marginTop : SPACING.space_18
+  },
+  ImagesScrollIndicator : {
+      width : SPACING.space_10*0.8,
+      height : SPACING.space_10*0.8,
+      borderRadius : BORDERRADIUS.radius_25,
+      marginRight : SPACING.space_10*0.5
   },
   ProductDetailInfo : {
     padding : SPACING.space_18,
@@ -363,13 +493,19 @@ const styles = StyleSheet.create({
   },
   ProductPriceHeading : {
     fontSize : FONTSIZE.size_16,
-    fontFamily : FONTFAMILY.poppins_regular
+    fontFamily : FONTFAMILY.poppins_regular,
+    color : COLORS.primaryLightGreyHex
   },
   ProductPrice : {
     fontSize : FONTSIZE.size_24,
     fontFamily : FONTFAMILY.poppins_extrabold,
     marginLeft : SPACING.space_10,
     color : COLORS.primaryBlackHex
+  },
+  EarnCoinHeading : {
+    fontSize : FONTSIZE.size_16,
+    fontFamily : FONTFAMILY.poppins_medium,
+    color : COLORS.primaryBlackHex,
   },
   ProductDiscount : {
     fontSize : FONTSIZE.size_16,
@@ -382,7 +518,8 @@ const styles = StyleSheet.create({
   },
   ProductSizeHeading : {
     fontSize : FONTSIZE.size_16,
-    fontFamily : FONTFAMILY.poppins_regular
+    fontFamily : FONTFAMILY.poppins_regular,
+    color : COLORS.primaryLightGreyHex
   },
   ProductSizeQuantity : {
     fontSize : FONTSIZE.size_16,
