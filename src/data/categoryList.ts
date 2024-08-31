@@ -55,6 +55,20 @@ const CategoryListItem = [
         image_link : '',
         index : 8,
     },
+    {
+        id : 'CL8',
+        name : 'others',
+        description : '',
+        image_link : '',
+        index : 9,
+    },
+    {
+        id : 'CL8',
+        name : 'others',
+        description : '',
+        image_link : '',
+        index :10,
+    },
 ]
 
 export default CategoryListItem;

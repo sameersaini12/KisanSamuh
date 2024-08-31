@@ -31,6 +31,8 @@ import { useSelector } from 'react-redux'
 import RewardScreen from '../screens/RewardScreen'
 import RewardHistoryScreen from '../screens/RewardHistoryScreen'
 import ReddemHistoryScreen from '../screens/ReddemHistoryScreen'
+import UpdateRedeemOrderStatus from '../screens/UpdateRedeemOrderStatus'
+import UpdateProductDetails from '../screens/UpdateProductDetails'
 
 const Stack = createNativeStackNavigator()
 
@@ -198,7 +200,16 @@ const StackNavigator = () => {
             component={ReddemHistoryScreen}
             options={{ animation : "slide_from_bottom"}}
           />
-
+          <Stack.Screen
+            name='UpdateRedeemOrderStatus'
+            component={UpdateRedeemOrderStatus}
+            options={{ animation : "slide_from_bottom"}}
+          />
+          <Stack.Screen
+            name='UpdateProductDetails'
+            component={UpdateProductDetails}
+            options={{ animation : "slide_from_bottom"}}
+          />
         </Stack.Navigator>
   )
 }

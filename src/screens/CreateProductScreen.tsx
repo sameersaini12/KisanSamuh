@@ -710,7 +710,6 @@ const CreateProductScreen = ({ navigation} : any) => {
                         >
                             <TextInput
                                 multiline
-                                inputMode='text'
                                 style={[styles.ProductInput , {paddingRight : SPACING.space_18*3.1,}]}
                                 value={currentProductFeatures}
                                 onChangeText={setCurrentProductFeatures}

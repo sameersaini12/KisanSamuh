@@ -2,7 +2,7 @@ import { Dimensions, Image, ImageBackground, Pressable, StyleSheet, Text, View }
 import React from 'react'
 import CategoryListItem from '../data/categoryList'
 import { BORDERRADIUS, COLORS, FONTFAMILY, FONTSIZE, SPACING } from '../theme/theme';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { FlatList, ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 
 const CARD_WIDTH = Dimensions.get('window').width * 0.2;
 
@@ -17,32 +17,48 @@ const imageFetcher : any = {
     others : require("../assets/Categories/nutrient.png"),
 }
 
-const CategoryList = ({navigation} : any) => {
+const CategoryList = ({navigation, numColumns = 2} : any) => {
   return (
     <View style={styles.CategoryContainer}>
-      {CategoryListItem.map((category : any , index : any) => {
-        return (
-            <Pressable 
-                key={index} 
-                style={styles.CategoryContainerItem}
-                onPress={() => {
-                    navigation.navigate("Tab" , {
-                        screen : "Shop",
-                        params : {
-                            searchTextFromPreviousScreen : category.name
-                        }
-                    })
+        <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            directionalLockEnabled={true}
+            alwaysBounceVertical={false}
+        >
+            <FlatList
+                contentContainerStyle={{alignSelf : "flex-start"}}
+                numColumns={Math.ceil(CategoryListItem.length/numColumns)}
+                showsVerticalScrollIndicator={false}
+                showsHorizontalScrollIndicator={false}
+                directionalLockEnabled={true}
+                alwaysBounceVertical={false}
+                data={CategoryListItem}
+                renderItem={({item, index}) => {
+                    return (
+                        <Pressable 
+                            key={index} 
+                            style={styles.CategoryContainerItem}
+                            onPress={() => {
+                                navigation.navigate("Tab" , {
+                                    screen : "Shop",
+                                    params : {
+                                        searchTextFromPreviousScreen : item.name
+                                    }
+                                })
+                            }}
+                        >
+                            <View style={{marginTop : SPACING.space_10}}>
+                                <View style={styles.CategoryContainerBox}>
+                                </View>
+                                <ImageBackground style={styles.CategoryContainerBoxImage} source={imageFetcher[item.name]} />
+                            </View>
+                            <Text style={styles.CategoryTitle}>{item.name}</Text>
+                        </Pressable>
+                    )
                 }}
-            >
-                <View style={{marginTop : SPACING.space_10}}>
-                    <View style={styles.CategoryContainerBox}>
-                    </View>
-                    <ImageBackground style={styles.CategoryContainerBoxImage} source={imageFetcher[category.name]} />
-                </View>
-                <Text style={styles.CategoryTitle}>{category.name}</Text>
-            </Pressable>
-        )
-      })}
+            />
+        </ScrollView>
     </View>
   )
 }
@@ -58,7 +74,8 @@ const styles = StyleSheet.create({
     },
     CategoryContainerItem : {
         alignItems : 'center',
-        marginTop : SPACING.space_15
+        marginTop : SPACING.space_15,
+        marginRight : SPACING.space_18,
     },
     CategoryContainerBox : {
         height : CARD_WIDTH,

@@ -16,6 +16,8 @@ const UpdateOrderStatusScreen = ({navigation } : any) => {
   const [loading , setLoading] = useState(true)
   const [deliveryStatusLoading , setDeliveryStatusLoading ] = useState(false)
   const [paymentChangeLodaing , setPaymentChangeLoading ] = useState(false)
+  const [updateCardIndex, setUpdateCardIndex] = useState(0)
+  const [paidUpdateCardIndex, setPaidUpdateCardIndex] = useState(0)
 
   const userToken = useSelector((state : any) => state.user.token)
 
@@ -171,12 +173,11 @@ const UpdateOrderStatusScreen = ({navigation } : any) => {
                                 >
                                         {/* <Text style={styles.OrderDataDate}>Order Date : {orderData.orderDate}</Text> */}
                                         <View>
-                                            {orderData.orders.map((orderItem : any , index : any) => {
-                                                // console.log("Order Item " + orderItem)
+                                            {orderData.orders.map((orderItem : any , orderItemindex : any) => {
                                                 return (
                                                 
 
-                                                <View style={styles.OrderDataContainer} key={index}> 
+                                                <View style={styles.OrderDataContainer} key={orderItemindex}> 
                                                     <View style={styles.DeliveryStatusContainer}>
                                                         <View style={styles.DeliveryStatusIcon}>
                                                             <CustomIcon
@@ -191,10 +192,13 @@ const UpdateOrderStatusScreen = ({navigation } : any) => {
                                                                   
                                                                 </Text>
                                                                 <TouchableOpacity
-                                                                  onPress={() => updateStatusHandler(orderData.status, orderData._id , orderData.userId, orderData.rewardCoins)}
+                                                                  onPress={() => {
+                                                                    setUpdateCardIndex(index)
+                                                                    updateStatusHandler(orderData.status, orderData._id , orderData.userId, orderData.rewardCoins)
+                                                                  }}
                                                                   style={{marginLeft : SPACING.space_10 , flexDirection : "row", alignItems : "center"}}
                                                                 >
-                                                                  {deliveryStatusLoading && 
+                                                                  {deliveryStatusLoading && index===updateCardIndex && 
                                                                     <LottieView
                                                                       source={require("../components/lottie/Loading.json")}
                                                                       autoPlay
@@ -223,7 +227,10 @@ const UpdateOrderStatusScreen = ({navigation } : any) => {
                                                               <View style={{marginLeft : SPACING.space_10 , flexDirection : "row" , alignItems : "center"}}>
                                                                 {orderData.paymentStatus ? (
                                                                   <TouchableOpacity
-                                                                  onPress={() => updatePaymentStatusHandler(orderData._id , !orderData.paymentStatus)} 
+                                                                  onPress={() => {
+                                                                    setPaidUpdateCardIndex(index)
+                                                                    updatePaymentStatusHandler(orderData._id , !orderData.paymentStatus)
+                                                                  }} 
                                                                   style={styles.PaymentStatusContainer}>
                                                                   <Text style={styles.PaymentStatusText}>Paid {" "}
                                                                     <CustomIcon
@@ -233,7 +240,10 @@ const UpdateOrderStatusScreen = ({navigation } : any) => {
                                                                 </TouchableOpacity> 
                                                                 ) : (
                                                                   <TouchableOpacity
-                                                                    onPress={() => updatePaymentStatusHandler(orderData._id , !orderData.paymentStatus)} 
+                                                                    onPress={() => {
+                                                                      setPaidUpdateCardIndex(index)
+                                                                      updatePaymentStatusHandler(orderData._id , !orderData.paymentStatus)
+                                                                    }} 
                                                                     style={styles.PaymentStatusContainer}>
                                                                     <Text style={styles.PaymentStatusText}>Not Paid {" "}
                                                                       <CustomIcon
@@ -242,7 +252,7 @@ const UpdateOrderStatusScreen = ({navigation } : any) => {
                                                                     </Text>
                                                                   </TouchableOpacity> 
                                                                 )}
-                                                                  {paymentChangeLodaing && 
+                                                                  {paymentChangeLodaing && index===paidUpdateCardIndex && 
                                                                     <LottieView
                                                                       source={require("../components/lottie/Loading.json")}
                                                                       autoPlay
@@ -430,7 +440,7 @@ OrderHistoryImageContainer : {
 },
 OrderHistoryImage : {
   height : 80,
-  width : 80,
+  width : 80
 },
 HorizontalRule : {
   padding : 0.5,

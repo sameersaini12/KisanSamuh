@@ -70,12 +70,12 @@ useEffect(()=> {
           data={ordersList}
           keyExtractor={(item : any) => item._id}
           renderItem={({item , index}) => {
-            console.log(item)
+            // console.log(item)
             return (
               <View style={styles.RewardHistoryCardContainer}>
-                <Text style={styles.RewardCoinsText}>Date : {moment(item.updatedAt).format("DD/MM/YYYY")}</Text>
+                {/* <Text style={styles.RewardCoinsText}>Date : {moment(item.updatedAt).format("DD/MM/YYYY")}</Text> */}
                 <View style={{flexDirection : "row" , alignItems : "center" , justifyContent: 'space-between',}}>
-                <Text style={styles.OrderIdText}>Id: {item._id}</Text>
+                <Text style={styles.OrderIdText}>Date: {moment(item.deliveryDate).format("DD/MM/YYYY")}</Text>
                   <Text style={styles.RewardCoinsText}>
                   <Image style={{height : 25, width : 30}} source={require("../assets/reward_coin.png")} />
                     x {item.rewardCoins}</Text>

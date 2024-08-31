@@ -183,6 +183,26 @@ const CustomDrawer = ({navigation} : any) => {
           )
           }
 
+          {isAdmin && 
+          (
+            <View>
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.navigate("UpdateProductDetails")
+                  }}
+                  style={styles.DrawerSignOut}>
+                    <CustomIcon
+                      name='pencil'
+                      size={22}
+                      color={COLORS.primaryLightGreenHex}
+                    />
+                    <Text style={styles.DrawerSignOutText}>Update Product Details</Text>
+                </TouchableOpacity>
+                <View style={styles.HorizontalRule}></View>
+            </View>
+          )
+          }
+
           {/* Update Order Status  */}
 
           {isAdmin && 
@@ -203,6 +223,28 @@ const CustomDrawer = ({navigation} : any) => {
                 <View style={styles.HorizontalRule}></View>
             </View>
           )
+          }
+
+          {/* Update Redeem Order Status  */}
+
+          {isAdmin && 
+            (
+              <View>
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigation.navigate("UpdateRedeemOrderStatus")
+                    }}
+                    style={styles.DrawerSignOut}>
+                      <CustomIcon
+                        name='pencil'
+                        size={22}
+                        color={COLORS.primaryLightGreenHex}
+                      />
+                      <Text style={styles.DrawerSignOutText}>Update Reward Orders</Text>
+                  </TouchableOpacity>
+                  <View style={styles.HorizontalRule}></View>
+              </View>
+            )
           }
 
           {/* Krishi gayan  */}

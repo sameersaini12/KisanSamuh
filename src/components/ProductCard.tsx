@@ -7,7 +7,7 @@ const CARD_WIDTH = Dimensions.get('window').width * 0.43;
 
 interface ProductCardProps {
     id: string,
-    imageLink: ImageProps,
+    imageLink: any,
     title: string,
     companyName: string,
     price: any,
@@ -24,13 +24,18 @@ const ProductCard : React.FC<ProductCardProps> = ({
 }) => {
   return (
     <View style={styles.ProductCardContainer}>
+        {discount!=='' && 
+        <View style={styles.DiscountTag}>
+            <Text style={styles.DiscountTagText}>{discount}% off</Text>
+        </View>
+        }
       <Image style={styles.CardImageBG} source={{ uri : imageLink}} />
       <View style={styles.ProductDetails}>
         <Text style={styles.CardTitle}>{title}</Text>
         <Text style={styles.CardSubtitle}>{companyName}</Text>
         <View style={styles.CardFooterRow}>
             <Text style={styles.CardPriceCurrency}>
-            {discount!=='' ? 
+            {discount!=='' ?
                 <Text>
                     ₹{price}{" "}
                     <Text style={{fontSize : FONTSIZE.size_14,
@@ -66,6 +71,17 @@ const styles = StyleSheet.create({
         elevation : 1,
         shadowColor: 'transparent',
     }, 
+    DiscountTag : {
+        position : "absolute",
+        backgroundColor : COLORS.primaryOrangeHex,
+        padding : SPACING.space_10*0.4,
+        borderBottomRightRadius : BORDERRADIUS.radius_10*0.8,
+    },
+    DiscountTagText : {
+        color : COLORS.primaryWhiteHex,
+        fontSize : FONTSIZE.size_12,
+        fontFamily : FONTFAMILY.poppins_medium
+    },
     CardImageBG : {
         width: CARD_WIDTH,
         height: CARD_WIDTH,

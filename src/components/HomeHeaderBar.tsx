@@ -25,7 +25,7 @@ const HeaderBar = ({navigation} : any) => {
             <TouchableOpacity
                 onPress={async () => {
                     if(loginStatus)
-                    navigation.push("RewardScreen")
+                    navigation.navigate("RewardScreen")
                     else {
                         const enterInAppStatus : any = false
                         await dispatch(updateEnterInAppStatus(enterInAppStatus))
@@ -37,7 +37,7 @@ const HeaderBar = ({navigation} : any) => {
             </TouchableOpacity>
             <TouchableOpacity
                 onPress={() => {
-                    navigation.push("CartScreen")
+                    navigation.navigate("CartScreen")
                 }}
             >
                 <CustomIcon
