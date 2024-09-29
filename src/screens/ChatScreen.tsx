@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet, Text, ToastAndroid, View } from 'react-native'
+import { TouchableOpacity, StyleSheet, Text, ToastAndroid, View } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
 import CustomIcon from '../components/CustomIcon'
 import { BORDERRADIUS, COLORS, FONTFAMILY, FONTSIZE, SPACING } from '../theme/theme'
@@ -9,8 +9,11 @@ import ServerMessage from '../components/ServerMessage'
 import {BASE_URL} from "@env"
 import ChatLoadingSkeleton from '../components/ChatLoadingSkeleton'
 import LottieView from 'lottie-react-native'
+import { useTranslation } from 'react-i18next'
 
 const ChatScreen = ({navigation, route} : any) => {
+
+    const {t} = useTranslation()
 
     const [groupName, setGroupName ] = useState(route.params.groupName)
     const [currentGroupOrdersList, setCurrentGroupOrdersList] = useState([])
@@ -76,7 +79,7 @@ const ChatScreen = ({navigation, route} : any) => {
                 setPreviousGroupOrdersList(previosuOrderList)
             }
             else{
-                ToastAndroid.show("No More Previous Orders" , ToastAndroid.SHORT)
+                ToastAndroid.show(t("No More Previous Orders") , ToastAndroid.SHORT)
             }
             setLoadPreviousLoading(false)
             // console.log(currentGroupOrdersList)
@@ -131,7 +134,7 @@ const ChatScreen = ({navigation, route} : any) => {
   return (
     <GestureHandlerRootView>
         <View style={styles.StartingHeaderContainer}>
-            <Pressable 
+            <TouchableOpacity 
                 onPress={backButtonHandler}
                 style={styles.StartingHeaderBackButton}
             >
@@ -140,14 +143,14 @@ const ChatScreen = ({navigation, route} : any) => {
                     size={FONTSIZE.size_24}
                     color={COLORS.primaryWhiteHex}
                 />
-            </Pressable>
+            </TouchableOpacity>
             <View style={styles.GroupDPContainer}>
                 <CustomIcon
                     name='users'
                     size={27}
                 />
             </View>
-            <Pressable
+            <TouchableOpacity
                 onPress={()=> {
                     navigation.push("GroupInfoScreen",  {
                         groupName: groupName
@@ -155,8 +158,8 @@ const ChatScreen = ({navigation, route} : any) => {
                 }}
             >
                 <Text style={styles.SelectCropScreenHeaderTitle}>{route.params.groupName}</Text>
-                <Text style={styles.GroupMembers}>See all group members</Text>
-            </Pressable>
+                <Text style={styles.GroupMembers}>{t("See all group members")}</Text>
+            </TouchableOpacity>
         </View>
         {loadingContent ? (
             <ChatLoadingSkeleton  />
@@ -167,7 +170,7 @@ const ChatScreen = ({navigation, route} : any) => {
                 contentContainerStyle={styles.ScrollViewStyle}
                 
             >
-                <Pressable
+                <TouchableOpacity
                     onPress={loadPreviousOrdersButtonHandler}
                     style={styles.LoadPreviousOrdersButtonContainer}
                 >
@@ -180,9 +183,9 @@ const ChatScreen = ({navigation, route} : any) => {
                         />
                     }
                     <Text style={styles.LoadPreviousOrdersButtonText}>
-                        Load Previous orders
+                        {t("Load Previous orders")}
                     </Text>
-                </Pressable>
+                </TouchableOpacity>
                 {previousGroupOrdersList.length>0 && previousGroupOrdersList.map((item :any , index : any)=> {
                     // console.log(item)
                     return (
@@ -203,7 +206,7 @@ const ChatScreen = ({navigation, route} : any) => {
                         <View style={styles.CurrentOrderHRLineContainer}>
                             <View style={styles.HorizontalRuleHalf}>
                             </View>
-                            <Text style={styles.CurrentOrdersLineText}>Current Orders</Text>
+                            <Text style={styles.CurrentOrdersLineText}>{t("Current Orders")}</Text>
                             <View style={styles.HorizontalRuleHalf}>
                             </View>
                         </View>

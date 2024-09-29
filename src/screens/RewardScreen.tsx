@@ -9,8 +9,11 @@ import { BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet
 import ChangeAddressModal from '../components/ChangeAddressModal'
 import RedeemAddress from '../components/RedeemAddress'
 import OrderHistoryLoadingSkeleton from '../components/OrderHistoryLoadingSkeleton'
+import { useTranslation } from 'react-i18next'
 
 const RewardScreen = ({navigation} : any) => {
+
+    const {t} = useTranslation()
 
     const [openRewardProductModal , setOpenRewardProductModal] = useState(false)
     const [openRewardIndex, setOpenRewardIndex] = useState<any>({})
@@ -110,7 +113,7 @@ const RewardScreen = ({navigation} : any) => {
                     color={COLORS.primaryWhiteHex}
                 />
             </TouchableOpacity>
-            <Text style={styles.StartingHeaderTitle}>Rewards</Text>
+            <Text style={styles.StartingHeaderTitle}>{t("Rewards")}</Text>
 
         </View>
 
@@ -118,7 +121,7 @@ const RewardScreen = ({navigation} : any) => {
             <Image style={styles.RewardCoinImage} source={require("../assets/reward_coin.png")} />
             <View style={styles.RewardCoinNumberContainer}>
                 <Text style={styles.RewardCoinNumber}>{coins}</Text>
-                <Text style={styles.RewardCoinPointTitle}>Points</Text>
+                <Text style={styles.RewardCoinPointTitle}>{t("Coins")}</Text>
             </View>
         </View>
 
@@ -130,7 +133,7 @@ const RewardScreen = ({navigation} : any) => {
                 }}
                 style={styles.RewardHistoryContainer}
             >
-                <Text style={styles.RewardHistoryText}>Coin Reward History</Text>
+                <Text style={styles.RewardHistoryText}>{t("Coin Reward History")}</Text>
                 <CustomIcon
                     name='circle-right'
                     size={22}
@@ -146,7 +149,7 @@ const RewardScreen = ({navigation} : any) => {
                 }}
                 style={styles.RewardHistoryContainer}
             >
-                <Text style={styles.RewardHistoryText}>Redeem History</Text>
+                <Text style={styles.RewardHistoryText}>{t("Redeem History")}</Text>
                 <CustomIcon
                     name='circle-right'
                     size={22}
@@ -163,7 +166,7 @@ const RewardScreen = ({navigation} : any) => {
         <View style={{padding : SPACING.space_18}}>
             <View style={styles.BenifitListContainer}>
                 <View style={styles.GiftTitleButtonContainer}>
-                    <Text style={styles.GiftTitle}>Gifts</Text>
+                    <Text style={styles.GiftTitle}>{t("Rewards")}</Text>
                 </View>
                 {rewardList && rewardList.map((item : any, index: any) => {
                     return (
@@ -202,11 +205,11 @@ const RewardScreen = ({navigation} : any) => {
                 <View style={styles.ProductInfoModalDataContainer}>
                 <Image resizeMode='contain' style={styles.ProductInfoImage} source={{uri : openRewardIndex.image_link}} />
                 <View style={styles.ProductInfoDescriptionContainer}>
-                    <Text style={styles.ProductInfoDescriptionTitle}>Name : </Text>
+                    <Text style={styles.ProductInfoDescriptionTitle}>{t("Name")} : </Text>
                     <Text style={styles.ProductInfoDescriptionData}>{openRewardIndex.name} </Text>
                 </View>
                 <View style={styles.ProductInfoDescriptionContainer}>
-                    <Text style={styles.ProductInfoDescriptionTitle}>Coins : </Text>
+                    <Text style={styles.ProductInfoDescriptionTitle}>{t("Coins")} : </Text>
                     <Text style={styles.ProductInfoDescriptionData}>{openRewardIndex.coins_required} Coins </Text>
                 </View>
                 <View style={styles.ProductInfoModalButtonContainer}>
@@ -216,7 +219,7 @@ const RewardScreen = ({navigation} : any) => {
                         }}
                         style={styles.AddToCartButtonContainer}
                     >
-                        <Text style={styles.AddToCartText}>Cancel</Text>
+                        <Text style={styles.AddToCartText}>{t("Cancel")}</Text>
                     </Pressable>
                     <Pressable
                         onPress={() => {
@@ -229,7 +232,7 @@ const RewardScreen = ({navigation} : any) => {
                         }}
                         style={[styles.CloseButtonContainer , {opacity : openRewardIndex.coins_required < coins ? 1 : 0.8}]}
                     >
-                        <Text style={styles.CloseButtonText}>{openRewardIndex.coins_required < coins ? "Redeem Now" : `Needs ${openRewardIndex.coins_required - coins} Coins`}</Text>
+                        <Text style={styles.CloseButtonText}>{openRewardIndex.coins_required < coins ? t("Redeem Now") : `${t("Needs")} ${openRewardIndex.coins_required - coins} Coins`}</Text>
                     </Pressable>
                 </View>
                 </View>

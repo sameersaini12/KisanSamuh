@@ -8,8 +8,11 @@ import { useSelector } from 'react-redux'
 import LottieView from 'lottie-react-native'
 import OrderHistoryLoadingSkeleton from '../components/OrderHistoryLoadingSkeleton'
 import moment from 'moment'
+import { useTranslation } from 'react-i18next'
 
 const ReddemHistoryScreen = ({navigation , route} : any) => {
+
+  const {t} = useTranslation()
 
   const [redeemOrdersList, setRedeemOrdersList] = useState([])
   const [noOrders , setNoOrders] = useState(false)
@@ -80,7 +83,7 @@ const ReddemHistoryScreen = ({navigation , route} : any) => {
                 />
             </TouchableOpacity>
 
-            <Text style={styles.StartingHeaderTitle}>Redeem History</Text>
+            <Text style={styles.StartingHeaderTitle}>{t("Redeem History")}</Text>
 
         </View>
         {noOrders &&
@@ -91,7 +94,7 @@ const ReddemHistoryScreen = ({navigation , route} : any) => {
                   autoPlay
                   loop
               />
-              <Text style={styles.EmptyCartText}>There is no orders yet !</Text>
+              <Text style={styles.EmptyCartText}>{t("There is no orders yet!")}</Text>
           </View>
         }
 
@@ -113,12 +116,12 @@ const ReddemHistoryScreen = ({navigation , route} : any) => {
                           />
                       </View>
                       <View style={styles.DeliveryStatusDateContainer}>
-                          <Text style={styles.DeliveryStatusText}>{item.status}</Text>
-                          <Text style={styles.DeliveryStatusDate}>Ordered On - { moment(item.orderDate).format("DD MMMM, YYYY")}</Text>
+                          <Text style={styles.DeliveryStatusText}>{t(item.status)}</Text>
+                          <Text style={styles.DeliveryStatusDate}>{t("Ordered On")} - { moment(item.orderDate).format("DD MMMM, YYYY")}</Text>
                           {item.deliveryDate!==undefined && 
-                            <Text style={styles.DeliveryStatusDate}>Delivered On - { moment(item.deliveryDate).format("DD MMMM, YYYY")}</Text>
+                            <Text style={styles.DeliveryStatusDate}>{t("Delivered By")} - { moment(item.deliveryDate).format("DD MMMM, YYYY")}</Text>
                           }
-                          <Text style={styles.DeliveryStatusDate}>Coins Required - { item.rewardDetails[0].coins_required}</Text>
+                          <Text style={styles.DeliveryStatusDate}>{t("Coins Required")} - { item.rewardDetails[0].coins_required}</Text>
                       </View>
                     </View>
                     <View style={[styles.HorizontalRule]}></View>

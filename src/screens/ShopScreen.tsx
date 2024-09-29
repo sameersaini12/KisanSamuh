@@ -1,4 +1,4 @@
-import { Dimensions, Pressable, ScrollView, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Dimensions, TouchableOpacity, ScrollView, StatusBar, StyleSheet, Text, TextInput, View } from 'react-native'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import CustomIcon from '../components/CustomIcon'
 import { BORDERRADIUS, COLORS, FONTFAMILY, FONTSIZE, SPACING } from '../theme/theme'
@@ -13,12 +13,13 @@ import { FlatList, GestureHandlerRootView } from 'react-native-gesture-handler'
 import { ActivityIndicator } from 'react-native'
 import _ from "lodash";
 import CategoryList from '../components/CategoryList'
+import { useTranslation } from 'react-i18next'
 
 const Screen_width  = Dimensions.get("screen").width
 const Screen_height = Dimensions.get("screen").height
 
 const ShopScreen = ({navigation  , searchTextFromPreviousScreen = ''} : any) => {
-  // console.log(searchTextFromPreviousScreen)
+  const {t} = useTranslation()
   const [searchText , setSearchText] = useState(searchTextFromPreviousScreen)
   const [productList , setProductList] = useState<Array<any>>([])
   const [categories , setCategories] = useState(searchTextFromPreviousScreen)
@@ -151,7 +152,7 @@ const ShopScreen = ({navigation  , searchTextFromPreviousScreen = ''} : any) => 
               }
             />
             <TextInput
-              placeholder='Search anything'
+              placeholder={t('Search anything')}
               value={searchText}
               onChangeText={text => 
                 setSearchText(text)
@@ -161,7 +162,7 @@ const ShopScreen = ({navigation  , searchTextFromPreviousScreen = ''} : any) => 
               style={styles.SearchTextInputContainer}
             />
             {searchText.length > 0 ? (
-              <Pressable
+              <TouchableOpacity
                 onPress={() => {
                   resetSearchInputText()
                   setCategories('')
@@ -173,12 +174,12 @@ const ShopScreen = ({navigation  , searchTextFromPreviousScreen = ''} : any) => 
                   size={FONTSIZE.size_16}
                   color={COLORS.primaryLightGreyHex}
                 />
-              </Pressable>
+              </TouchableOpacity>
             ) : (
               <></>
             )}
           </View>
-          <Pressable
+          <TouchableOpacity
             onPress={() => {
               navigation.push("CartScreen")
             }}
@@ -203,30 +204,16 @@ const ShopScreen = ({navigation  , searchTextFromPreviousScreen = ''} : any) => 
                       <Text style={{color : COLORS.primaryWhiteHex}}>{totalItemInCartStore}</Text>
                   </View>
               )}
-          </Pressable>
+          </TouchableOpacity>
         </View>
 
         <CategoryList navigation={navigation} numColumns={1} />
 
         {productList.length===0 && 
-          <Text style={{color : COLORS.primaryLightGreyHex , marginLeft : SPACING.space_18}}>No Products Available</Text>
+          <Text style={{color : COLORS.primaryLightGreyHex , marginLeft : SPACING.space_18}}>{t("No Products Available")}</Text>
         }
 
         { loading ? 
-          // <View style={styles.LoadingAnimationContainer}>
-          //     <LottieView
-          //       style={styles.LoadingAnimation}
-          //       source={require("../components/lottie/Loading.json")}
-          //       autoPlay
-          //       loop
-          //     />
-          //     <Pressable
-          //         onPress={() => setRetryButton(!retryButton)}
-          //         style={styles.LoadingRetryButton}
-          //     >
-          //       <Text style={styles.LoadingRetryButtonText}>Retry</Text>
-          //     </Pressable>
-          // </View>  
           <ShopScreenLoadingSkeleton /> 
           :
             <FlatList
@@ -245,7 +232,7 @@ const ShopScreen = ({navigation  , searchTextFromPreviousScreen = ''} : any) => 
               renderItem={({item , index}) => {
                 // console.log(index + " " + item._id)
                 return (
-                  <Pressable
+                  <TouchableOpacity
                     key={index}
                     onPress={() => {
                       navigation.navigate('ProductDetails', {
@@ -261,7 +248,7 @@ const ShopScreen = ({navigation  , searchTextFromPreviousScreen = ''} : any) => 
                       price= {item['price'][0]['price']}
                       discount={item['discount']}
                     />
-                  </Pressable>
+                  </TouchableOpacity>
                 )
               }}
             />

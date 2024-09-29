@@ -50,16 +50,16 @@ const CategoryListItem = [
     },
     {
         id : 'CL8',
-        name : 'others',
+        name : 'organic',
         description : '',
         image_link : '',
         index : 8,
     },
     {
         id : 'CL8',
-        name : 'others',
+        name : 'inputs',
         description : '',
-        image_link : '',
+        image_link : 'https://m.media-amazon.com/images/I/71gWfs0OVmL._SL1500_.jpg',
         index : 9,
     },
     {

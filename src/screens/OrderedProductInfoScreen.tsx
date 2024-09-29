@@ -5,10 +5,13 @@ import { BORDERRADIUS, COLORS, FONTFAMILY, FONTSIZE, SPACING } from '../theme/th
 import { TouchableOpacity } from '@gorhom/bottom-sheet'
 import CustomIcon from '../components/CustomIcon'
 import moment from 'moment'
+import { useTranslation } from 'react-i18next'
 
 const screen_width = Dimensions.get("screen").width
 
 const OrderedProductInfoScreen = ({navigation, route} : any) => {
+
+    const {t} = useTranslation()
 
     const backButtonHandler = () => {
         navigation.pop()
@@ -29,7 +32,7 @@ const OrderedProductInfoScreen = ({navigation, route} : any) => {
                     color={COLORS.primaryLightGreyHex}
                 />
                 </Pressable>
-                <Text style={styles.OrderHistoryScreenHeaderTitle}>Ordered Product Details</Text>
+                <Text style={styles.OrderHistoryScreenHeaderTitle}>{t('Ordered Product Details')}</Text>
             </View>
         </View>
 
@@ -54,12 +57,12 @@ const OrderedProductInfoScreen = ({navigation, route} : any) => {
                         />
                     </View>
                     <View style={styles.DeliveryStatusDateContainer}>
-                        <Text style={styles.DeliveryStatusText}>{route.params.orderStatus}</Text>
-                        <Text style={styles.DeliveryStatusDate}>On {moment(route.params.orderDate).format("DD MMMM, YYYY")}</Text>
+                        <Text style={styles.DeliveryStatusText}>{t(route.params.orderStatus)}</Text>
+                        <Text style={styles.DeliveryStatusDate}>{t('Date')}: {moment(route.params.orderDate).format("DD MMM, YYYY")}</Text>
                     </View>
                 </View>
                 <View style={styles.DeliveryAddressContainer}>
-                    <Text style={styles.ItemPriceHeading}>Quantity</Text>
+                    <Text style={styles.ItemPriceHeading}>{t('Quantity')}</Text>
                     {(route.params.price).map((item : any, index : any) => {
                         return (
                             <View key={index} style={{flexDirection : "row" , justifyContent: 'space-between' , alignItems : "center"}}>
@@ -75,21 +78,21 @@ const OrderedProductInfoScreen = ({navigation, route} : any) => {
                 </View>
                 {route.params.buyingGroup!=="none" && (
                     <View style={styles.DeliveryAddressContainer}>
-                        <Text style={styles.DeliveryAddressHeading}>Buying Group</Text>
+                        <Text style={styles.DeliveryAddressHeading}>{t('Buying Group')}</Text>
                         <Text style={styles.DeliveryAddressText}>{route.params.buyingGroup}</Text>
                     </View>
                 )}
                 
                 <View style={styles.DeliveryAddressContainer}>
-                    <Text style={styles.DeliveryAddressHeading}>Delivery Address</Text>
+                    <Text style={styles.DeliveryAddressHeading}>{t('Delivery Address')}</Text>
                     <Text style={styles.DeliveryAddressText}>{route.params.address}</Text>
                 </View>
                 <View style={styles.ItemPriceContainer}>
-                    <Text style={styles.ItemPriceHeading}>Total Item Price</Text>
+                    <Text style={styles.ItemPriceHeading}>{t('Item Price')}</Text>
                     <Text style={styles.ItemPriceText}>Rs. {route.params.itemPrice}</Text>
                 </View>
                 <View style={styles.ButtonContainer}>
-                    <Text style={styles.ButtonText}>Download Invoice</Text>
+                    <Text style={styles.ButtonText}>{t('Download Invoice')}</Text>
                 </View>
                 {/* <View style={styles.ButtonContainer}>
                     <Text style={styles.ButtonText}>Rate this product</Text>

@@ -9,8 +9,10 @@ import LottieView from 'lottie-react-native'
 import moment from 'moment'
 import {BASE_URL} from "@env"
 import OrderHistoryLoadingSkeleton from '../components/OrderHistoryLoadingSkeleton'
+import { useTranslation } from 'react-i18next'
 
 const UpdateOrderStatusScreen = ({navigation } : any) => {
+  const {t} = useTranslation()
 
   const [ordersList , setOrdersList] = useState([])
   const [loading , setLoading] = useState(true)
@@ -97,7 +99,7 @@ const UpdateOrderStatusScreen = ({navigation } : any) => {
       nextOrderStatus = 'delivered'
       updateRewardCoins(userId, coins)
     }else {
-      ToastAndroid.show("Order is already deliverd", ToastAndroid.SHORT)
+      ToastAndroid.show(t("Order is already deliverd"), ToastAndroid.SHORT)
     }
 
     await fetch(`${BASE_URL}/order/update-order/${orderId}` , {
@@ -140,7 +142,7 @@ const UpdateOrderStatusScreen = ({navigation } : any) => {
                     color={COLORS.primaryLightGreyHex}
                 />
                 </TouchableOpacity>
-                <Text style={styles.OrderHistoryScreenHeaderTitle}>Update Order Status</Text>
+                <Text style={styles.OrderHistoryScreenHeaderTitle}>{t('Update Order Status')}</Text>
             </View>
         </View>
 
@@ -160,7 +162,7 @@ const UpdateOrderStatusScreen = ({navigation } : any) => {
                             autoPlay
                             loop
                         />
-                        <Text style={styles.EmptyCartText}>There is no orders yet !</Text>
+                        <Text style={styles.EmptyCartText}>{t('There is no orders yet!')}</Text>
                     </View>
                 :
                 (
@@ -188,7 +190,7 @@ const UpdateOrderStatusScreen = ({navigation } : any) => {
                                                         </View>
                                                         <View style={styles.DeliveryStatusDateContainer}>
                                                             <View style={{flexDirection : "row" , alignItems : "center" }}>
-                                                                <Text style={styles.DeliveryStatusText}>{orderData.status}
+                                                                <Text style={styles.DeliveryStatusText}>{t(orderData.status)}
                                                                   
                                                                 </Text>
                                                                 <TouchableOpacity
@@ -206,19 +208,19 @@ const UpdateOrderStatusScreen = ({navigation } : any) => {
                                                                       style={{height : 35 , width : 30}}
                                                                     />
                                                                   }
-                                                                  <Text style={[styles.DeliveryStatusDate , {color : COLORS.primaryLightGreenHex}]}>Update Status</Text>
+                                                                  <Text style={[styles.DeliveryStatusDate , {color : COLORS.primaryLightGreenHex}]}>{t('Update Status')}</Text>
                                                                 </TouchableOpacity>
                                                             </View>
                                                             
-                                                            <Text style={styles.DeliveryStatusDate}>Ordered On - {moment(orderData.orderDate).format("DD MMMM, YYYY")}</Text>
-                                                            <Text style={styles.DeliveryStatusDate}>Delivered By - {moment(orderData.deliveryDate).format("DD MMMM, YYYY")}</Text>
-                                                            <Text style={styles.DeliveryStatusDate}>Ordered By {"- "}
+                                                            <Text style={styles.DeliveryStatusDate}>{t('Ordered On')} - {moment(orderData.orderDate).format("DD MMM, YYYY")}</Text>
+                                                            <Text style={styles.DeliveryStatusDate}>{t('Delivered By')} - {moment(orderData.deliveryDate).format("DD MMM, YYYY")}</Text>
+                                                            <Text style={styles.DeliveryStatusDate}>{t('Ordered By')} {"- "}
                                                               <Text style={{textDecorationLine : "underline" , color : COLORS.primaryBlackHex}}>
                                                                 {orderData.userId}
                                                               </Text>
                                                             </Text>
                                                             <View style={[ {flexDirection : "row", alignItems : "center"}]}>
-                                                              <Text style={styles.DeliveryStatusDate}>Payment {"- "} </Text>
+                                                              <Text style={styles.DeliveryStatusDate}>{t('Payment Status')} {"- "} </Text>
                                                               <View>
                                                                 <View style={styles.PaymentStatusContainer}>
                                                                   <Text style={styles.PaymentStatusText}>{orderData.paymentMode}</Text>
@@ -232,7 +234,7 @@ const UpdateOrderStatusScreen = ({navigation } : any) => {
                                                                     updatePaymentStatusHandler(orderData._id , !orderData.paymentStatus)
                                                                   }} 
                                                                   style={styles.PaymentStatusContainer}>
-                                                                  <Text style={styles.PaymentStatusText}>Paid {" "}
+                                                                  <Text style={styles.PaymentStatusText}>{t('Paid')} {" "}
                                                                     <CustomIcon
                                                                       name='pencil'
                                                                     />
@@ -245,7 +247,7 @@ const UpdateOrderStatusScreen = ({navigation } : any) => {
                                                                       updatePaymentStatusHandler(orderData._id , !orderData.paymentStatus)
                                                                     }} 
                                                                     style={styles.PaymentStatusContainer}>
-                                                                    <Text style={styles.PaymentStatusText}>Not Paid {" "}
+                                                                    <Text style={styles.PaymentStatusText}>{t('Not Paid')} {" "}
                                                                       <CustomIcon
                                                                         name='pencil'
                                                                       />
@@ -264,7 +266,7 @@ const UpdateOrderStatusScreen = ({navigation } : any) => {
                                                             </View>
                                                             {orderData.buyingGroup!=="none" && (
                                                                 <View style={[ {flexDirection : "row", alignItems : "center" , marginTop : SPACING.space_10}]}>
-                                                                <Text style={styles.DeliveryStatusDate}>Buying Group {"- "} </Text>
+                                                                <Text style={styles.DeliveryStatusDate}>{t('Buying Group')} {"- "} </Text>
                                                                 <View>
                                                                   <View style={styles.PaymentStatusContainer}>
                                                                     <Text style={styles.PaymentStatusText}>{orderData.buyingGroup}</Text>
@@ -272,7 +274,7 @@ const UpdateOrderStatusScreen = ({navigation } : any) => {
                                                                 </View>
                                                               </View>
                                                             )}
-                                                            <Text style={styles.DeliveryStatusDate}>Coins Earned - {orderData.rewardCoins}</Text>
+                                                            <Text style={styles.DeliveryStatusDate}>{t('Coins Earned')} - {orderData.rewardCoins}</Text>
                                                         </View>
                                                     </View> 
                                                     <View style={[styles.HorizontalRule , ]}>
@@ -306,7 +308,7 @@ const UpdateOrderStatusScreen = ({navigation } : any) => {
                                                                     <View style={styles.OrderHistorySingleItemInfoContainer}>
                                                                         <View>
                                                                             <Text style={styles.OrderHistorySingleItemInfoTitle}>{orderItemData.title}</Text>
-                                                                            <Text style={styles.OrderHistorySingleItemInfoPrice}>Item Price : {orderItemData.ItemPrice}</Text>
+                                                                            <Text style={styles.OrderHistorySingleItemInfoPrice}>{t('Item Price')} : {orderItemData.ItemPrice}</Text>
                                                                         </View>
                                                                         <View style={{flexDirection : "row",alignItems : "center" , marginRight : SPACING.space_18}}>
                                                                             {/* <CustomIcon
@@ -329,7 +331,7 @@ const UpdateOrderStatusScreen = ({navigation } : any) => {
                                                         )
                                                     })}
                                                     <View style={styles.TotalBottomContainer}>
-                                                        <Text style={styles.TotalBottomTitle}>Total</Text>
+                                                        <Text style={styles.TotalBottomTitle}>{t('Total')}</Text>
                                                         <Text style={styles.TotalBottomRuppes}>Rs. {orderData.amount}</Text>
                                                     </View>
                                                 </View>

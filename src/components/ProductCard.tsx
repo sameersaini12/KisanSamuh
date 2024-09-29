@@ -2,6 +2,7 @@ import { Dimensions, ImageBackground, ImageProps, StyleSheet, Text, TouchableOpa
 import React from 'react'
 import CustomIcon from './CustomIcon'
 import { BORDERRADIUS, COLORS, FONTFAMILY, FONTSIZE, SPACING } from '../theme/theme'
+import { useTranslation } from 'react-i18next';
 
 const CARD_WIDTH = Dimensions.get('window').width * 0.43;
 
@@ -22,11 +23,12 @@ const ProductCard : React.FC<ProductCardProps> = ({
     price,
     discount
 }) => {
+    const {t} = useTranslation()
   return (
     <View style={styles.ProductCardContainer}>
         {discount!=='' && 
         <View style={styles.DiscountTag}>
-            <Text style={styles.DiscountTagText}>{discount}% off</Text>
+            <Text style={styles.DiscountTagText}>{discount}% {t("off")}</Text>
         </View>
         }
       <Image style={styles.CardImageBG} source={{ uri : imageLink}} />

@@ -7,8 +7,10 @@ import { useDispatch, useSelector } from 'react-redux'
 import LottieView from 'lottie-react-native'
 import { updateEnterInAppStatus } from '../features/userSlice'
 import {BASE_URL} from "@env"
+import { useTranslation } from 'react-i18next'
 
 const ShareFeedbackScreen = ({navigation}  : any) => {
+  const {t} = useTranslation()
 
   const [title , setTitle ] = useState('')
   const [description , setDescription ] = useState('')
@@ -102,7 +104,7 @@ const ShareFeedbackScreen = ({navigation}  : any) => {
                   color={COLORS.primaryLightGreyHex}
               />
               </Pressable>
-              <Text style={styles.ShareFeedbackScreenHeaderTitle}>Share your feedback</Text>
+              <Text style={styles.ShareFeedbackScreenHeaderTitle}>{t('Share your feedback')}</Text>
           </View>
       </View>
       
@@ -119,7 +121,7 @@ const ShareFeedbackScreen = ({navigation}  : any) => {
                 style={styles.ProductInput}
                 value={title}
                 onChangeText={setTitle}
-                placeholder='Title*'
+                placeholder={t('Title*')}
             >
             
             </TextInput>
@@ -135,7 +137,7 @@ const ShareFeedbackScreen = ({navigation}  : any) => {
                 style={[styles.ProductInput, {textAlignVertical : "top"}]}
                 value={description}
                 onChangeText={setDescription}
-                placeholder='Description*'
+                placeholder={t('Description*')}
             >
             
             </TextInput>
@@ -147,7 +149,7 @@ const ShareFeedbackScreen = ({navigation}  : any) => {
                   shareFeedbackButtonHandler()
               }}
               style={[styles.ShareFeedbackButtonContainer , { marginBottom : SPACING.space_18}]}>
-              <Text style={styles.ShareFeedbackButtonText}>Submit</Text>
+              <Text style={styles.ShareFeedbackButtonText}>{t('Submit')}</Text>
           </Pressable>
         ) : (
           <Pressable

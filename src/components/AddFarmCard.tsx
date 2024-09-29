@@ -3,9 +3,13 @@ import React from 'react'
 import CustomIcon from './CustomIcon'
 import { BORDERRADIUS, COLORS, FONTFAMILY, FONTSIZE, SPACING } from '../theme/theme'
 import { useSelector } from 'react-redux'
+import { useTranslation } from 'react-i18next'
 
 const AddFarmCard = ({navigation , openBottomModel , closeBottomModel, totalFarms} : any) => {
     const isLoggedIn = useSelector((state : any) => state.user.isLoggedIn)
+
+    const {t}  = useTranslation()
+
   return (
     <View>
         {totalFarms > 0 ? (
@@ -15,7 +19,7 @@ const AddFarmCard = ({navigation , openBottomModel , closeBottomModel, totalFarm
                 }}
                 style={styles.AddFardmCardContainer}
             >
-                <Text style={styles.VisitYourFarmText}>Visit Your Farms</Text>
+                <Text style={styles.VisitYourFarmText}>{t('visit your farm')}</Text>
                 <Pressable
                     style={styles.VisitFarmCardRightContainer}
                 >
@@ -39,7 +43,7 @@ const AddFarmCard = ({navigation , openBottomModel , closeBottomModel, totalFarm
                         size={35}
                         color={COLORS.primaryLightGreenHex}
                     />
-                    <Text style={styles.AddYourFarmText}>Add your farm</Text>
+                    <Text style={styles.AddYourFarmText}>{t('add your farm')}</Text>
                 </Pressable>
                 <Pressable 
                     onPress={() => {

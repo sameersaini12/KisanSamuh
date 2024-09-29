@@ -6,11 +6,16 @@ import CustomIcon from '../components/CustomIcon'
 import { useDispatch } from 'react-redux'
 import { updateEnterInAppStatus } from '../features/userSlice'
 import {BASE_URL} from "@env"
+import LottieView from 'lottie-react-native'
+import { useTranslation } from 'react-i18next';
 
 const PhoneLoginScreen = ({navigation} : any) => {
   const [phoneNumber , setPhoneNumber] = useState('')
   const [addPhoneNumberError , setAddPhoneNumberError] = useState(false)
   const [otpError , setOtpError ] = useState(false)
+  const [loading , setLoading] = useState(false)
+
+  const {t} = useTranslation()
 
   const backButtonHandler = () => {
       navigation.pop()
@@ -23,6 +28,7 @@ const PhoneLoginScreen = ({navigation} : any) => {
       ToastAndroid.show("Phone Number is incorrent" , ToastAndroid.SHORT)
       setAddPhoneNumberError(true)
     }else {
+      setLoading(true)
       await fetch(`${BASE_URL}/auth/send-otp` , {
         method : "POST",
         headers : {
@@ -45,6 +51,7 @@ const PhoneLoginScreen = ({navigation} : any) => {
           ToastAndroid.show("Error Occurs" , ToastAndroid.SHORT)
         }
       })
+      setLoading(false)
     }
   }
 
@@ -57,7 +64,7 @@ const PhoneLoginScreen = ({navigation} : any) => {
   return (
     <View>
       <View style={styles.StartingHeaderContainer}>
-          <Pressable 
+          <TouchableOpacity 
               onPress={backButtonHandler}
               style={styles.StartingHeaderBackButton}
           >
@@ -66,20 +73,20 @@ const PhoneLoginScreen = ({navigation} : any) => {
                   size={FONTSIZE.size_24}
                   color={COLORS.primaryBlackHex}
               />
-          </Pressable>
-          <Pressable 
+          </TouchableOpacity>
+          <TouchableOpacity 
             onPress={() => {
               const enterInAppStatus : any = true
               dispatch(updateEnterInAppStatus(enterInAppStatus))
               navigation.navigate('Tab')
             }}
             style={styles.StartingHeaderSkipButton}>
-              <Text style={styles.StartingHeaderSkipButtonText}>Skip</Text>
-          </Pressable>
+              <Text style={styles.StartingHeaderSkipButtonText}>{t('skip')}</Text>
+          </TouchableOpacity>
 
       </View>
-      <Text style={styles.PhoneLoginHeading}>Login or Sign up</Text>
-      <Text style={styles.PhoneInputHeading}>Enter your mobile number</Text>
+      <Text style={styles.PhoneLoginHeading}>{t('login or signup')}</Text>
+      <Text style={styles.PhoneInputHeading}>{t('enter your mobile number')}</Text>
 
       <View style={styles.PhoneNumberContainer}>
         <TouchableOpacity style={styles.PhoneNumberCountryContainer}>
@@ -93,7 +100,6 @@ const PhoneLoginScreen = ({navigation} : any) => {
             style={styles.PhoneNumberInput}
             value={phoneNumber}
             maxLength={10}
-            placeholder='9887898878'
             onChangeText={setPhoneNumber}
             placeholderTextColor={COLORS.primaryLightGreyHex}
           >
@@ -105,14 +111,15 @@ const PhoneLoginScreen = ({navigation} : any) => {
       <TouchableOpacity
             onPress={() => {
               if(phoneNumber==='') {
-                ToastAndroid.show("Enter Mobile Number" , ToastAndroid.SHORT)
+                ToastAndroid.show(t('enter your mobile number') , ToastAndroid.SHORT)
                 setAddPhoneNumberError(true)
-              }else 
+              }else if(!loading)
                 handleSendOTPButton()
             }}
-            style={styles.NextButtonContainer}
+            style={[styles.NextButtonContainer , {opacity : loading ? 0.5 : 1}]}
         >
-            <Text style={styles.NextButtonText}>Next</Text>
+            <Text style={styles.NextButtonText}>{t('next')}
+            </Text>
         </TouchableOpacity>
 
     </View>

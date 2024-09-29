@@ -1,14 +1,16 @@
-import { Dimensions, Pressable, StyleSheet, Text, Touchable, View } from 'react-native'
+import { Dimensions, TouchableOpacity, StyleSheet, Text, Touchable, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { TextInput } from 'react-native-gesture-handler'
-import { TouchableOpacity } from '@gorhom/bottom-sheet'
 import { useDispatch, useSelector } from 'react-redux'
 import { BORDERRADIUS, COLORS, FONTFAMILY, FONTSIZE, SPACING } from '../theme/theme'
 import {BASE_URL} from "@env"
+import { useTranslation } from 'react-i18next'
 
 const ModalWidth = Dimensions.get('window').width*0.5 - SPACING.space_18*1.5;
 
 const ChangeAddressModal = ({navigation , closeBottomModel , fetchAllAddresses , setSelectedAddressName , setSelectedAddress} : any) => {
+
+    const {t} = useTranslation()
     const [address , setAddress] = useState('')
     const [landmark , setLandMark ] = useState('')
     const [city , setCity] = useState('')
@@ -20,6 +22,7 @@ const ChangeAddressModal = ({navigation , closeBottomModel , fetchAllAddresses ,
     const [addCityError , setAddCityError] = useState(false)
     const [addPincodeError , setAddPincodeError ] = useState(false)
     const [addStateError , setAddStateError] = useState(false)
+    const [buttonLoading , setButtonLoading ] = useState(false)
 
 
     const userId = useSelector((state : any) => state.user.id)
@@ -27,7 +30,7 @@ const ChangeAddressModal = ({navigation , closeBottomModel , fetchAllAddresses ,
 
     const dispatch = useDispatch()
 
-    const AddAddressButtonHandler = () => {
+    const AddAddressButtonHandler = async () => {
         if(address==='' || landmark==='' || city==='' || state==='' || pincode==='') {
             if(address==='') {
                 setAddAddressError(true)
@@ -46,7 +49,8 @@ const ChangeAddressModal = ({navigation , closeBottomModel , fetchAllAddresses ,
             }
         }
         else {
-            fetch(`${BASE_URL}/users/add-address/${userId}`, {
+            setButtonLoading(true)
+            await fetch(`${BASE_URL}/users/add-address/${userId}`, {
                 method : "POST",
                 headers : {
                     Accept : "application/json",
@@ -69,6 +73,7 @@ const ChangeAddressModal = ({navigation , closeBottomModel , fetchAllAddresses ,
             .catch((err) => {
                 console.log(err)
             })
+            setButtonLoading(false)
         }
     }
 
@@ -95,7 +100,7 @@ const ChangeAddressModal = ({navigation , closeBottomModel , fetchAllAddresses ,
     <View style={styles.AddressModalContainer}>
         <View style={styles.AddressFormTitleContainer}>
             <Text style={styles.AddressFormTitle}>
-                Enter New Address Details
+                {t("Enter New Address Details")}
             </Text>
         </View>
       <View style={styles.AddressModalFormContainer}>
@@ -103,7 +108,7 @@ const ChangeAddressModal = ({navigation , closeBottomModel , fetchAllAddresses ,
             style={[styles.AddressInput , {borderColor : addAddressError ? "red" : COLORS.secondaryLightGreyHex}]}
             value={address}
             onChangeText={setAddress}
-            placeholder='Address*'
+            placeholder={t("Address")+"*"}
             placeholderTextColor={COLORS.secondaryLightGreyHex}
          />
          <View style={styles.AddressModalInputContainer}>
@@ -111,14 +116,14 @@ const ChangeAddressModal = ({navigation , closeBottomModel , fetchAllAddresses ,
                 style={[styles.AddressInput , {width : ModalWidth , borderColor : addLandmarkError ? "red" : COLORS.secondaryLightGreyHex}]}
                 value={landmark}
                 onChangeText={setLandMark}
-                placeholder='Landmark*'
+                placeholder={t("Landmark")+"*"}
                 placeholderTextColor={COLORS.secondaryLightGreyHex}
             />
             <TextInput
                 style={[styles.AddressInput , {width : ModalWidth , borderColor : addCityError ? "red" : COLORS.secondaryLightGreyHex}]}
                 value={city}
                 onChangeText={setCity}
-                placeholder='City*'
+                placeholder={t("City")+"*"}
                 placeholderTextColor={COLORS.secondaryLightGreyHex}
             />
          </View>
@@ -129,25 +134,29 @@ const ChangeAddressModal = ({navigation , closeBottomModel , fetchAllAddresses ,
                 value={pincode}
                 maxLength={6}
                 onChangeText={setPincode}
-                placeholder='Pincode*'
+                placeholder={t("Pincode")+"*"}
                 placeholderTextColor={COLORS.secondaryLightGreyHex}
             />
             <TextInput
                 style={[styles.AddressInput , {width : ModalWidth, borderColor : addStateError ? "red" : COLORS.secondaryLightGreyHex}]}
                 value={state}
                 onChangeText={setState}
-                placeholder='State*'
+                placeholder={t("State")+"*"}
                 placeholderTextColor={COLORS.secondaryLightGreyHex}
             />
          </View>
-         <Pressable 
+         <TouchableOpacity 
+            disabled={buttonLoading}
             onPress={() => {
-                AddAddressButtonHandler()
+                if(!buttonLoading) {
+                    AddAddressButtonHandler()
+                }
+
             }}
             style={styles.AddressModalSubmitButtonContainer}
         >
-            <Text style={styles.AddressModalSubmitButtonText}>Add new Address</Text>
-         </Pressable>
+            <Text style={styles.AddressModalSubmitButtonText}>{t("Add new Address")}</Text>
+         </TouchableOpacity>
 
       </View>
     </View>

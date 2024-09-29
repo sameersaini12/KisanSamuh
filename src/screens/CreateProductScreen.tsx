@@ -8,11 +8,13 @@ import { ColorProperties } from 'react-native-reanimated/lib/typescript/reanimat
 import { useSelector } from 'react-redux'
 import LottieView from 'lottie-react-native'
 import {BASE_URL} from "@env"
+import { useTranslation } from 'react-i18next'
 
 const ImageCardWidth = Dimensions.get("screen").width-SPACING.space_18*2
 const screenWidth = Dimensions.get("screen").width-SPACING.space_18*2
 
 const CreateProductScreen = ({ navigation} : any) => {
+    const {t} = useTranslation()
 
     const [productName , setProductName ] = useState('')
     const [brandName , setBrandName ] = useState('')
@@ -135,23 +137,23 @@ const CreateProductScreen = ({ navigation} : any) => {
     const addProductButtonHandler = async () => {
         if(selectedImages.length===0) {
             setImageError(true)
-            ToastAndroid.show('Image field is necessary' , ToastAndroid.SHORT)
+            ToastAndroid.show(t('Image field is necessary') , ToastAndroid.SHORT)
         }else if(productName==='') {
             setProductNameError(true)
-            ToastAndroid.show('Proudct name field is necessary' , ToastAndroid.SHORT)
+            ToastAndroid.show(t('Product name field is necessary') , ToastAndroid.SHORT)
         }else if(brandName==='') {
             setBrandNameError(true)
-            ToastAndroid.show('Brand name field is necessary' , ToastAndroid.SHORT)
+            ToastAndroid.show(t('Brand name field is necessary') , ToastAndroid.SHORT)
         }else if(productPrice.length===0) {
             setPriceError(true)
-            ToastAndroid.show('Price field is necessary' , ToastAndroid.SHORT)
+            ToastAndroid.show(t('Price field is necessary') , ToastAndroid.SHORT)
         }
         else{
             setUploadLoadingAnimation(true)
             var isImagesUploaded : boolean = true
             for(let i=1;i<=imagesBlob.length;i++) {
                 const url = await getPreSignedUrlToUploadImageOnAws(`image_${i}` , i )
-                console.log(imagesBlob[i-1])
+                // console.log(imagesBlob[i-1])
                 let imageUploaded  = await uploadImageOnPresignedURL(url , imagesBlob[i-1])
                 // console.log(imageUploaded)
                 isImagesUploaded = isImagesUploaded && imageUploaded
@@ -159,7 +161,7 @@ const CreateProductScreen = ({ navigation} : any) => {
             }
 
             if(!isImagesUploaded) {
-                ToastAndroid.show("Error while uploading image",ToastAndroid.SHORT)
+                ToastAndroid.show(t("Error while uploading image"),ToastAndroid.SHORT)
                 setUploadLoadingAnimation(false)
             }else {
                 await fetch(`${BASE_URL}/product/create-product`, {
@@ -322,7 +324,7 @@ const CreateProductScreen = ({ navigation} : any) => {
             >
                 <Text style={styles.StartingHeaderSkipButtonText}>Done</Text>
             </Pressable> */}
-            <Text style={styles.CartScreenHeaderTitle}>Create New Product</Text>
+            <Text style={styles.CartScreenHeaderTitle}>{t('Create New Product')}</Text>
 
         </View>
 
@@ -351,7 +353,7 @@ const CreateProductScreen = ({ navigation} : any) => {
                     <View 
                         style={[styles.ImagePickerOuterContainer ]}
                     >
-                        <Text style={styles.ImagePickerText}>Choose Product Photo</Text>             
+                        <Text style={styles.ImagePickerText}>{t('Choose Product Photo')}</Text>             
                     </View>
                 </TouchableOpacity>
 
@@ -401,13 +403,13 @@ const CreateProductScreen = ({ navigation} : any) => {
                 }) }
             </View>
 
-            <Text style={[styles.ErrorMessageText , {display : imageError ? "flex" : "none"}]}>* Image is necessary</Text>
+            <Text style={[styles.ErrorMessageText , {display : imageError ? "flex" : "none"}]}>* {t('Image field is necessary')}</Text>
             
 
             {/* Product Name  */}
 
             <View>
-                <Text style={styles.ProductInputHeading}>Product Name*</Text>
+                <Text style={styles.ProductInputHeading}>{t('Product Name')}*</Text>
 
                 <Pressable 
                     style={styles.ProductInputContainer}
@@ -418,18 +420,18 @@ const CreateProductScreen = ({ navigation} : any) => {
                         style={styles.ProductInput}
                         value={productName}
                         onChangeText={setProductName}
-                        placeholder='Product Name'
+                        placeholder={t('Product Name')}
                     >
                     
                     </TextInput>
                 </Pressable>   
             </View>
-            <Text style={[styles.ErrorMessageText , {display : productNameError ? "flex" : "none" , marginTop : 0}]}>* Product Name is necessary</Text>
+            <Text style={[styles.ErrorMessageText , {display : productNameError ? "flex" : "none" , marginTop : 0}]}>* {t('Product name field is necessary')}</Text>
 
             {/* Brand Name  */}
 
             <View>
-                <Text style={styles.ProductInputHeading}>Brand*</Text>
+                <Text style={styles.ProductInputHeading}>{t('Brand Name')}*</Text>
 
                 <Pressable 
                     style={styles.ProductInputContainer}
@@ -440,18 +442,18 @@ const CreateProductScreen = ({ navigation} : any) => {
                         style={styles.ProductInput}
                         value={brandName}
                         onChangeText={setBrandName}
-                        placeholder='Brand Name'
+                        placeholder={t('Brand Name')}
                     >
                     
                     </TextInput>
                 </Pressable>
             </View>
-            <Text style={[styles.ErrorMessageText , {display : brandNameError ? "flex" : "none" , marginTop : 0}]}>* Brand Name is necessary</Text>
+            <Text style={[styles.ErrorMessageText , {display : brandNameError ? "flex" : "none" , marginTop : 0}]}>* {t('Brand name field is necessary')}</Text>
 
             {/* About Product  */}
 
             <View>
-                <Text style={styles.ProductInputHeading}>About Product</Text>
+                <Text style={styles.ProductInputHeading}>{t('About Product')}</Text>
 
                 {aboutProduct.length > 0 && (
                     <View style={styles.AboutProductLines}>
@@ -510,7 +512,7 @@ const CreateProductScreen = ({ navigation} : any) => {
                                 style={[styles.ProductInput , {paddingRight : SPACING.space_18*3.1,}]}
                                 value={currentAboutProudct}
                                 onChangeText={setCurrentAboutProduct}
-                                placeholder={`Add Line ${aboutProduct.length+1}`}
+                                placeholder={t('Add line') + ` ${aboutProduct.length+1}`}
                             >
                             
                             </TextInput>
@@ -547,7 +549,7 @@ const CreateProductScreen = ({ navigation} : any) => {
             {/* Technical Details */}
 
             <View>
-                <Text style={styles.ProductInputHeading}>Technical Details</Text>
+                <Text style={styles.ProductInputHeading}>{t("Technical Details")}</Text>
 
                 {productTechnicalDetails[0] === undefined ?
                 <View>hii</View> :
@@ -609,7 +611,7 @@ const CreateProductScreen = ({ navigation} : any) => {
                         style={styles.ProductInput}
                         value={currentTechnicalDetailHeading}
                         onChangeText={setCurrentTechnicalDetailHeading}
-                        placeholder={`Heading ${Object.keys(productTechnicalDetails[0]).length+1}`}
+                        placeholder={t('Heading')+` ${Object.keys(productTechnicalDetails[0]).length+1}`}
                     >
                     </TextInput>
                 </Pressable>
@@ -635,7 +637,7 @@ const CreateProductScreen = ({ navigation} : any) => {
                     onPress={() => {
                         if(currentTechnicalDetailData==='' || currentTechnicalDetailHeading==='') {
                             setTechnicalHeadingError(true)
-                            ToastAndroid.show('Both fields are require' , ToastAndroid.SHORT)
+                            ToastAndroid.show(t('Both fields are require') , ToastAndroid.SHORT)
                         }else{
                             let previousDetails : any = productTechnicalDetails
                             previousDetails[0][currentTechnicalDetailHeading]= currentTechnicalDetailData

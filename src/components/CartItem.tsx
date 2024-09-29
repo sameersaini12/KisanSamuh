@@ -1,12 +1,13 @@
-import { Image, Pressable, StyleSheet, Text, Touchable, TouchableOpacity, View } from 'react-native'
+import { Image, StyleSheet, Text, Touchable, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 import { BORDERRADIUS, COLORS, FONTFAMILY, FONTSIZE, SPACING } from '../theme/theme'
 import { useDispatch } from 'react-redux'
 import { calculateCartPrice, decrementCartItemQuantity, incrementCartItemQuantity } from '../features/cartSlice'
 import CustomIcon from './CustomIcon'
+import { useTranslation } from 'react-i18next'
 
 const CartItem = ({id, title , price , itemPrice , navigation , image} : any) => {
-  
+  const {t} = useTranslation()
   const dispatch = useDispatch()
 
   const incrementCartItem = ( { size} : any) => {
@@ -30,7 +31,7 @@ const CartItem = ({id, title , price , itemPrice , navigation , image} : any) =>
   return (
     <View style={styles.CartItemContainer}>
       <View style={styles.CartItem}>
-      <Pressable
+      <TouchableOpacity
           onPress={() => {
               navigation.push("ProductDetails" , {
                   id
@@ -42,7 +43,7 @@ const CartItem = ({id, title , price , itemPrice , navigation , image} : any) =>
             source={{uri : image}}
             style={styles.CartItemImage}
         />
-      </Pressable>
+      </TouchableOpacity>
         <View style={styles.CartItemInfo}>
             <Text style={styles.CartItemTitle}>{title}</Text>
             {price.map((item : any , index : any) => {
@@ -79,8 +80,8 @@ const CartItem = ({id, title , price , itemPrice , navigation , image} : any) =>
                 </View>
               )
             })}
-            <Text style={styles.CartItemTotalPriceHeading}>Total Price : 
-              <Text style={styles.CartItemTotalPrice}> Rs {itemPrice}</Text>
+            <Text style={styles.CartItemTotalPriceHeading}>{t("Total Amount")} : 
+              <Text style={styles.CartItemTotalPrice}> {t("Rs.")} {itemPrice}</Text>
             </Text>
         </View>
       </View>

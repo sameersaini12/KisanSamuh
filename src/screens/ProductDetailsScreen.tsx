@@ -9,12 +9,17 @@ import { updateEnterInAppStatus } from '../features/userSlice.ts'
 import {BASE_URL} from "@env"
 import ProductDetailsLoadingSkeleton from '../components/ProductDetailsLoadingSkeleton.tsx'
 import { Linking } from 'react-native'
+import { useTranslation } from 'react-i18next'
+console.log("Url" + BASE_URL)
 
 
 const ImageCardWidth = Dimensions.get("screen").width
 const screenWidth = Dimensions.get("screen").width
 
 const ProductDetailsScreen  = ({navigation , route} : any) => {
+
+  const {t} = useTranslation()
+
   const [productImages, setProductImages] = useState([])
   const [productTitle , setProductTitle] = useState('')
   const [productBrand , setProductBrand ] = useState('')
@@ -42,7 +47,7 @@ const ProductDetailsScreen  = ({navigation , route} : any) => {
   }
 
   const addToCartButtonHandler = ({id , title , price , image} :any) => {
-    ToastAndroid.show('Item Added to Cart', ToastAndroid.SHORT)
+    ToastAndroid.show(t('Item Added to Cart'), ToastAndroid.SHORT)
     const addToCartData : any = {
         id,
         title,
@@ -55,7 +60,7 @@ const ProductDetailsScreen  = ({navigation , route} : any) => {
 
   useEffect(() => {
     //total cart Item
-
+    console.log(route.params.id)
     fetch(`${BASE_URL}/product/product-details/${route.params.id}`)
     .then((resp) => resp.json())
     .then((res) => {
@@ -103,7 +108,7 @@ const ProductDetailsScreen  = ({navigation , route} : any) => {
               color={COLORS.primaryLightGreyHex}
             />
           </TouchableOpacity>
-          <Text style={styles.ProductDetailHeaderTitle}>Product Detail</Text>
+          <Text style={styles.ProductDetailHeaderTitle}>{t("Product Detail")}</Text>
         </View>
 
         <View style={styles.ProductDetailHeaderRight}>
@@ -150,7 +155,7 @@ const ProductDetailsScreen  = ({navigation , route} : any) => {
                     size={20}
                     color={COLORS.primaryWhiteHex}
                 />
-              <Text style={styles.PaymentFooterButtonTextBuy}>Ask to Doctor
+              <Text style={styles.PaymentFooterButtonTextBuy}>{t("Ask to Doctor")}
                 
               </Text>
             </TouchableOpacity>
@@ -165,7 +170,7 @@ const ProductDetailsScreen  = ({navigation , route} : any) => {
               })
             }
             >
-              <Text style={styles.PaymentFooterButtonTextCart}>Add to Cart</Text>
+              <Text style={styles.PaymentFooterButtonTextCart}>{t("Add to Cart")}</Text>
             </TouchableOpacity>
             {/* <TouchableOpacity
             style={[styles.PaymentFooterButton , {marginLeft : SPACING.space_10 , backgroundColor : COLORS.primaryLightGreenHex}]}
@@ -235,7 +240,7 @@ const ProductDetailsScreen  = ({navigation , route} : any) => {
                 <Text style={styles.ProductDetailTitle}>{productTitle}</Text>
                 <Text style={styles.ProductDetailBrand}>{productBrand}</Text>
                 <View style={styles.ProductPriceContainer}>
-                  <Text style={styles.ProductPriceHeading}>Price</Text>
+                  <Text style={styles.ProductPriceHeading}>{t("Price")} -</Text>
                     {productPrice[0] === undefined ?
                       <Text></Text> :
                       (
@@ -265,11 +270,11 @@ const ProductDetailsScreen  = ({navigation , route} : any) => {
                 </View>
       
                 {productDiscount!=='' && (
-                  <Text style={styles.ProductDiscount}>Save money by {productDiscount}% from Market price</Text>  
+                  <Text style={styles.ProductDiscount}>{t("Save money by")} {productDiscount}% {t("from Market price")}</Text>  
                 )}
                   <View>
                     <View style={styles.ProductSizeContainer}>
-                      <Text style={styles.ProductSizeHeading}>Size </Text>
+                      <Text style={styles.ProductSizeHeading}>{t("Size")} -</Text>
                       {/* <Text style={styles.ProductSizeMeasurement}>{productPrice[0]['size']}</Text> */}
                       {productPrice[0] === undefined ?
                           <Text></Text> :
@@ -299,7 +304,7 @@ const ProductDetailsScreen  = ({navigation , route} : any) => {
       
                   {productAboutDetails.length>0 && (
                       <View style={styles.AboutProductContainer}>
-                        <Text style={styles.AboutHeading}>About Product</Text>
+                        <Text style={styles.AboutHeading}>{t("About Product")}</Text>
                         {productAboutDetails.map((line : any, index : any) => {
                           return (
                               <Text key={index} style={styles.ProductAboutLine}>
@@ -312,7 +317,7 @@ const ProductDetailsScreen  = ({navigation , route} : any) => {
                 
                 {Object.keys(productTechnicalDetails[0]).length>0 && (
                     <View style={styles.AboutProductContainer}>
-                      <Text style={styles.AboutHeading}>Technical Details</Text>
+                      <Text style={styles.AboutHeading}>{t("Technical Details")}</Text>
                       {productTechnicalDetails[0] === undefined ?
                       <Text>Loading</Text> :
                       (
@@ -332,7 +337,7 @@ const ProductDetailsScreen  = ({navigation , route} : any) => {
       
                   {productFeatureDetails.length>0 && (
                       <View style={styles.AboutProductContainer}>
-                        <Text style={styles.AboutHeading}>Features</Text>
+                        <Text style={styles.AboutHeading}>{t("Features")}</Text>
                         {productFeatureDetails.map((line : any,index : any) => {
                           return (
                               <Text key={index} style={styles.ProductAboutLine}>
@@ -346,7 +351,7 @@ const ProductDetailsScreen  = ({navigation , route} : any) => {
       
                   {Object.keys(productHowToUse[0]).length>0 && (
                       <View style={styles.AboutProductContainer}>
-                        <Text style={styles.AboutHeading}>Usage</Text>
+                        <Text style={styles.AboutHeading}>{t("Usage")}</Text>
                         {productHowToUse[0] === undefined ?
                         <Text>Loading</Text> :
                         (
@@ -366,7 +371,7 @@ const ProductDetailsScreen  = ({navigation , route} : any) => {
       
                   {productAdditionalInformation.length>0 && (
                       <View style={styles.AboutProductContainer}>
-                        <Text style={styles.AboutHeading}>Additional Information</Text>
+                        <Text style={styles.AboutHeading}>{t("Additional Information")}</Text>
                         {productAdditionalInformation.map((line : any , index : any) => {
                           return (
                               <Text key={index} style={styles.ProductAboutLine}>

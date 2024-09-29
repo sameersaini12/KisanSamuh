@@ -6,9 +6,13 @@ import languages from '../data/languageList'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateLanguage } from '../features/userSlice'
 import CustomIcon from '../components/CustomIcon'
+import { useTranslation } from 'react-i18next';
+
 
 const ChooseLanguageScreen = ({navigation} : any) => {
     const selectedLanguage = useSelector((state : any) => state.user.language)
+    const { t, i18n } = useTranslation();
+
 
     const dispatch = useDispatch()
 
@@ -18,12 +22,21 @@ const ChooseLanguageScreen = ({navigation} : any) => {
 
     const changeLanguageHandler = (id : any) => {
         dispatch(updateLanguage(id))
+        if(id===0) {
+            changeLanguage('en')
+        }else if(id==1) {
+            changeLanguage('hi')
+        }
     }
+
+    const changeLanguage = (lng : any) => {
+        i18n.changeLanguage(lng);
+    };
 
   return (
     <View style={{height : "100%"}}>
         <View style={styles.StartingHeaderContainer}>
-            <Pressable 
+            <TouchableOpacity 
                 onPress={backButtonHandler}
                 style={styles.StartingHeaderBackButton}
             >
@@ -32,42 +45,42 @@ const ChooseLanguageScreen = ({navigation} : any) => {
                     size={FONTSIZE.size_24}
                     color={COLORS.primaryBlackHex}
                 />
-            </Pressable>
-            <Pressable 
+            </TouchableOpacity>
+            <TouchableOpacity 
                 onPress={() => {
                     const language_index : any = 0
                     dispatch(updateLanguage(language_index))
                     navigation.push("PhoneLoginScreen")
                 }}
                 style={styles.StartingHeaderSkipButton}>
-                <Text style={styles.StartingHeaderSkipButtonText}>Skip</Text>
-            </Pressable>
+                <Text style={styles.StartingHeaderSkipButtonText}>{t('skip')}</Text>
+            </TouchableOpacity>
 
         </View>
-        <Text style={styles.LanguageHeading}>Choose a Language</Text>
+        <Text style={styles.LanguageHeading}>{t('choose a language')}</Text>
         {languages.map((item : any , index : any) => {
             return (
                 <View key={index}>
-                    <Pressable 
+                    <TouchableOpacity 
                         style={[styles.LanguageButtonContainer , {backgroundColor : (selectedLanguage==item.id) ? COLORS.primaryLightGreenHex : COLORS.primaryLightestGreyHex}]}
                         onPress={() => {
                             changeLanguageHandler(item.id)
                         }}
                     >
-                        <Text style={[styles.LanguageButtonText , {color : (selectedLanguage==item.id) ? COLORS.primaryWhiteHex : COLORS.primaryBlackHex}]}>{item.name}</Text>
-                    </Pressable>
+                        <Text style={[styles.LanguageButtonText , {color : (selectedLanguage==item.id) ? COLORS.primaryWhiteHex : COLORS.primaryBlackHex}]}>{t(item.name.toLowerCase())}</Text>
+                    </TouchableOpacity>
                 </View>
             )
         })}
 
-        <Pressable
+        <TouchableOpacity
             onPress={() =>  {
                 navigation.push("PhoneLoginScreen")
             }}
             style={styles.NextButtonContainer}
         >
-            <Text style={styles.NextButtonText}>Next</Text>
-        </Pressable>
+            <Text style={styles.NextButtonText}>{t('next')}</Text>
+        </TouchableOpacity>
     </View>
   )
 }

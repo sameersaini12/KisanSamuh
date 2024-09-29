@@ -52,6 +52,9 @@
 		F0B2F78A05AA4B5E80F4C182 /* ic_launcher.png in Resources */ = {isa = PBXBuildFile; fileRef = 7BEB719B84D34C329EBBC32E /* ic_launcher.png */; };
 		B884F4E3D67C48D28B5679E5 /* launch_screen.png in Resources */ = {isa = PBXBuildFile; fileRef = B869C9D637B24E85842CF14C /* launch_screen.png */; };
 		F12D2BA8D7B84F418CE04247 /* reward_coin.png in Resources */ = {isa = PBXBuildFile; fileRef = 92E60D51E23D4C9DB8BD360E /* reward_coin.png */; };
+		F13B16803B1A4FF985CE2992 /* equipments.png in Resources */ = {isa = PBXBuildFile; fileRef = 334EB7123E8B45ECBB6E4166 /* equipments.png */; };
+		B90F2C0E746B4B12970380F6 /* file.pdf in Resources */ = {isa = PBXBuildFile; fileRef = DAE73F3893AD4FA2AE72CFF6 /* file.pdf */; };
+		5B5B819B46614925ABCFDBFE /* organic.png in Resources */ = {isa = PBXBuildFile; fileRef = 7DFA5F3E605746859C362976 /* organic.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -121,6 +124,9 @@
 		7BEB719B84D34C329EBBC32E /* ic_launcher.png */ = {isa = PBXFileReference; name = "ic_launcher.png"; path = "../src/assets/android/mipmap-hdpi/ic_launcher.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		B869C9D637B24E85842CF14C /* launch_screen.png */ = {isa = PBXFileReference; name = "launch_screen.png"; path = "../src/assets/launch_screen.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		92E60D51E23D4C9DB8BD360E /* reward_coin.png */ = {isa = PBXFileReference; name = "reward_coin.png"; path = "../src/assets/reward_coin.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		334EB7123E8B45ECBB6E4166 /* equipments.png */ = {isa = PBXFileReference; name = "equipments.png"; path = "../src/assets/Categories/equipments.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		DAE73F3893AD4FA2AE72CFF6 /* file.pdf */ = {isa = PBXFileReference; name = "file.pdf"; path = "../src/assets/Categories/file.pdf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		7DFA5F3E605746859C362976 /* organic.png */ = {isa = PBXFileReference; name = "organic.png"; path = "../src/assets/Categories/organic.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -268,6 +274,9 @@
 				7BEB719B84D34C329EBBC32E /* ic_launcher.png */,
 				B869C9D637B24E85842CF14C /* launch_screen.png */,
 				92E60D51E23D4C9DB8BD360E /* reward_coin.png */,
+				334EB7123E8B45ECBB6E4166 /* equipments.png */,
+				DAE73F3893AD4FA2AE72CFF6 /* file.pdf */,
+				7DFA5F3E605746859C362976 /* organic.png */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -406,6 +415,9 @@
 				F0B2F78A05AA4B5E80F4C182 /* ic_launcher.png in Resources */,
 				B884F4E3D67C48D28B5679E5 /* launch_screen.png in Resources */,
 				F12D2BA8D7B84F418CE04247 /* reward_coin.png in Resources */,
+				F13B16803B1A4FF985CE2992 /* equipments.png in Resources */,
+				B90F2C0E746B4B12970380F6 /* file.pdf in Resources */,
+				5B5B819B46614925ABCFDBFE /* organic.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

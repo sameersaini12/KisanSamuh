@@ -6,9 +6,11 @@ import CustomIcon from '../components/CustomIcon'
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs'
 import { BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import WhyAddFarmCard from '../components/WhyAddFarmCard'
+import { useTranslation } from 'react-i18next'
 
 
 const CallDoctorScreen = () => {
+    const { t} = useTranslation()
     const [currentTime , setCurrentTime] = useState(new Date().getHours())
 
     const handleCallButton = () => {
@@ -55,12 +57,12 @@ const CallDoctorScreen = () => {
                     />
                 </View>
                 <View style={styles.CallingDetailContainer}>
-                    <Text style={styles.CallingDetailHeading}>Ask Agri Doctor About</Text>
-                    <Text style={styles.CallingDetailLine}>{`\u25CF`}{" "}Any type of Disease in farms</Text>
-                    <Text style={styles.CallingDetailLine}>{`\u25CF`}{" "}Pricing of Products</Text>
-                    <Text style={styles.CallingDetailLine}>{`\u25CF`}{" "}Best indegredients for your farm</Text>
-                    <Text style={styles.CallingDetailLine}>{`\u25CF`}{" "}How to increase productivity in your farm</Text>
-                    <Text style={styles.CallingDetailLine}>{`\u25CF`}{" "}Any kind of help or support</Text>
+                    <Text style={styles.CallingDetailHeading}>{t('Ask Agri Doctor About')}</Text>
+                    <Text style={styles.CallingDetailLine}>{`\u25CF`}{" "}{t('Any type of Disease in farms')}</Text>
+                    <Text style={styles.CallingDetailLine}>{`\u25CF`}{" "}{t('Pricing of Products')}</Text>
+                    <Text style={styles.CallingDetailLine}>{`\u25CF`}{" "}{t('Best indegredients for your farm')}</Text>
+                    <Text style={styles.CallingDetailLine}>{`\u25CF`}{" "}{t('How to increase productivity in your farm')}</Text>
+                    <Text style={styles.CallingDetailLine}>{`\u25CF`}{" "}{t('Any kind of help or support')}</Text>
                 </View>
                 <Pressable
                     onPress={handleCallButton}

@@ -8,8 +8,10 @@ import LottieView from 'lottie-react-native'
 import moment from 'moment'
 import {BASE_URL} from "@env"
 import OrderHistoryLoadingSkeleton from '../components/OrderHistoryLoadingSkeleton'
+import { useTranslation } from 'react-i18next'
 
 const OrderHistoryScreen = ({navigation} : any) => {
+    const {t} = useTranslation()
     const [ordersList , setOrdersList] = useState([])
     const [selectedOrderCategory , setSelectedOrderCategory] = useState(0)
     const [loading , setLoading ]  = useState(true)
@@ -111,7 +113,7 @@ const OrderHistoryScreen = ({navigation} : any) => {
                 color={COLORS.primaryLightGreyHex}
             />
             </TouchableOpacity>
-            <Text style={styles.OrderHistoryScreenHeaderTitle}>Orders</Text>
+            <Text style={styles.OrderHistoryScreenHeaderTitle}>{t('Orders')}</Text>
         </View>
     </View>
 
@@ -121,7 +123,7 @@ const OrderHistoryScreen = ({navigation} : any) => {
             style={styles.ActiveOrdersContainer}
         >
             <Text style={styles.ActiveOrdersTitle}>
-                Active Orders
+                {t('Active Orders')}
             </Text>
             <View style={[styles.OrderCategorySelectedLine , {display : selectedOrderCategory == 0 ? "flex" : "none"}]}>
             </View>
@@ -131,7 +133,7 @@ const OrderHistoryScreen = ({navigation} : any) => {
             style={styles.PastOrdersContainer}
         >
             <Text style={styles.PastOrdersTitle}>
-                Past Orders
+                {t('Past Orders')}
             </Text>
             <View style={[styles.OrderCategorySelectedLine , {display : selectedOrderCategory == 1 ? "flex" : "none"}]}>
             </View>
@@ -152,7 +154,7 @@ const OrderHistoryScreen = ({navigation} : any) => {
                         autoPlay
                         loop
                     />
-                    <Text style={styles.EmptyCartText}>There is no orders yet !</Text>
+                    <Text style={styles.EmptyCartText}>{t('There is no orders yet!')}</Text>
                 </View>
               }
                 {loading ? 
@@ -179,11 +181,11 @@ const OrderHistoryScreen = ({navigation} : any) => {
                                                             />
                                                         </View>
                                                         <View style={styles.DeliveryStatusDateContainer}>
-                                                            <Text style={styles.DeliveryStatusText}>{orderData.status}</Text>
-                                                            <Text style={styles.DeliveryStatusDate}>Ordered On - { moment(orderData.orderDate).format("DD MMMM, YYYY")}</Text>
-                                                            <Text style={styles.DeliveryStatusDate}>Delivered By - { moment(orderData.deliveryDate).format("DD MMMM, YYYY")}</Text>
+                                                            <Text style={styles.DeliveryStatusText}>{t(orderData.status)}</Text>
+                                                            <Text style={styles.DeliveryStatusDate}>{t('Ordered On')} - { moment(orderData.orderDate).format("DD MMM, YYYY")}</Text>
+                                                            <Text style={styles.DeliveryStatusDate}>{t('Delivered By')} - { moment(orderData.deliveryDate).format("DD MMM, YYYY")}</Text>
                                                             <View style={[ {flexDirection : "row", alignItems : "center"}]}>
-                                                              <Text style={styles.DeliveryStatusDate}>Payment Status {"- "} </Text>
+                                                              <Text style={styles.DeliveryStatusDate}>{t('Payment Status')} {"- "} </Text>
                                                               <View>
                                                                 <View style={styles.PaymentStatusContainer}>
                                                                   <Text style={styles.PaymentStatusText}>{orderData.paymentMode}</Text>
@@ -193,19 +195,19 @@ const OrderHistoryScreen = ({navigation} : any) => {
                                                                 {orderData.paymentStatus ? (
                                                                   <View
                                                                   style={styles.PaymentStatusContainer}>
-                                                                  <Text style={styles.PaymentStatusText}>Paid</Text>
+                                                                  <Text style={styles.PaymentStatusText}>{t('Paid')}</Text>
                                                                 </View> 
                                                                 ) : (
                                                                   <View
                                                                     style={styles.PaymentStatusContainer}>
-                                                                    <Text style={styles.PaymentStatusText}>Not Paid</Text>
+                                                                    <Text style={styles.PaymentStatusText}>{t('Not Paid')}</Text>
                                                                   </View> 
                                                                 )}
                                                               </View>
                                                             </View>
                                                             {orderData.buyingGroup!=="none" && (
                                                                 <View style={[ {flexDirection : "row", alignItems : "center" , marginTop : SPACING.space_10}]}>
-                                                                <Text style={styles.DeliveryStatusDate}>Buying Group {"- "} </Text>
+                                                                <Text style={styles.DeliveryStatusDate}>{t('Buying Group')} {"- "} </Text>
                                                                 <View>
                                                                   <View style={styles.PaymentStatusContainer}>
                                                                     <Text style={styles.PaymentStatusText}>{orderData.buyingGroup}</Text>
@@ -213,7 +215,7 @@ const OrderHistoryScreen = ({navigation} : any) => {
                                                                 </View>
                                                               </View>
                                                             )}
-                                                            <Text style={styles.DeliveryStatusDate}>Coins Earned - {orderData.rewardCoins}</Text>
+                                                            <Text style={styles.DeliveryStatusDate}>{t('Coins Earned')} - {orderData.rewardCoins}</Text>
                                                         </View>
                                                     </View> 
                                                     <View style={[styles.HorizontalRule , ]}>
@@ -248,7 +250,7 @@ const OrderHistoryScreen = ({navigation} : any) => {
                                                                     <View style={styles.OrderHistorySingleItemInfoContainer}>
                                                                         <View>
                                                                             <Text style={styles.OrderHistorySingleItemInfoTitle}>{orderItemData.title}</Text>
-                                                                            <Text style={styles.OrderHistorySingleItemInfoPrice}>Item Price : {orderItemData.ItemPrice}</Text>
+                                                                            <Text style={styles.OrderHistorySingleItemInfoPrice}>{t('Item Price')} : {orderItemData.ItemPrice}</Text>
                                                                         </View>
                                                                         <View style={{flexDirection : "row",alignItems : "center" , marginRight : SPACING.space_18}}>
                                                                             {/* <CustomIcon
@@ -271,7 +273,7 @@ const OrderHistoryScreen = ({navigation} : any) => {
                                                         )
                                                     })}
                                                     <View style={styles.TotalBottomContainer}>
-                                                        <Text style={styles.TotalBottomTitle}>Total</Text>
+                                                        <Text style={styles.TotalBottomTitle}>{t('Total')}</Text>
                                                         <Text style={styles.TotalBottomRuppes}>Rs. {orderData.amount}</Text>
                                                     </View>
                                                 </View>

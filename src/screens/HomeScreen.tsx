@@ -13,87 +13,85 @@ import WhyAddFarmCard from '../components/WhyAddFarmCard'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateTotalFarms } from '../features/farmSlice'
 import { updateEnterInAppStatus } from '../features/userSlice'
-import {BASE_URL} from "@env"
-// console.log(BASE_URL)
+import { BASE_URL } from "@env"
+import { useTranslation } from 'react-i18next'
 
-const screenWidth = Dimensions.get("screen").width-SPACING.space_18*2
-const ImageCardWidth = Dimensions.get("screen").width-SPACING.space_18*2
+const screenWidth = Dimensions.get("screen").width - SPACING.space_18 * 2
+const ImageCardWidth = Dimensions.get("screen").width - SPACING.space_18 * 2
 
 const image_banners = [
   {
-    image : require("../assets/Banners/banner_2.jpg")
+    image: require("../assets/Banners/banner_2.jpg")
   },
   {
-    image : require("../assets/Banners/banner_1.jpg")
+    image: require("../assets/Banners/banner_1.jpg")
   },
 ]
 
-const HomeScreen = ({navigation} : any) => {
+const HomeScreen = ({ navigation }: any) => {
 
-  const [searchText , setSearchText] = useState('')
+  const { t } = useTranslation()
+
+  const [searchText, setSearchText] = useState('')
   const [refreshPage, setRefreshPage] = useState(false)
-  const [currentBannerImageIndex , setCurrentBannerImageIndex] = useState(0)
-  const [farmList , setFarmList] = useState([])
-  const [loading , setLoading ] = useState(true)
+  const [currentBannerImageIndex, setCurrentBannerImageIndex] = useState(0)
+  const [farmList, setFarmList] = useState([])
+  const [loading, setLoading] = useState(true)
 
-  const userId = useSelector((state : any) => state.user.id)
-  const userToken = useSelector((state : any) => state.user.token)
-  const totalFarms = useSelector((state : any) => state.farm.totalFarms)
-  const isLoggedIn = useSelector((state : any) => state.user.isLoggedIn)
+  const userId = useSelector((state: any) => state.user.id)
+  const userToken = useSelector((state: any) => state.user.token)
+  const totalFarms = useSelector((state: any) => state.farm.totalFarms)
+  const isLoggedIn = useSelector((state: any) => state.user.isLoggedIn)
 
   const dispatch = useDispatch()
 
-  const onRefreshPage = useCallback(() => {
-    setRefreshPage(true)
-    setTimeout(()  => {
-      setRefreshPage(false)
-    } , 2000)
-  } , [])
+  const bottomSheetModalRef = useRef<any | null>(null)
+  const snapPoints = useMemo(() => ["42%"], [])
 
-  const bottomSheetModalRef  = useRef<any | null>(null)
-  const snapPoints = useMemo(() => ["42%"],[])
-
-  const openBottomModel= () => {
-      bottomSheetModalRef.current?.present()
+  const openBottomModel = () => {
+    bottomSheetModalRef.current?.present()
   }
 
   const closeBottomModel = () => {
-      bottomSheetModalRef.current?.close()
+    bottomSheetModalRef.current?.close()
   }
 
   const tabBarHeight = useBottomTabBarHeight()
 
-  const scrollImageHandler = (event :any) => {
-      const scrollPosition = event.nativeEvent.contentOffset.x
-      
-      const currentImageIndex = scrollPosition / screenWidth
-      setCurrentBannerImageIndex(Math.round(currentImageIndex))
+  const scrollImageHandler = (event: any) => {
+    const scrollPosition = event.nativeEvent.contentOffset.x
+
+    const currentImageIndex = scrollPosition / screenWidth
+    setCurrentBannerImageIndex(Math.round(currentImageIndex))
   }
 
-  const resetSearchInputText = () => {
+  const resetSearchInputText = useCallback(() => {
     setSearchText('');
-  };
+  }, []);
 
-  const fetchUserFarms = async () => {
-    await fetch(`${BASE_URL}/farm/get-farms/${userId}` , {
-      headers : {
-        "Content-Type" : "application/json",
-        Authorization : `Bearer ${userToken}`
+  const fetchUserFarms = useCallback(async () => {
+    try {
+      const res = await fetch(`${BASE_URL}/farm/get-farms/${userId}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${userToken}`
+        }
+      });
+      const data = await res.json();
+      if (data.data) {
+        setFarmList(data.data);
+        dispatch(updateTotalFarms(data.data.length));
       }
-    }).then((res) => res.json())
-    .then((res) => {
-      setFarmList(res.data)
-      dispatch(updateTotalFarms(res.data.length))
-    }).catch((err) => {
-      console.log(err)
-    })
-  }
+    } catch (error) {
+      console.log(error);
+    }
+  }, [userId, userToken, dispatch]);
 
   useEffect(() => {
-    if(isLoggedIn) {
+    if (isLoggedIn) {
       fetchUserFarms()
     }
-  }, [])
+  }, [isLoggedIn, fetchUserFarms])
 
   return (
     <View style={styles.HomeScreenContainer}>
@@ -103,61 +101,25 @@ const HomeScreen = ({navigation} : any) => {
         <BottomSheetModal
           ref={bottomSheetModalRef}
           index={0}
-          snapPoints={snapPoints}  
+          snapPoints={snapPoints}
         >
           <View>
-            <WhyAddFarmCard closeBottomSheet ={closeBottomModel}/>
+            <WhyAddFarmCard closeBottomSheet={closeBottomModel} />
           </View>
         </BottomSheetModal>
 
         <ScrollView
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={styles.ScrollViewFlex}
-            refreshControl={
-              <RefreshControl refreshing={refreshPage} onRefresh={onRefreshPage} />
-            }
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.ScrollViewFlex}
+        // refreshControl={
+        //   <RefreshControl refreshing={refreshPage} onRefresh={onRefreshPage} />
+        // }
         >
           <HeaderBar navigation={navigation} />
 
           <Text style={styles.ScreenTitle}>
-            Buy products{'\n'}at cheapest price
+            {t('buy products')}{'\n'}{t('at cheapest price')}
           </Text>
-
-          {/* <View style={styles.SearchInputContainer}>
-            <CustomIcon
-              style={styles.SearchInputSearchIcon}
-              name='search'
-              size={FONTSIZE.size_18}
-              color={
-                searchText.length > 0
-                  ? COLORS.primaryLightGreenHex
-                  : COLORS.primaryLightGreyHex
-              }
-            />
-            <TextInput
-              placeholder='Search anything'
-              value={searchText}
-              onChangeText={text => 
-                setSearchText(text)
-              }
-              placeholderTextColor={COLORS.primaryLightGreyHex}
-              style={styles.SearchTextInputContainer}
-            />
-            {searchText.length > 0 ? (
-              <TouchableOpacity
-                onPress={() => resetSearchInputText()}
-              >
-                <CustomIcon
-                  style={styles.SearchInputClose}
-                  name='cancel-circle'
-                  size={FONTSIZE.size_16}
-                  color={COLORS.primaryLightGreyHex}
-                />
-              </TouchableOpacity>
-            ) : (
-              <></>
-            )}
-          </View> */}
 
           <View style={styles.AdvertisementContainer}>
             <ScrollView
@@ -166,73 +128,73 @@ const HomeScreen = ({navigation} : any) => {
               pagingEnabled={true}
               onScroll={scrollImageHandler}
             >
-              {image_banners.map((image : any, index : any) => {
-                      return (
-                        <Image 
-                          key={index}
-                          style={styles.AdvertisementImage} 
-                          source={image.image} 
-                        />
-                      )
-                  }) }
+              {image_banners.map((image: any, index: any) => {
+                return (
+                  <Image
+                    key={index}
+                    style={styles.AdvertisementImage}
+                    source={image.image}
+                  />
+                )
+              })}
             </ScrollView>
           </View>
           <View style={styles.ImagesScrollIndicatorContainer}>
-              {image_banners.map((image : any, index : any) => {
-                  return (
-                      <View
-                          style={[styles.ImagesScrollIndicator, {backgroundColor : (currentBannerImageIndex == (index)) ? COLORS.primaryLightGreenHex : COLORS.secondaryLightGreyHex}]}
-                          key={index}>
-                      </View>
-                  )
-              }) }
+            {image_banners.map((image: any, index: any) => {
+              return (
+                <View
+                  style={[styles.ImagesScrollIndicator, { backgroundColor: (currentBannerImageIndex == (index)) ? COLORS.primaryLightGreenHex : COLORS.secondaryLightGreyHex }]}
+                  key={index}>
+                </View>
+              )
+            })}
           </View>
 
-          <Text style={styles.CategoryTitle}>Your Farms</Text>
+          <Text style={styles.CategoryTitle}>{t('your farms')}</Text>
 
           {isLoggedIn ? (
-            <AddFarmCard 
-              navigation={navigation} 
-              openBottomModel={openBottomModel} 
+            <AddFarmCard
+              navigation={navigation}
+              openBottomModel={openBottomModel}
               closeBottomaModel={closeBottomModel}
               totalFarms={totalFarms}
             />
-          ): (
+          ) : (
             <View style={styles.AddFardmCardContainer}>
-                <Pressable 
-                    onPress={async () => {
-                        const enterInAppStatus : any = false
-                        await dispatch(updateEnterInAppStatus(enterInAppStatus))
-                        navigation.push("PhoneLoginScreen")
-                    }}
-                    style={styles.AddFarmCardLeftContainer}
-                >
-                    <CustomIcon
-                        name='add-solid'
-                        size={35}
-                        color={COLORS.primaryLightGreenHex}
-                    />
-                    <Text style={styles.AddYourFarmText}>Login to add farm</Text>
-                </Pressable>
-                <Pressable 
-                    onPress={() => {
-                        openBottomModel()
-                    }}
-                    style={styles.AddFarmCardRightContainer}
-                >
-                    <Text style={styles.WhyAddFarmText}>?</Text>
-                </Pressable>
+              <Pressable
+                onPress={async () => {
+                  const enterInAppStatus: any = false
+                  await dispatch(updateEnterInAppStatus(enterInAppStatus))
+                  navigation.push("PhoneLoginScreen")
+                }}
+                style={styles.AddFarmCardLeftContainer}
+              >
+                <CustomIcon
+                  name='add-solid'
+                  size={35}
+                  color={COLORS.primaryLightGreenHex}
+                />
+                <Text style={styles.AddYourFarmText}>{t('login to add your farm')}</Text>
+              </Pressable>
+              <Pressable
+                onPress={() => {
+                  openBottomModel()
+                }}
+                style={styles.AddFarmCardRightContainer}
+              >
+                <Text style={styles.WhyAddFarmText}>?</Text>
+              </Pressable>
             </View>
           )}
-          
 
-          <Text style={styles.CategoryTitle}>Categories</Text>
+
+          <Text style={styles.CategoryTitle}>{t('categories')}</Text>
 
           <CategoryList navigation={navigation} />
 
-          <Text style={styles.CategoryTitle}>Brands</Text>
+          <Text style={styles.CategoryTitle}>{t('brands')}</Text>
 
-          <BrandList  navigation={navigation}/>
+          <BrandList navigation={navigation} />
 
         </ScrollView>
       </BottomSheetModalProvider>
@@ -243,100 +205,100 @@ const HomeScreen = ({navigation} : any) => {
 export default HomeScreen
 
 const styles = StyleSheet.create({
-  HomeScreenContainer : {
-    flex : 1,
-    backgroundColor : COLORS.primaryWhiteHex,
+  HomeScreenContainer: {
+    flex: 1,
+    backgroundColor: COLORS.primaryWhiteHex,
   },
-  ScrollViewFlex : {
-    flexGrow : 1,
+  ScrollViewFlex: {
+    flexGrow: 1,
   },
-  ScreenTitle : {
+  ScreenTitle: {
     fontSize: FONTSIZE.size_28,
     fontFamily: FONTFAMILY.poppins_semibold,
     color: COLORS.primaryGreyHex,
     paddingLeft: SPACING.space_18,
   },
-  SearchInputContainer : {
+  SearchInputContainer: {
     flexDirection: 'row',
     margin: SPACING.space_18,
     borderRadius: BORDERRADIUS.radius_20,
     backgroundColor: COLORS.secondaryLightGreenHex,
     alignItems: 'center',
   },
-  SearchInputSearchIcon : {
+  SearchInputSearchIcon: {
     marginHorizontal: SPACING.space_20,
   },
-  SearchTextInputContainer : {
+  SearchTextInputContainer: {
     flex: 1,
     height: SPACING.space_20 * 3,
     fontFamily: FONTFAMILY.poppins_medium,
     fontSize: FONTSIZE.size_14,
     color: COLORS.secondaryBlackRGBA,
   },
-  SearchInputClose : {
+  SearchInputClose: {
     marginHorizontal: SPACING.space_20,
   },
-  AdvertisementContainer : {
-    backgroundColor : COLORS.primaryLightestGreyHex,
-    height : 150,
-    width : ImageCardWidth,
-    borderRadius : BORDERRADIUS.radius_10,
-    margin : SPACING.space_18,
-    overflow : "hidden",
-    elevation : 3
+  AdvertisementContainer: {
+    backgroundColor: COLORS.primaryLightestGreyHex,
+    height: 150,
+    width: ImageCardWidth,
+    borderRadius: BORDERRADIUS.radius_10,
+    margin: SPACING.space_18,
+    overflow: "hidden",
+    elevation: 3
   },
   AdvertisementImage: {
-    height : 150,
-    width : ImageCardWidth
+    height: 150,
+    width: ImageCardWidth
   },
-  ImagesScrollIndicatorContainer : {
-    flexDirection : "row",
-    alignItems : "center",
-    justifyContent : "center"
+  ImagesScrollIndicatorContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center"
   },
-  ImagesScrollIndicator : {
-      width : SPACING.space_10*0.8,
-      height : SPACING.space_10*0.8,
-      borderRadius : BORDERRADIUS.radius_25,
-      marginRight : SPACING.space_10*0.5
+  ImagesScrollIndicator: {
+    width: SPACING.space_10 * 0.8,
+    height: SPACING.space_10 * 0.8,
+    borderRadius: BORDERRADIUS.radius_25,
+    marginRight: SPACING.space_10 * 0.5
   },
-  CategoryTitle : {
+  CategoryTitle: {
     fontSize: FONTSIZE.size_18,
     marginLeft: SPACING.space_18,
     marginTop: SPACING.space_20,
     fontFamily: FONTFAMILY.poppins_semibold,
     color: COLORS.primaryBlackHex,
   },
-  AddFardmCardContainer : {
-    backgroundColor : COLORS.secondaryLightGreenHex,
-    padding : SPACING.space_12,
-    margin : SPACING.space_18,
-    borderRadius : BORDERRADIUS.radius_15,
-    elevation : 2,
-    borderColor : COLORS.primaryBlackHex,
-    flexDirection : "row",
-    alignItems : "center",
-    justifyContent : "space-between"
+  AddFardmCardContainer: {
+    backgroundColor: COLORS.secondaryLightGreenHex,
+    padding: SPACING.space_12,
+    margin: SPACING.space_18,
+    borderRadius: BORDERRADIUS.radius_15,
+    elevation: 2,
+    borderColor: COLORS.primaryBlackHex,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between"
   },
-  AddFarmCardLeftContainer : {
-      flexDirection : "row",
-      alignItems : "center",
+  AddFarmCardLeftContainer: {
+    flexDirection: "row",
+    alignItems: "center",
   },
-  AddFarmCardRightContainer : {
-      backgroundColor : COLORS.primaryLightGreenHex,
-      width : 25,
-      height : 25,
-      borderRadius : BORDERRADIUS.radius_15,
-      justifyContent : "center",
-      alignItems : "center",
+  AddFarmCardRightContainer: {
+    backgroundColor: COLORS.primaryLightGreenHex,
+    width: 25,
+    height: 25,
+    borderRadius: BORDERRADIUS.radius_15,
+    justifyContent: "center",
+    alignItems: "center",
   },
-  WhyAddFarmText : {
-    color : COLORS.primaryWhiteHex
+  WhyAddFarmText: {
+    color: COLORS.primaryWhiteHex
   },
-  AddYourFarmText : {
-      fontSize : FONTSIZE.size_18,
-      fontFamily : FONTFAMILY.poppins_medium,
-      color : COLORS.primaryBlackHex,
-      marginLeft : SPACING.space_18,
+  AddYourFarmText: {
+    fontSize: FONTSIZE.size_18,
+    fontFamily: FONTFAMILY.poppins_medium,
+    color: COLORS.primaryBlackHex,
+    marginLeft: SPACING.space_18,
   },
 })

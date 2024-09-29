@@ -1,8 +1,9 @@
-import { Dimensions, Image, ImageBackground, Pressable, StyleSheet, Text, View } from 'react-native'
+import { Dimensions, Image, ImageBackground, TouchableOpacity, StyleSheet, Text, View, Pressable } from 'react-native'
 import React from 'react'
 import CategoryListItem from '../data/categoryList'
 import { BORDERRADIUS, COLORS, FONTFAMILY, FONTSIZE, SPACING } from '../theme/theme';
-import { FlatList, ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import { FlatList, ScrollView } from 'react-native-gesture-handler';
+import { useTranslation } from 'react-i18next';
 
 const CARD_WIDTH = Dimensions.get('window').width * 0.2;
 
@@ -14,10 +15,13 @@ const imageFetcher : any = {
     pesticide : require("../assets/Categories/pesticide.png"),
     insecticide : require("../assets/Categories/insecticide.png"),
     fungicide : require("../assets/Categories/fungicide.png"),
-    others : require("../assets/Categories/nutrient.png"),
+    others : require("../assets/Categories/equipments.png"),
+    inputs : require("../assets/Categories/equipments.png"),
+    organic : require("../assets/Categories/organic.png")
 }
 
 const CategoryList = ({navigation, numColumns = 2} : any) => {
+    const {t} = useTranslation()
   return (
     <View style={styles.CategoryContainer}>
         <ScrollView
@@ -53,7 +57,7 @@ const CategoryList = ({navigation, numColumns = 2} : any) => {
                                 </View>
                                 <ImageBackground style={styles.CategoryContainerBoxImage} source={imageFetcher[item.name]} />
                             </View>
-                            <Text style={styles.CategoryTitle}>{item.name}</Text>
+                            <Text style={styles.CategoryTitle}>{t(item.name.toLowerCase())}</Text>
                         </Pressable>
                     )
                 }}

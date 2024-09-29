@@ -1,12 +1,15 @@
-import { Image, Pressable, StyleSheet, Text, View } from 'react-native'
+import { Image, TouchableOpacity, StyleSheet, Text, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import CustomIcon from '../components/CustomIcon'
 import { BORDERRADIUS, COLORS, FONTFAMILY, FONTSIZE, SPACING } from '../theme/theme'
 import { GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler'
 import { useSelector } from 'react-redux'
 import {BASE_URL} from "@env"
+import { useTranslation } from 'react-i18next'
 
 const GroupInfoScreen = ({navigation, route} : any) => {
+
+    const {t} = useTranslation()
 
     const userToken = useSelector((state : any) => state.user.token)
     const userId = useSelector((state : any) => state.user.id)
@@ -73,7 +76,7 @@ const GroupInfoScreen = ({navigation, route} : any) => {
   return (
     <GestureHandlerRootView>
         <View style={styles.StartingHeaderContainer}>
-            <Pressable 
+            <TouchableOpacity 
                 onPress={backButtonHandler}
                 style={styles.StartingHeaderBackButton}
             >
@@ -82,8 +85,8 @@ const GroupInfoScreen = ({navigation, route} : any) => {
                     size={FONTSIZE.size_24}
                     color={COLORS.primaryWhiteHex}
                 />
-            </Pressable>
-            <Text style={styles.SelectCropScreenHeaderTitle}>Group Info</Text>
+            </TouchableOpacity>
+            <Text style={styles.SelectCropScreenHeaderTitle}>{t("Group Info")}</Text>
         </View>
 
         <View style={styles.GroupInfoContainer}>
@@ -95,7 +98,7 @@ const GroupInfoScreen = ({navigation, route} : any) => {
             </View>
 
             <Text style={styles.GroupNameText}>{route.params.groupName}</Text>
-            <Text style={styles.GroupMembersText}>Group . {farmUsers.length} members</Text>
+            <Text style={styles.GroupMembersText}>{t("Group")} . {farmUsers.length} {t("members")}</Text>
         </View>
 
         <ScrollView showsVerticalScrollIndicator={false} style={styles.GroupMembersContainer}>

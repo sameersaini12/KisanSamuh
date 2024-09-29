@@ -6,8 +6,11 @@ import { FlatList, GestureHandlerRootView, TouchableOpacity } from 'react-native
 import CustomIcon from '../components/CustomIcon'
 import { BORDERRADIUS, COLORS, FONTFAMILY, FONTSIZE, SPACING } from '../theme/theme'
 import moment from 'moment'
+import { useTranslation } from 'react-i18next'
 
 const RewardHistoryScreen = ({navigation} : any) => {
+
+  const {t} = useTranslation()
 
   const [ordersList, setOrdersList] = useState([])
   const [noRewards , setNoRewards] = useState(false)
@@ -58,12 +61,12 @@ useEffect(()=> {
                     color={COLORS.primaryWhiteHex}
                 />
             </TouchableOpacity>
-            <Text style={styles.StartingHeaderTitle}>Reward History</Text>
+            <Text style={styles.StartingHeaderTitle}>{t("Coin Reward History")}</Text>
 
         </View>
 
         {noRewards && 
-          <Text style={[styles.RewardCoinsText, {margin : SPACING.space_18}]}>There is not any rewards yet</Text>
+          <Text style={[styles.RewardCoinsText, {margin : SPACING.space_18}]}>{t("There is not any rewards yet")}</Text>
         }
 
         <FlatList
@@ -75,7 +78,7 @@ useEffect(()=> {
               <View style={styles.RewardHistoryCardContainer}>
                 {/* <Text style={styles.RewardCoinsText}>Date : {moment(item.updatedAt).format("DD/MM/YYYY")}</Text> */}
                 <View style={{flexDirection : "row" , alignItems : "center" , justifyContent: 'space-between',}}>
-                <Text style={styles.OrderIdText}>Date: {moment(item.deliveryDate).format("DD/MM/YYYY")}</Text>
+                <Text style={styles.OrderIdText}>{t("Date")}: {moment(item.deliveryDate).format("DD/MM/YYYY")}</Text>
                   <Text style={styles.RewardCoinsText}>
                   <Image style={{height : 25, width : 30}} source={require("../assets/reward_coin.png")} />
                     x {item.rewardCoins}</Text>

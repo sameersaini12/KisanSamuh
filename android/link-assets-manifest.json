@@ -46,6 +46,14 @@
       "sha1": "36de9010bdc6ed0a0bf6a069138cd9f533220f9e"
     },
     {
+      "path": "src/assets/Categories/equipments.png",
+      "sha1": "313fe26c690e82ca8219143642655802c6b72969"
+    },
+    {
+      "path": "src/assets/Categories/file.pdf",
+      "sha1": "ec7c302025454284f8e749806f55078edacd4879"
+    },
+    {
       "path": "src/assets/Categories/fungicide.png",
       "sha1": "53767313b53dd7637cb35ef3394caa94b0918588"
     },
@@ -72,6 +80,10 @@
     {
       "path": "src/assets/Categories/nutrients_image.jpg",
       "sha1": "53895d2de34e3a56f4a75c728c5db43f7e9010b2"
+    },
+    {
+      "path": "src/assets/Categories/organic.png",
+      "sha1": "c5c0da0868b4d7ea0d941586e27ba571c5c0bca5"
     },
     {
       "path": "src/assets/Categories/other_image.jpg",

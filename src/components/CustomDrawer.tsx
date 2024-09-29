@@ -13,11 +13,14 @@ import Share from "react-native-share"
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs'
 import { updateAfterSignOut } from '../features/cartSlice'
 import { updateTotalFarms } from '../features/farmSlice'
+import { useTranslation } from 'react-i18next'
 
 
 
 
 const CustomDrawer = ({navigation} : any) => {
+
+  const {t} = useTranslation()
 
   const dispatch = useDispatch()
 
@@ -86,7 +89,7 @@ const CustomDrawer = ({navigation} : any) => {
               >
                   {userName.length==0 ? (
                     <Text style={[styles.DrawerProfileInfoText , {fontSize :FONTSIZE.size_20*0.84}]}>
-                      Enter Your Name {" "}
+                      {t('Enter Your Name')} {" "}
                       <CustomIcon
                         name='pencil'
                         size={16}
@@ -104,7 +107,7 @@ const CustomDrawer = ({navigation} : any) => {
                 <Text  style={styles.DrawerProfileInfoText}>{phoneNumber}</Text>
               </View>
               <View>
-                <Text  style={styles.DrawerProfileInfoText}>{languages[selectedLanguageId].name}</Text>
+                <Text  style={styles.DrawerProfileInfoText}>{t(languages[selectedLanguageId].name.toLowerCase())}</Text>
               </View>
             </View>
           )}
@@ -118,7 +121,7 @@ const CustomDrawer = ({navigation} : any) => {
                 }}
                 style={styles.DrawerViewProfileContainer}
               >
-                <Text style={styles.DrawerViewProfileText}>View Profile</Text>
+                <Text style={styles.DrawerViewProfileText}>{t('View Profile')}</Text>
               </Pressable>
           ) : (
             <Pressable
@@ -129,7 +132,7 @@ const CustomDrawer = ({navigation} : any) => {
               }}
               style={styles.DrawerViewProfileContainer}
             >
-              <Text style={styles.DrawerViewProfileText}>Login to view Profile</Text>
+              <Text style={styles.DrawerViewProfileText}>{t('Login to view Profile')}</Text>
             </Pressable>
           )}
         
@@ -153,7 +156,7 @@ const CustomDrawer = ({navigation} : any) => {
                       size={22}
                       color={COLORS.primaryLightGreenHex}
                     />
-                    <Text style={styles.DrawerSignOutText}>Add Product</Text>
+                    <Text style={styles.DrawerSignOutText}>{t('Add Product')}</Text>
                 </TouchableOpacity>
                 <View style={styles.HorizontalRule}></View>
             </View>
@@ -163,7 +166,7 @@ const CustomDrawer = ({navigation} : any) => {
           
           {/* Add Category  */}
 
-          {isAdmin && 
+          {/* {isAdmin && 
           (
             <View>
                 <TouchableOpacity
@@ -181,7 +184,7 @@ const CustomDrawer = ({navigation} : any) => {
                 <View style={styles.HorizontalRule}></View>
             </View>
           )
-          }
+          } */}
 
           {isAdmin && 
           (
@@ -196,7 +199,7 @@ const CustomDrawer = ({navigation} : any) => {
                       size={22}
                       color={COLORS.primaryLightGreenHex}
                     />
-                    <Text style={styles.DrawerSignOutText}>Update Product Details</Text>
+                    <Text style={styles.DrawerSignOutText}>{t('Update Product Details')}</Text>
                 </TouchableOpacity>
                 <View style={styles.HorizontalRule}></View>
             </View>
@@ -218,7 +221,7 @@ const CustomDrawer = ({navigation} : any) => {
                       size={22}
                       color={COLORS.primaryLightGreenHex}
                     />
-                    <Text style={styles.DrawerSignOutText}>Update Order Status</Text>
+                    <Text style={styles.DrawerSignOutText}>{t('Update Order Status')}</Text>
                 </TouchableOpacity>
                 <View style={styles.HorizontalRule}></View>
             </View>
@@ -240,28 +243,12 @@ const CustomDrawer = ({navigation} : any) => {
                         size={22}
                         color={COLORS.primaryLightGreenHex}
                       />
-                      <Text style={styles.DrawerSignOutText}>Update Reward Orders</Text>
+                      <Text style={styles.DrawerSignOutText}>{t('Update Reward Orders')}</Text>
                   </TouchableOpacity>
                   <View style={styles.HorizontalRule}></View>
               </View>
             )
           }
-
-          {/* Krishi gayan  */}
-          
-          {/* <TouchableOpacity
-            onPress={() => {
-              navigation.navigate("KrishiGyanScreen")
-            }}
-            style={styles.DrawerSignOut}>
-              <CustomIcon
-                name='book'
-                size={22}
-                color={COLORS.primaryLightGreenHex}
-              />
-              <Text style={styles.DrawerSignOutText}>Krishi Gyan</Text>
-          </TouchableOpacity>
-          <View style={styles.HorizontalRule}></View> */}
 
           <TouchableOpacity
             onPress={() => {
@@ -273,7 +260,7 @@ const CustomDrawer = ({navigation} : any) => {
                 size={22}
                 color={COLORS.primaryLightGreenHex}
               />
-              <Text style={styles.DrawerSignOutText}>Your Orders</Text>
+              <Text style={styles.DrawerSignOutText}>{t('My Orders')}</Text>
           </TouchableOpacity>
           <View style={styles.HorizontalRule}></View>
 
@@ -293,7 +280,7 @@ const CustomDrawer = ({navigation} : any) => {
                 size={22}
                 color={COLORS.primaryLightGreenHex}
               />
-              <Text style={styles.DrawerSignOutText}>Share</Text>
+              <Text style={styles.DrawerSignOutText}>{t('Share')}</Text>
           </TouchableOpacity>
           <View style={styles.HorizontalRule}></View>
 
@@ -309,7 +296,7 @@ const CustomDrawer = ({navigation} : any) => {
                 size={22}
                 color={COLORS.primaryLightGreenHex}
               />
-              <Text style={styles.DrawerSignOutText}>Terms</Text>
+              <Text style={styles.DrawerSignOutText}>{t('Terms and Conditions')}</Text>
           </TouchableOpacity>
           <View style={styles.HorizontalRule}></View>
 
@@ -325,7 +312,7 @@ const CustomDrawer = ({navigation} : any) => {
                 size={22}
                 color={COLORS.primaryLightGreenHex}
               />
-              <Text style={styles.DrawerSignOutText}>Privacy Policy</Text>
+              <Text style={styles.DrawerSignOutText}>{t('Privacy Policy')}</Text>
           </TouchableOpacity>
           <View style={styles.HorizontalRule}></View>
 
@@ -341,7 +328,7 @@ const CustomDrawer = ({navigation} : any) => {
                 size={22}
                 color={COLORS.primaryLightGreenHex}
               />
-              <Text style={styles.DrawerSignOutText}>Refund Policy</Text>
+              <Text style={styles.DrawerSignOutText}>{t('Refund Policy')}</Text>
           </TouchableOpacity>
           <View style={styles.HorizontalRule}></View>
 
@@ -357,7 +344,7 @@ const CustomDrawer = ({navigation} : any) => {
                 size={22}
                 color={COLORS.primaryLightGreenHex}
               />
-              <Text style={styles.DrawerSignOutText}>Share your feedback</Text>
+              <Text style={styles.DrawerSignOutText}>{t('Share your feedback')}</Text>
           </TouchableOpacity>
           <View style={styles.HorizontalRule}></View>
 
@@ -372,7 +359,7 @@ const CustomDrawer = ({navigation} : any) => {
                     size={22}
                     color={COLORS.primaryLightGreenHex}
                   />
-                  <Text style={styles.DrawerSignOutText}>Sign Out</Text>
+                  <Text style={styles.DrawerSignOutText}>{t('Sign Out')}</Text>
               </TouchableOpacity>
             }
           

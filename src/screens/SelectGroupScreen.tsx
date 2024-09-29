@@ -6,8 +6,11 @@ import { useSelector } from 'react-redux'
 import { GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler'
 import {BASE_URL} from "@env"
 import GroupsLoadingSkeleton from '../components/GroupsLoadingSkeleton'
+import { useTranslation } from 'react-i18next'
 
 const SelectGroupScreen = ({navigation, route} : any) => {
+
+    const {t} = useTranslation()
 
     const [farmList, setFarmList] = useState([])
     const [farmLocations , setFarmLocations ] = useState([])
@@ -73,20 +76,20 @@ const SelectGroupScreen = ({navigation, route} : any) => {
                     color={COLORS.primaryLightGreyHex}
                 />
                 </Pressable>
-                <Text style={styles.CartScreenHeaderTitle}>Select Group</Text>
+                <Text style={styles.CartScreenHeaderTitle}>{t("Select Group")}</Text>
             </View>
         </View>
 
         {noGroups && 
             <View style={styles.NoGroupsContainer}>
-                <Text style={styles.NoGroupsText}>No groups yet! Add your farms to get group benefits</Text>
+                <Text style={styles.NoGroupsText}>{t("No groups yet! Add your farms to get group benefits")}</Text>
                 <Pressable 
                 onPress={() => {
                     navigation.push("SelectCropScreen")
                 }}
                 style={styles.AddYourFarmButtonContainer}
                 >
-                <Text style={styles.AddYourFarmButtonText}>Add Your farms</Text>
+                <Text style={styles.AddYourFarmButtonText}>{t("Add Your farms")}</Text>
                 </Pressable>
             </View>
         }
@@ -122,7 +125,7 @@ const SelectGroupScreen = ({navigation, route} : any) => {
                                     <Text style={styles.MessageCardGroupNameText}>{item}</Text>
                                 </View>
                                 <View style={styles.MessageCardLastDetailsContainer}>
-                                    <Text style={styles.MessageCardLastDetailsText}>Last Order Details</Text>
+                                    <Text style={styles.MessageCardLastDetailsText}>{t("Select this group")}</Text>
                                 </View>
                             </View>
                             <View style={[styles.SelectedGroupCircleContainer , {backgroundColor : selectedGroup===key ? COLORS.primaryWhiteHex : COLORS.primaryWhiteHex , borderWidth : selectedGroup===key ? 0 : 1}]}>
@@ -154,7 +157,7 @@ const SelectGroupScreen = ({navigation, route} : any) => {
                 })
             }}
             style={[styles.ProceedButtonContainer , {display : selectedGroup!==-1 ? "flex" : "none"}]}>
-            <Text style={styles.ProceedButtonText}>Proceed to CheckOut</Text>
+            <Text style={styles.ProceedButtonText}>{t("Proceed to Checkout")}</Text>
         </Pressable>
 
     </GestureHandlerRootView>

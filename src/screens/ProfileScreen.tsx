@@ -12,10 +12,13 @@ import { updateCurrentAddressIndex, updateLanguage, updateName } from '../featur
 import languages from '../data/languageList'
 import LottieView from 'lottie-react-native'
 import {BASE_URL} from "@env"
+import { useTranslation } from 'react-i18next'
 
 const SCREEN_WIDTH = Dimensions.get("screen").height
 
 const ProfileScreen = ({navigation} : any) => {
+
+    const {t} = useTranslation()
 
     const phoneNumber = useSelector((state : any) => state.user.phone)
     const email = useSelector((state : any) => state.user.email)
@@ -156,7 +159,7 @@ const ProfileScreen = ({navigation} : any) => {
                 }}
                 style={styles.StartingHeaderSkipButton}
             >
-                <Text style={styles.StartingHeaderSkipButtonText}>Done</Text>
+                <Text style={styles.StartingHeaderSkipButtonText}>{t("Save")}</Text>
             </Pressable>
 
         </View>
@@ -179,7 +182,7 @@ const ProfileScreen = ({navigation} : any) => {
 
         <ScrollView style={styles.ProfileInfoLowerCard}>
             <View>
-                <Text style={styles.PhoneInputHeading}>Phone Number</Text>
+                <Text style={styles.PhoneInputHeading}>{t("Phone Number")}</Text>
 
                 <View style={styles.PhoneNumberContainer}>
                     <TouchableOpacity style={styles.PhoneNumberCountryContainer}>
@@ -206,7 +209,7 @@ const ProfileScreen = ({navigation} : any) => {
             </View>
 
             <View>
-                <Text style={styles.PhoneInputHeading}>Email</Text>
+                <Text style={styles.PhoneInputHeading}>{t("Email")}</Text>
 
                 <TouchableOpacity 
                     style={styles.EmailInputContainer}
@@ -223,7 +226,7 @@ const ProfileScreen = ({navigation} : any) => {
             </View>
 
             <View>
-                <Text style={styles.PhoneInputHeading}>Address</Text>
+                <Text style={styles.PhoneInputHeading}>{t("Address")}</Text>
 
                 <TouchableOpacity 
                     style={styles.EmailInputContainer}
@@ -240,7 +243,7 @@ const ProfileScreen = ({navigation} : any) => {
             </View>
 
             <View style={{marginBottom : SPACING.space_18*2}}>
-                <Text style={styles.PhoneInputHeading}>Language</Text>
+                <Text style={styles.PhoneInputHeading}>{t("Language")}</Text>
 
                 <TouchableOpacity 
                     style={styles.EmailInputContainer}
@@ -269,13 +272,13 @@ const ProfileScreen = ({navigation} : any) => {
         >
             <View style={styles.AddressModalContainers}>
                     <View style={styles.BillDetailsContainer}>
-                            <Text style={styles.BillDetailsHeading}>Change Address Details</Text>
+                            <Text style={styles.BillDetailsHeading}>{t("Change Address Details")}</Text>
                             <ScrollView
                                 showsVerticalScrollIndicator={false}
                                 style={styles.AddressListContainer}>
                                 {addressList.length==0 ? 
                                 <View>
-                                    <Text style={{textAlign : "center"}}>No address added yet</Text>
+                                    <Text style={{textAlign : "center"}}>{t("No address added yet")}</Text>
                                     <LottieView
                                         source={require("../components/lottie/Location.json")}
                                         style={{height : 220}}
@@ -333,7 +336,7 @@ const ProfileScreen = ({navigation} : any) => {
                                     size={22}
                                     color={COLORS.primaryLightGreenHex}
                                 />
-                                <Text style={styles.AddressListItemText}>Add new Address</Text>
+                                <Text style={styles.AddressListItemText}>{t("Add new Address")}</Text>
                             </Pressable>
                             </ScrollView>
 
@@ -341,7 +344,7 @@ const ProfileScreen = ({navigation} : any) => {
                                 style={styles.ChangeAddressButtonContainer}
                                 onPress={() => setAddressListModalStatus(!addressListModalStatus)}
                                 >
-                                <Text style={styles.ChangeAddressButtonText}>Done</Text>
+                                <Text style={styles.ChangeAddressButtonText}>{t("Save")}</Text>
                             </Pressable>
                             
                         </View>
@@ -358,12 +361,12 @@ const ProfileScreen = ({navigation} : any) => {
         >
             <View style={[styles.AddressModalContainers , {width : 250 , marginTop : SCREEN_HEIGHT*0.34, marginBottom : SCREEN_HEIGHT*0.3, marginLeft : 70}]}>
                     <View style={styles.BillDetailsContainer}>
-                            <Text style={styles.BillDetailsHeading}>Select any Language</Text>
+                            <Text style={styles.BillDetailsHeading}>{t("Select any Language")}</Text>
                             <ScrollView
                                 showsVerticalScrollIndicator={false}
                                 style={styles.AddressListContainer}>
                                 {languages.length==0 ? 
-                                <Text>No languages</Text> :
+                                <Text>{t("No languages")}</Text> :
                                 (
                                     languages.map((language :any , index : any) => {
                                         return (
@@ -396,7 +399,7 @@ const ProfileScreen = ({navigation} : any) => {
                                 style={[styles.ChangeAddressButtonContainer , {marginTop : SPACING.space_16}]}
                                 onPress={() => setLanguageModalStatus(!languageModalStatus)}
                                 >
-                                <Text style={styles.ChangeAddressButtonText}>Okay</Text>
+                                <Text style={styles.ChangeAddressButtonText}>{t("Save")}</Text>
                             </Pressable>
                             </ScrollView>
                         </View>

@@ -3,9 +3,12 @@ import React from 'react'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { BORDERRADIUS, COLORS, FONTFAMILY, FONTSIZE, SPACING } from '../theme/theme'
 import CustomIcon from './CustomIcon'
+import { useTranslation } from 'react-i18next'
+import { TouchableOpacity } from '@gorhom/bottom-sheet'
 
 const MessageCard = ({item, socket , navigation} : any) => {
 
+    const {t} = useTranslation()
     const groupChatClickHandler = () => {
         navigation.push("ChatScreen", {
             groupName : item
@@ -14,7 +17,7 @@ const MessageCard = ({item, socket , navigation} : any) => {
   return (
     <GestureHandlerRootView >
         <View style={styles.HorizontalRule}></View>
-        <Pressable 
+        <TouchableOpacity 
             onPress={() => {
                 groupChatClickHandler()
             }}
@@ -29,13 +32,13 @@ const MessageCard = ({item, socket , navigation} : any) => {
             <View style={styles.MessageCardDetails}>
                 <View style={styles.MessageCardNameContainer}>
                     <Text style={styles.MessageCardGroupNameText}>{item}</Text>
-                    <Text style={styles.MessageCardLastTimeText}>9:05 PM</Text>
+                    <Text style={styles.MessageCardLastTimeText}></Text>
                 </View>
                 <View style={styles.MessageCardLastDetailsContainer}>
-                    <Text style={styles.MessageCardLastDetailsText}>Last Order Details</Text>
+                    <Text style={styles.MessageCardLastDetailsText}>{t("View Group Order Details")}</Text>
                 </View>
             </View>
-        </Pressable>
+        </TouchableOpacity>
       
     </GestureHandlerRootView>
   )

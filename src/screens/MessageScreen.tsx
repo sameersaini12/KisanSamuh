@@ -14,8 +14,11 @@ const socket = io('http://10.0.2.2:4000/' , {
 })
 import {BASE_URL} from "@env"
 import GroupsLoadingSkeleton from '../components/GroupsLoadingSkeleton'
+import { useTranslation } from 'react-i18next'
 
 const MessageScreen = ({navigation} : any) => {
+
+  const {t} = useTranslation()
   const tabBarHeight = useBottomTabBarHeight()
 
   const [searchText , setSearchText] = useState('')
@@ -83,52 +86,14 @@ const MessageScreen = ({navigation} : any) => {
   return (
     <GestureHandlerRootView>
       <View style={styles.MessageScreenUpperContainer}>
-        <Text style={styles.GroupsTitleText}>Groups</Text>
-        <Text style={styles.GroupTitleNextLine}>Order in Groups to Save Money!!</Text>
-        {/* <View style={styles.SearchInputContainer}>
-            <CustomIcon
-              style={styles.SearchInputSearchIcon}
-              name='search'
-              size={FONTSIZE.size_18}
-              color={
-                searchText.length > 0
-                  ? COLORS.primaryLightGreenHex
-                  : COLORS.primaryLightGreyHex
-              }
-            />
-            <TextInput
-              placeholder='Search anything'
-              value={searchText}
-              onChangeText={text => 
-                setSearchText(text)
-              }
-              onSubmitEditing={handleSearchEnterButton}
-              placeholderTextColor={COLORS.primaryLightGreyHex}
-              style={styles.SearchTextInputContainer}
-            />
-            {searchText.length > 0 ? (
-              <Pressable
-                onPress={() => {
-                  resetSearchInputText()
-                }}
-              >
-                <CustomIcon
-                  style={styles.SearchInputClose}
-                  name='cancel-circle'
-                  size={FONTSIZE.size_16}
-                  color={COLORS.primaryLightGreyHex}
-                />
-              </Pressable>
-            ) : (
-              <></>
-            )}
-          </View> */}
+        <Text style={styles.GroupsTitleText}>{t('Groups')}</Text>
+        <Text style={styles.GroupTitleNextLine}>{t('Order in Groups to Save Money')}!!</Text>
       </View>
 
       {noGroups && 
           <View style={styles.NoGroupsContainer}>
             <View style={styles.HorizontailLine}></View>
-            <Text style={styles.NoGroupsText}>No groups yet! Add your farms to get group benefits</Text>
+            <Text style={styles.NoGroupsText}>{t('No groups yet! Add your farms to get group benefits')}</Text>
             <Pressable 
               onPress={async () => {
                 if(isLoggedIn)
@@ -141,7 +106,7 @@ const MessageScreen = ({navigation} : any) => {
               }}
               style={styles.AddYourFarmButtonContainer}
             >
-              <Text style={styles.AddYourFarmButtonText}>{isLoggedIn ? "Add Your farms" : "Login to add your farms"}</Text>
+              <Text style={styles.AddYourFarmButtonText}>{isLoggedIn ? t("Add Your farms") : t("Login to add your farms")}</Text>
             </Pressable>
           </View>
       }

@@ -8,8 +8,11 @@ import { BORDERRADIUS, COLORS, FONTFAMILY, FONTSIZE, SPACING } from '../theme/th
 import OrderHistoryLoadingSkeleton from '../components/OrderHistoryLoadingSkeleton'
 import LottieView from 'lottie-react-native'
 import moment from 'moment'
+import { useTranslation } from 'react-i18next'
 
 const UpdateRedeemOrderStatus = ({navigation} : any) => {
+
+    const {t} = useTranslation()
 
     const [loading , setLoading ] = useState(true)
     const [ordersList , setOrdersList] = useState([])
@@ -28,7 +31,7 @@ const UpdateRedeemOrderStatus = ({navigation} : any) => {
         if(orderStatus.toLowerCase() ==='ordered') {
           nextOrderStatus = 'delivered'
         }else {
-          ToastAndroid.show("Order is already deliverd", ToastAndroid.SHORT)
+          ToastAndroid.show(t("Order is already deliverd"), ToastAndroid.SHORT)
           setDeliveryStatusLoading(false)
           return ;
         }
@@ -93,7 +96,7 @@ const UpdateRedeemOrderStatus = ({navigation} : any) => {
                     color={COLORS.primaryLightGreyHex}
                 />
                 </TouchableOpacity>
-                <Text style={styles.OrderHistoryScreenHeaderTitle}>Update Order Status</Text>
+                <Text style={styles.OrderHistoryScreenHeaderTitle}>{t('Update Reward Orders')}</Text>
             </View>
         </View>
 
@@ -115,7 +118,7 @@ const UpdateRedeemOrderStatus = ({navigation} : any) => {
                             </View>
                             <View style={styles.DeliveryStatusDateContainer}>
                                 <View style={{flexDirection : "row" , alignItems : "center" }}>
-                                    <Text style={styles.DeliveryStatusText}>{item.status}
+                                    <Text style={styles.DeliveryStatusText}>{t(item.status)}
                                         
                                     </Text>
                                     <TouchableOpacity
@@ -133,10 +136,10 @@ const UpdateRedeemOrderStatus = ({navigation} : any) => {
                                             style={{height : 35 , width : 30}}
                                         />
                                         }
-                                        <Text style={[styles.DeliveryStatusDate , {color : COLORS.primaryLightGreenHex}]}>Update Status</Text>
+                                        <Text style={[styles.DeliveryStatusDate , {color : COLORS.primaryLightGreenHex}]}>{t('Update Status')}</Text>
                                     </TouchableOpacity>
                                 </View>
-                                <Text style={styles.DeliveryStatusDate}>Ordered On - { moment(item.orderDate).format("DD MMMM, YYYY")}</Text>
+                                <Text style={styles.DeliveryStatusDate}>{t('Date')} - { moment(item.orderDate).format("DD MMMM, YYYY")}</Text>
                             </View>
                             </View>
                             <View style={[styles.HorizontalRule]}></View>
