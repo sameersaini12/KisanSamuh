@@ -91,9 +91,9 @@ const OrderedProductInfoScreen = ({navigation, route} : any) => {
                     <Text style={styles.ItemPriceHeading}>{t('Item Price')}</Text>
                     <Text style={styles.ItemPriceText}>Rs. {route.params.itemPrice}</Text>
                 </View>
-                <View style={styles.ButtonContainer}>
+                {/* <View style={styles.ButtonContainer}>
                     <Text style={styles.ButtonText}>{t('Download Invoice')}</Text>
-                </View>
+                </View> */}
                 {/* <View style={styles.ButtonContainer}>
                     <Text style={styles.ButtonText}>Rate this product</Text>
                 </View> */}

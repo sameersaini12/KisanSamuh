@@ -25,7 +25,7 @@ const PaymentCheckoutScreen = ({ navigation, route }: any) => {
 
   const dispatch = useDispatch()
   const [buyingGroupName, setBuyingGroupName] = useState(route.params.buyingGroupName)
-  const [deliveryCost, setDeliveryCost] = useState(buyingGroupName === undefined ? 50 : 0)
+  const [deliveryCost, setDeliveryCost] = useState(route.params.deliveryCost)
   // console.log(buyingGroupName)
 
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(1)
@@ -299,10 +299,11 @@ const PaymentCheckoutScreen = ({ navigation, route }: any) => {
               <Text style={styles.AddressListItemText}>{t(paymentMethodList[0])}</Text>
             </View>
             <Pressable
-              onPress={UIPPaymentButtonHandler}
+              // onPress={UIPPaymentButtonHandler}
               style={[styles.PlaceOrderButtonContainer, { display: selectedPaymentMethod == 0 ? "flex" : "none" }]}
             >
-              <Text style={styles.PlaceOrderButtonText}>{`${t("Pay")}  ₹ ${route.params.totalCartPrice + deliveryCost}`}</Text>
+              {/* <Text style={styles.PlaceOrderButtonText}>{`${t("Pay")}  ₹ ${route.params.totalCartPrice + deliveryCost}`}</Text> */}
+              <Text style={styles.PlaceOrderButtonText}>{t("Coming soon")}</Text>
             </Pressable>
           </Pressable>
 

@@ -14,7 +14,7 @@ const CallDoctorScreen = () => {
     const [currentTime , setCurrentTime] = useState(new Date().getHours())
 
     const handleCallButton = () => {
-        Linking.openURL(`tel:9817620774`)
+        Linking.openURL(`tel:8685980100`)
     }
     const tabBarHeight = useBottomTabBarHeight()
 

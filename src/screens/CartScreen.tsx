@@ -34,6 +34,7 @@ const CartScreen = ({ navigation, route }: any) => {
     const [openAddressModal, setOpenAddressModal] = useState(false)
     const [addressLoading, setAddressLoading] = useState(true)
     const [noAddresses, setNoAddresses] = useState(false)
+    const [deliveryCostFromDb , setDeliveryCostFromDb] = useState(0)
 
     const dispatch = useDispatch()
 
@@ -60,7 +61,7 @@ const CartScreen = ({ navigation, route }: any) => {
             headers: {
                 Accept: "application/json",
                 "Content-Type": "application/json",
-                Authorization: `Beared ${userToken}`
+                Authorization: `Bearer ${userToken}`
             },
         })
             .then((res) => res.json())
@@ -80,7 +81,28 @@ const CartScreen = ({ navigation, route }: any) => {
             })
     }
 
+    const fetchAdminSetting = async () => {
+        await fetch(`${BASE_URL}/admin-setting/get-admin-setting`, {
+            method: "GET",
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${userToken}`
+            },
+        })
+            .then((res) => res.json())
+            .then((res) => {
+                if (res.data) {
+                    setDeliveryCostFromDb(res.data.deliveryCost)
+                }
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    }
+
     useEffect(() => {
+        fetchAdminSetting()
         if (userLoginStatus) {
             fetchAllAddresses()
         }
@@ -220,7 +242,7 @@ const CartScreen = ({ navigation, route }: any) => {
                                             </View>
                                             <View style={styles.BillDetailsTotalPriceContainer}>
                                                 <Text style={styles.BillDetailsTotalPriceHeading}>{t("Shipping Charges")}</Text>
-                                                <Text style={styles.BillDetailsTotalPrice}>{t("Rs.")} 70</Text>
+                                                <Text style={styles.BillDetailsTotalPrice}>{t("Rs.")} {deliveryCostFromDb}</Text>
                                             </View>
                                         </View>
 
@@ -228,7 +250,7 @@ const CartScreen = ({ navigation, route }: any) => {
 
                                         <View style={styles.NetPriceContainer}>
                                             <Text style={styles.NetPriceHeading}>{t("Total Amount")}</Text>
-                                            <Text style={styles.NetPrice}>{t("Rs.")} {70 + parseFloat(totalCartPrice)}</Text>
+                                            <Text style={styles.NetPrice}>{t("Rs.")} {deliveryCostFromDb + parseFloat(totalCartPrice)}</Text>
                                         </View>
 
                                         {Math.floor(totalCartPrice / 10) !== 0 &&
@@ -250,8 +272,8 @@ const CartScreen = ({ navigation, route }: any) => {
                                                     } else {
                                                         navigation.push("PaymentCheckoutScreen", {
                                                             address: selectedAddressName,
-                                                            totalCartPrice: parseFloat(totalCartPrice)
-
+                                                            totalCartPrice: parseFloat(totalCartPrice),
+                                                            deliveryCost: deliveryCostFromDb
                                                         })
                                                     }
                                                 }
@@ -268,7 +290,8 @@ const CartScreen = ({ navigation, route }: any) => {
                                                 } :
                                                 () => {
                                                     navigation.push("SelectGroupScreen", {
-                                                        totalCartPrice: parseFloat(totalCartPrice)
+                                                        totalCartPrice: parseFloat(totalCartPrice),
+                                                        deliveryCost: 0
                                                     })
                                                 }
                                             }
